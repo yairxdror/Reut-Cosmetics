@@ -1,0 +1,53 @@
+"use client";
+
+import { useEffect, useState, type ReactNode } from "react";
+import { usePathname } from "next/navigation";
+import Image from "next/image";
+import { BackButton, HomeButton, LanguageButton } from "./NavControls";
+import HamburgerButton from "./HamburgerButton";
+import Sidebar from "./Sidebar";
+import logo from "@/assets/logo.png";
+
+export default function SiteChrome({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+  const isHealthDeclaration = pathname === "/health-declaration";
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [pathname]);
+
+  return (
+    <div>
+      <header className="nav-bar">
+        <div className="nav-bar-lang">
+          {isHome && (
+            <button
+              type="button"
+              className="nav-bar-logo-link"
+              onClick={() => window.location.reload()}
+              aria-label="Refresh home page"
+            >
+              <span className="nav-bar-brand">Reut Cosmetics</span>
+              <Image src={logo} alt="Reut Yakobi" className="nav-bar-logo" priority />
+            </button>
+          )}
+        </div>
+        {!isHome && !isHealthDeclaration && (
+          <h2 className="text-gold" style={{ margin: 0 }}>
+            Reut Cosmetics
+          </h2>
+        )}
+        <div className="nav-bar-side">
+          {!isHome && <BackButton />}
+          {!isHome && <HomeButton />}
+          <HamburgerButton isOpen={isMenuOpen} onClick={() => setIsMenuOpen((prev) => !prev)} />
+          <LanguageButton />
+        </div>
+      </header>
+      <Sidebar isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+      <main style={{ padding: "1rem 1.5rem 3rem" }}>{children}</main>
+    </div>
+  );
+}

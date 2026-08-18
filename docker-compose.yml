@@ -1,0 +1,25 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "4001:4001"
+    environment:
+      PORT: 4001
+      CLIENT_ORIGIN: http://localhost:3001
+    volumes:
+      - ./backend/src:/app/src
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3001:3000"
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: http://localhost:4001
+      WATCHPACK_POLLING: "true"
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+    depends_on:
+      - backend
+    restart: unless-stopped
