@@ -1,19 +1,5 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:4001";
 
-export interface Product {
-  id: number;
-  name: string;
-  price: number;
-}
-
-export async function fetchProducts(): Promise<Product[]> {
-  const res = await fetch(`${API_BASE_URL}/api/products`);
-  if (!res.ok) {
-    throw new Error(`Failed to fetch products: ${res.status}`);
-  }
-  return res.json();
-}
-
 export interface HealthDeclarationPayload {
   fullName: string;
   idNumber: string;
@@ -31,6 +17,23 @@ export async function submitHealthDeclaration(payload: HealthDeclarationPayload)
   });
   if (!res.ok) {
     throw new Error(`Failed to submit health declaration: ${res.status}`);
+  }
+  return res.json();
+}
+
+export class InvalidCredentialsError extends Error {}
+
+export async function loginAdmin(email: string, password: string): Promise<{ token: string }> {
+  const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
+  if (res.status === 401) {
+    throw new InvalidCredentialsError("Invalid email or password");
+  }
+  if (!res.ok) {
+    throw new Error(`Login failed: ${res.status}`);
   }
   return res.json();
 }

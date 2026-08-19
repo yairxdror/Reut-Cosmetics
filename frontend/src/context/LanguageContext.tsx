@@ -8,25 +8,20 @@ type Dictionary = Record<string, { he: string; en: string }>;
 
 const dictionary: Dictionary = {
   back: { he: "חזור", en: "Back" },
-  viewProducts: { he: "לצפייה במוצרים", en: "View Products" },
   contactUs: { he: "צור קשר", en: "Contact Us" },
-  productsTitle: { he: "המוצרים שלנו", en: "Our Products" },
   aboutTitle: { he: "צור קשר", en: "Contact" },
   aboutText: {
     he: "זהו עמוד לדוגמה שמדגים את כפתור החזרה.",
     en: "This is a placeholder page demonstrating the back button.",
   },
-  loading: { he: "טוען...", en: "Loading..." },
-  price: { he: "מחיר", en: "Price" },
 
   heroTitleMain: { he: "יופי, דיוק ונוכחות", en: "Beauty, Precision, and Presence," },
   heroTitleLine2Prefix: { he: "בדיוק", en: "Made" },
   heroTitleHighlight: { he: "בשבילך", en: "Just for You" },
   heroSubtitle: {
-    he: "טיפולי קוסמטיקה מתקדמים, איפור קבוע, איפור ערב, עיצוב גבות, לק ג'ל, קורסי הכשרה מקצועיים - כל מה שצריך כדי להרגיש מושלמת.",
-    en: "Advanced cosmetic treatments, permanent makeup, evening makeup, eyebrow shaping, gel polish, professional training courses - everything you need to feel perfect.",
+    he: "טיפולי קוסמטיקה מתקדמים, איפור קבוע, איפור ערב, איפור כלות, עיצוב גבות, שעווה בפנים, קורסי הכשרה מקצועיים.\nכל מה שצריך כדי להרגיש מושלמת.",
+    en: "Advanced cosmetic treatments, permanent makeup, evening makeup, bridal makeup, eyebrow shaping, facial waxing, professional training courses.\nEverything you need to feel perfect.",
   },
-  bookAppointment: { he: "לקביעת תור", en: "Book an Appointment" },
   whatsappCta: { he: "דברו איתנו בוואטסאפ", en: "Chat with us on WhatsApp" },
   featureDiagnostics: { he: "בדיקות מדויקות\nלהתאמה מושלמת", en: "Precise diagnostics\nfor a perfect fit" },
   featurePersonalService: { he: "שירות אישי\nוליווי צמוד", en: "Personal service\nand close guidance" },
@@ -56,11 +51,26 @@ const dictionary: Dictionary = {
   menu: { he: "תפריט", en: "Menu" },
   faq: { he: "שאלות ותשובות", en: "FAQ" },
   healthDeclaration: { he: "הצהרת בריאות", en: "Health Declaration" },
+  careInstructions: { he: "הוראות לטיפול", en: "Treatment Instructions" },
   privateCourses: { he: "הדרכת קורסים פרטניים", en: "Private Course Guidance" },
   login: { he: "התחברות", en: "Login" },
   privacyPolicy: { he: "מדיניות פרטיות", en: "Privacy Policy" },
   termsOfUse: { he: "תנאי שימוש", en: "Terms of Use" },
   comingSoon: { he: "תוכן העמוד יתווסף בקרוב.", en: "Page content coming soon." },
+
+  loginSubtitle: { he: "כניסת מנהלת אתר", en: "Site admin sign-in" },
+  loginEmailLabel: { he: "אימייל", en: "Email" },
+  loginPasswordLabel: { he: "סיסמה", en: "Password" },
+  loginSubmit: { he: "התחברות", en: "Log In" },
+  loginSubmitting: { he: "מתחברת...", en: "Logging in..." },
+  loginEmailRequired: { he: "יש למלא אימייל", en: "Email is required" },
+  loginEmailInvalid: { he: "כתובת האימייל אינה תקינה", en: "Please enter a valid email address" },
+  loginPasswordRequired: { he: "יש למלא סיסמה", en: "Password is required" },
+  loginPasswordTooShort: { he: "הסיסמה חייבת להכיל לפחות 6 תווים", en: "Password must be at least 6 characters" },
+  loginInvalidCredentials: { he: "אימייל או סיסמה שגויים", en: "Invalid email or password" },
+  loginGenericError: { he: "אירעה שגיאה. נסי שוב מאוחר יותר.", en: "Something went wrong. Please try again later." },
+  loginSuccessTitle: { he: "התחברת בהצלחה", en: "Logged in successfully" },
+  loginSuccessText: { he: "התחברת כמנהלת האתר.", en: "You are now signed in as the site admin." },
 };
 
 export type TranslationKey = keyof typeof dictionary;

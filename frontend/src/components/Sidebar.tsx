@@ -7,6 +7,7 @@ import { useLanguage, type TranslationKey } from "@/context/LanguageContext";
 const NAV_ITEMS: { href: string; key: TranslationKey }[] = [
   { href: "/faq", key: "faq" },
   { href: "/health-declaration", key: "healthDeclaration" },
+  { href: "/care-instructions", key: "careInstructions" },
   { href: "/courses", key: "privateCourses" },
   { href: "/login", key: "login" },
   { href: "/privacy-policy", key: "privacyPolicy" },

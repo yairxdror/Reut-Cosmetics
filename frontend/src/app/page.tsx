@@ -4,7 +4,6 @@ import Image from "next/image";
 import heroProduct from "@/assets/hero-product.jpg";
 import { useLanguage } from "@/context/LanguageContext";
 import {
-  CalendarIcon,
   CrownIcon,
   DiamondIcon,
   HeartIcon,
@@ -69,10 +68,6 @@ export default function Home() {
 
           <div className="hero-cta-row">
             <a className="btn-hero btn-hero-gold" href="#">
-              <CalendarIcon size={18} />
-              {t("bookAppointment")}
-            </a>
-            <a className="btn-hero btn-hero-dark" href="#">
               <WhatsAppIcon size={18} />
               {t("whatsappCta")}
             </a>

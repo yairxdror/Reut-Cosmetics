@@ -4,18 +4,18 @@ Website skeleton with a Next.js (App Router, TypeScript) frontend and an Express
 
 ## Design system
 
-- Background: cream (`#f7f1e4`)
+- Background: cream (`#faf8f2` → `#f6f1e6` gradient)
 - Body text: near-black (`#1a1712`)
 - Headings / accents: gold (`#a97f1e`)
-- Primary buttons: rounded, glass (blurred, translucent) with a blue or red border + matching text color, subtle color shift on hover
-- Utility buttons (language / home / back): glass with a thin gold border
+- Primary buttons: rounded, glass (blurred, translucent) with a blue, red, or black border + matching text color, subtle color shift on hover
+- Utility buttons (language / home / back / hamburger): glass with a thin gold border
 
-All of this lives in [frontend/src/app/globals.css](frontend/src/app/globals.css) as CSS variables and `.btn`, `.btn-blue`, `.btn-red`, `.btn-glass-thin` classes, so new pages/components stay visually consistent by reusing those classes.
+All of this lives in [frontend/src/app/globals.css](frontend/src/app/globals.css) as CSS variables and `.btn`, `.btn-blue`, `.btn-red`, `.btn-black`, `.btn-glass-thin` classes, so new pages/components stay visually consistent by reusing those classes.
 
 ## Structure
 
 ```
-backend/    Express API (products endpoint, health check)
+backend/    Express API (health declarations, admin login, health check)
 frontend/   Next.js app (App Router, language toggle, glass UI components)
 ```
 
@@ -56,10 +56,11 @@ The frontend calls the backend via `NEXT_PUBLIC_API_BASE_URL` (see `frontend/.en
 
 ## What's included
 
-- `GET /api/health`, `GET /api/products`, `GET /api/products/:id` on the backend
-- Home / Products / Contact pages on the frontend (`src/app/page.tsx`, `src/app/products/page.tsx`, `src/app/contact/page.tsx`)
-- A language toggle (Hebrew ⇄ English) that also flips text direction (RTL/LTR) on `<html>`
-- Reusable `Button` component (`variant="blue" | "red"`) and `LanguageButton` / `HomeButton` / `BackButton` nav controls (`src/components/`)
+- Backend: `GET /api/health`, `POST /api/health-declarations`, `POST /api/auth/login` (rate-limited admin login, see [backend/.env.example](backend/.env.example) for required env vars)
+- Frontend pages: Home, FAQ, Health Declaration (full questionnaire + agreement), Care Instructions, Private Courses, Login, Privacy Policy, Terms, Contact (`src/app/*/page.tsx`)
+- A slide-in sidebar menu linking all secondary pages (`src/components/Sidebar.tsx`)
+- A language toggle (Hebrew ⇄ English) with a dropdown picker that also flips text direction (RTL/LTR) on `<html>`
+- Reusable `Button` component (`variant="blue" | "red"`) and `LanguageButton` / `HomeButton` / `BackButton` / `HamburgerButton` nav controls (`src/components/`)
 
 ## Notes
 

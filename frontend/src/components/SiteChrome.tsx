@@ -11,7 +11,6 @@ import logo from "@/assets/logo.png";
 export default function SiteChrome({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const isHome = pathname === "/";
-  const isHealthDeclaration = pathname === "/health-declaration";
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -34,11 +33,6 @@ export default function SiteChrome({ children }: { children: ReactNode }) {
             </button>
           )}
         </div>
-        {!isHome && !isHealthDeclaration && (
-          <h2 className="text-gold" style={{ margin: 0 }}>
-            Reut Cosmetics
-          </h2>
-        )}
         <div className="nav-bar-side">
           {!isHome && <BackButton />}
           {!isHome && <HomeButton />}
