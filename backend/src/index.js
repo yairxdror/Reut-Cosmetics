@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import healthDeclarationsRouter from "./routes/health-declarations.js";
 import authRouter from "./routes/auth.js";
+import reviewsRouter from "./routes/reviews.js";
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -17,6 +18,7 @@ app.get("/api/health", (req, res) => {
 
 app.use("/api/health-declarations", healthDeclarationsRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/reviews", reviewsRouter);
 
 app.listen(PORT, () => {
   console.log(`Reut Cosmetics API running on http://localhost:${PORT}`);

@@ -70,6 +70,44 @@ const dictionary: Dictionary = {
   loginGenericError: { he: "אירעה שגיאה. נסי שוב מאוחר יותר.", en: "Something went wrong. Please try again later." },
   loginSuccessTitle: { he: "התחברת בהצלחה", en: "Logged in successfully" },
   loginSuccessText: { he: "התחברת כמנהלת האתר.", en: "You are now signed in as the site admin." },
+
+  reviewsTitle: { he: "מה הלקוחות שלנו אומרות", en: "What Our Clients Say" },
+  addReviewButton: { he: "הוסיפי ביקורת", en: "Add a Review" },
+  reviewFormTitle: { he: "כתיבת ביקורת", en: "Write a Review" },
+  requiredFieldsNote: {
+    he: "שאלות המסומנות בכוכבית אדומה הן שאלות חובה.",
+    en: "Fields marked with a red asterisk are required.",
+  },
+  reviewNameLabel: { he: "שם", en: "Name" },
+  reviewRatingLabel: { he: "דירוג", en: "Rating" },
+  reviewTextLabel: { he: "הביקורת שלך", en: "Your Review" },
+  reviewTextPlaceholder: { he: "ספרי לנו על החוויה שלך...", en: "Tell us about your experience..." },
+  reviewSubmit: { he: "פרסום ביקורת", en: "Post Review" },
+  reviewSubmitting: { he: "מפרסמת...", en: "Posting..." },
+  reviewEditFormTitle: { he: "עריכת ביקורת", en: "Edit Review" },
+  reviewUpdate: { he: "עדכון ביקורת", en: "Update Review" },
+  reviewUpdating: { he: "מעדכנת...", en: "Updating..." },
+  reviewEditedLabel: { he: "נערך", en: "edited" },
+  reviewEditExpired: {
+    he: "לא ניתן יותר לערוך ביקורת זו (עברו יותר מ-15 דקות מהפרסום).",
+    en: "This review can no longer be edited (more than 15 minutes have passed since posting).",
+  },
+  reviewNameRequired: { he: "יש למלא שם", en: "Name is required" },
+  reviewRatingRequired: { he: "יש לבחור דירוג", en: "Please select a rating" },
+  reviewTextRequired: { he: "יש לכתוב ביקורת", en: "Please write a review" },
+  reviewTextTooShort: { he: "הביקורת קצרה מדי (לפחות 3 תווים)", en: "Review is too short (at least 3 characters)" },
+  reviewProfanityError: {
+    he: "הביקורת מכילה שפה לא הולמת. נא לנסח מחדש.",
+    en: "This review contains inappropriate language. Please rephrase.",
+  },
+  reviewTextTooLong: { he: "הביקורת ארוכה מדי (עד 500 תווים)", en: "Review is too long (max 500 characters)" },
+  reviewGenericError: { he: "אירעה שגיאה. נסי שוב מאוחר יותר.", en: "Something went wrong. Please try again later." },
+  reviewRateLimited: {
+    he: "נשלחו יותר מדי ביקורות מהמכשיר הזה. נסי שוב בעוד כמה דקות.",
+    en: "Too many reviews submitted from this device. Please try again in a few minutes.",
+  },
+  reviewsEmpty: { he: "עדיין אין ביקורות. תהיי הראשונה לכתוב!", en: "No reviews yet. Be the first to write one!" },
+  reviewsLoadError: { he: "לא ניתן לטעון ביקורות כרגע.", en: "Unable to load reviews right now." },
 };
 
 export type TranslationKey = keyof typeof dictionary;
@@ -86,8 +124,17 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState<Language>("he");
 
   useEffect(() => {
-    document.documentElement.lang = language;
-    document.documentElement.dir = language === "he" ? "rtl" : "ltr";
+    const root = document.documentElement;
+    root.classList.add("no-transitions");
+    root.lang = language;
+    root.dir = language === "he" ? "rtl" : "ltr";
+
+    const raf = requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        root.classList.remove("no-transitions");
+      });
+    });
+    return () => cancelAnimationFrame(raf);
   }, [language]);
 
   const value = useMemo<LanguageContextValue>(

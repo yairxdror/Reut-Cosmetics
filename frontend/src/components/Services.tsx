@@ -1,11 +1,11 @@
 "use client";
 
 import { useLanguage } from "@/context/LanguageContext";
-import { BrushIcon, FeatherIcon, GraduationCapIcon, ImageIcon, LeafIcon } from "@/components/icons";
+import { FeatherIcon, GraduationCapIcon, ImageIcon, LeafIcon, MakeupBrushIcon } from "@/components/icons";
 
 const SERVICES = [
   { badgeIcon: FeatherIcon, titleKey: "service1Title" as const, descKey: "service1Desc" as const },
-  { badgeIcon: BrushIcon, titleKey: "service2Title" as const, descKey: "service2Desc" as const },
+  { badgeIcon: MakeupBrushIcon, titleKey: "service2Title" as const, descKey: "service2Desc" as const },
   { badgeIcon: GraduationCapIcon, titleKey: "service3Title" as const, descKey: "service3Desc" as const },
   { badgeIcon: LeafIcon, titleKey: "service4Title" as const, descKey: "service4Desc" as const },
 ];

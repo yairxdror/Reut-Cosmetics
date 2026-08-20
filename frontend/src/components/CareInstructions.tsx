@@ -1,3 +1,6 @@
+import Image from "next/image";
+import healingTimeline from "@/assets/healing-timeline.png";
+
 const RULES = [
   "לא לגרד ו/או לשפשף את הגבות – שפשוף המקום עלול לגרום לנזק! ולגרום לצבע להימרח מתחת לעור.",
   "אין להשתמש בתכשירים קוסמטיים כגון – קרמים המכילים חומצות, קרמים הגורמים לקילוף העור, קרמים להבהרה, קרמים לאקנה, פילינג, סבון פנים פעיל באזור הגבות והמצח עד תום התהליך של 2 הטיפולים.",
@@ -58,6 +61,10 @@ export default function CareInstructions() {
           טיפול אחד בלבד, וזו הסיבה שכל התהליך מורכב משני טיפולים!
         </p>
       </section>
+
+      <div className="care-timeline-image">
+        <Image src={healingTimeline} alt="תהליך ההחלמה של הגבות לפי ימים" sizes="(max-width: 720px) 100vw, 720px" />
+      </div>
 
       <section className="form-section care-contact">
         <p>לכל שאלה אני כאן בשבילך בטלפון:</p>

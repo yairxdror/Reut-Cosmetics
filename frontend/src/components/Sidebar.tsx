@@ -25,11 +25,12 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
       if (event.key === "Escape") onClose();
     };
     document.addEventListener("keydown", handleKeyDown);
-    document.body.style.overflow = "hidden";
+    const scrollContainer = document.querySelector<HTMLElement>(".page-scroll");
+    if (scrollContainer) scrollContainer.style.overflow = "hidden";
 
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "";
+      if (scrollContainer) scrollContainer.style.overflow = "";
     };
   }, [isOpen, onClose]);
 

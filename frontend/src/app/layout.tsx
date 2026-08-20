@@ -6,6 +6,11 @@ import SiteChrome from "@/components/SiteChrome";
 export const metadata: Metadata = {
   title: "Reut Cosmetics",
   description: "Reut Cosmetics - natural beauty products",
+  appleWebApp: {
+    capable: true,
+    title: "Reut Cosmetics",
+    statusBarStyle: "black-translucent",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

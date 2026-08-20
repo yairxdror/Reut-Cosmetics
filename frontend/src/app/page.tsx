@@ -14,6 +14,7 @@ import {
 } from "@/components/icons";
 import Services from "@/components/Services";
 import Courses from "@/components/Courses";
+import Reviews from "@/components/Reviews";
 
 const FEATURES = [
   { icon: SparkleIcon, key: "featureDiagnostics" as const },
@@ -86,6 +87,7 @@ export default function Home() {
 
       <Services />
       <Courses />
+      <Reviews />
     </>
   );
 }

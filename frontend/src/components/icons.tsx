@@ -126,6 +126,29 @@ export function BrushIcon(props: IconProps) {
   );
 }
 
+export function PerfumeIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <rect x="7" y="10.5" width="10" height="9.5" rx="2.5" />
+      <path d="M9.5 10.5V8a2.5 2.5 0 0 1 5 0v2.5" />
+      <rect x="9.7" y="3.5" width="4.6" height="3" rx="1" />
+      <path d="M7 15h10" />
+    </Icon>
+  );
+}
+
+export function MakeupBrushIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <circle cx="12" cy="6" r="4" />
+      <path d="M12 9.5 9 4M12 9.5 10.6 3.3M12 9.5 12 3M12 9.5 13.4 3.3M12 9.5 15 4" />
+      <path d="M9.3 9.8 10 12.5h4l.7-2.7" />
+      <path d="M10 12.9h4" />
+      <path d="M10.3 13.3V19a1.7 1.7 0 0 0 3.4 0v-5.7" />
+    </Icon>
+  );
+}
+
 export function GraduationCapIcon(props: IconProps) {
   return (
     <Icon {...props}>
@@ -141,6 +164,31 @@ export function LeafIcon(props: IconProps) {
     <Icon {...props}>
       <path d="M5 20c8 0 14-6 14-14V4h-2C9 4 5 10 5 18v2z" />
       <path d="M5 20c3-5 6-8 12-11" />
+    </Icon>
+  );
+}
+
+export function StarIcon(props: IconProps) {
+  return (
+    <Icon {...props} fill="currentColor" strokeWidth="1">
+      <path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.4l-5.9 3.2 1.3-6.6-4.9-4.6 6.6-.8z" />
+    </Icon>
+  );
+}
+
+export function QuoteIcon(props: IconProps) {
+  return (
+    <Icon {...props} fill="currentColor" strokeWidth="0">
+      <path d="M9.5 6.5c-3.3 1-5.2 3.6-5.2 7 0 2.6 1.6 4.3 3.7 4.3 1.8 0 3.1-1.3 3.1-3.1 0-1.7-1.2-2.9-2.7-2.9-.2 0-.4 0-.5.1.2-1.9 1.5-3.4 3.3-4.1l-1.7-1.3zm9.4 0c-3.3 1-5.2 3.6-5.2 7 0 2.6 1.6 4.3 3.7 4.3 1.8 0 3.1-1.3 3.1-3.1 0-1.7-1.2-2.9-2.7-2.9-.2 0-.4 0-.5.1.2-1.9 1.5-3.4 3.3-4.1l-1.7-1.3z" />
+    </Icon>
+  );
+}
+
+export function PencilIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M4 20l1-4L15.5 5.5l3 3L8 19l-4 1z" />
+      <path d="M13.5 6.5l3 3" />
     </Icon>
   );
 }

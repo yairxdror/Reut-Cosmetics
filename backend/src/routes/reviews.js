@@ -1,0 +1,132 @@
+import { Router } from "express";
+import rateLimit from "express-rate-limit";
+import crypto from "node:crypto";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+import { containsProfanity } from "../utils/profanityFilter.js";
+
+const router = Router();
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const DATA_FILE = path.join(__dirname, "..", "data", "reviews.json");
+
+const MAX_NAME_LENGTH = 60;
+const MIN_TEXT_LENGTH = 3;
+const MAX_TEXT_LENGTH = 500;
+const EDIT_WINDOW_MS = 15 * 60 * 1000;
+
+function loadReviews() {
+  try {
+    return JSON.parse(fs.readFileSync(DATA_FILE, "utf-8"));
+  } catch {
+    return [];
+  }
+}
+
+function saveReviews(reviews) {
+  fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true });
+  fs.writeFileSync(DATA_FILE, JSON.stringify(reviews, null, 2));
+}
+
+let reviews = loadReviews();
+
+function toPublicReview(review) {
+  const { editToken, ...publicFields } = review;
+  return publicFields;
+}
+
+function validateReviewFields({ name, rating, text }) {
+  const trimmedName = typeof name === "string" ? name.trim() : "";
+  const trimmedText = typeof text === "string" ? text.trim() : "";
+  const numericRating = Number(rating);
+
+  if (!trimmedName || trimmedName.length > MAX_NAME_LENGTH) {
+    return { error: "A valid name is required" };
+  }
+  if (!Number.isInteger(numericRating) || numericRating < 1 || numericRating > 5) {
+    return { error: "Rating must be an integer between 1 and 5" };
+  }
+  if (!trimmedText || trimmedText.length < MIN_TEXT_LENGTH || trimmedText.length > MAX_TEXT_LENGTH) {
+    return { error: `Review text must be between ${MIN_TEXT_LENGTH} and ${MAX_TEXT_LENGTH} characters` };
+  }
+  if (containsProfanity(trimmedName) || containsProfanity(trimmedText)) {
+    return { error: "Review contains inappropriate language" };
+  }
+
+  return { name: trimmedName, rating: numericRating, text: trimmedText };
+}
+
+const createReviewLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  limit: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many reviews submitted. Please try again later." },
+});
+
+const editReviewLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  limit: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many edit attempts. Please try again later." },
+});
+
+router.get("/", (req, res) => {
+  const sorted = [...reviews].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  res.json(sorted.map(toPublicReview));
+});
+
+router.post("/", createReviewLimiter, (req, res) => {
+  const fields = validateReviewFields(req.body || {});
+  if (fields.error) {
+    return res.status(400).json({ error: fields.error });
+  }
+
+  const review = {
+    id: Date.now(),
+    name: fields.name,
+    rating: fields.rating,
+    text: fields.text,
+    createdAt: new Date().toISOString(),
+    editToken: crypto.randomUUID(),
+  };
+
+  reviews.push(review);
+  saveReviews(reviews);
+
+  res.status(201).json({ ...toPublicReview(review), editToken: review.editToken });
+});
+
+router.put("/:id", editReviewLimiter, (req, res) => {
+  const id = Number(req.params.id);
+  const { editToken } = req.body || {};
+
+  const review = reviews.find((r) => r.id === id);
+  if (!review) {
+    return res.status(404).json({ error: "Review not found" });
+  }
+  if (!editToken || editToken !== review.editToken) {
+    return res.status(403).json({ error: "You are not allowed to edit this review" });
+  }
+  if (Date.now() - new Date(review.createdAt).getTime() > EDIT_WINDOW_MS) {
+    return res.status(403).json({ error: "The edit window for this review has expired" });
+  }
+
+  const fields = validateReviewFields(req.body || {});
+  if (fields.error) {
+    return res.status(400).json({ error: fields.error });
+  }
+
+  review.name = fields.name;
+  review.rating = fields.rating;
+  review.text = fields.text;
+  review.updatedAt = new Date().toISOString();
+
+  saveReviews(reviews);
+
+  res.json(toPublicReview(review));
+});
+
+export default router;

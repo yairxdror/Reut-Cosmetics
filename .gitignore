@@ -24,3 +24,6 @@ Thumbs.db
 
 # superseded Vite implementation, kept locally only
 frontend-vite-backup/
+
+# runtime data (customer-submitted reviews), not source
+backend/src/data/
