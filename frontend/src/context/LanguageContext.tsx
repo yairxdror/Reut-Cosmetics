@@ -7,7 +7,6 @@ export type Language = "he" | "en";
 type Dictionary = Record<string, { he: string; en: string }>;
 
 const dictionary: Dictionary = {
-  back: { he: "חזור", en: "Back" },
   contactUs: { he: "צור קשר", en: "Contact Us" },
   aboutTitle: { he: "צור קשר", en: "Contact" },
   aboutText: {

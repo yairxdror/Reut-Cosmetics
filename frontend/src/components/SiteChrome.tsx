@@ -3,7 +3,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
-import { BackButton, HomeButton, LanguageButton } from "./NavControls";
+import { HomeButton, LanguageButton } from "./NavControls";
 import HamburgerButton from "./HamburgerButton";
 import Sidebar from "./Sidebar";
 import logo from "@/assets/logo.png";
@@ -34,7 +34,6 @@ export default function SiteChrome({ children }: { children: ReactNode }) {
           )}
         </div>
         <div className="nav-bar-side">
-          {!isHome && <BackButton />}
           {!isHome && <HomeButton />}
           <HamburgerButton isOpen={isMenuOpen} onClick={() => setIsMenuOpen((prev) => !prev)} />
           <LanguageButton />

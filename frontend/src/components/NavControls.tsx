@@ -115,12 +115,3 @@ export function HomeButton() {
   );
 }
 
-export function BackButton() {
-  const { t } = useLanguage();
-  const router = useRouter();
-  return (
-    <button className="btn-glass-thin" onClick={() => router.back()} aria-label="Go back">
-      ↩ {t("back")}
-    </button>
-  );
-}
