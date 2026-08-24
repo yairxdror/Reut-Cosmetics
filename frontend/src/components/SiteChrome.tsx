@@ -6,9 +6,13 @@ import Image from "next/image";
 import { HomeButton, LanguageButton } from "./NavControls";
 import HamburgerButton from "./HamburgerButton";
 import Sidebar from "./Sidebar";
+import AccessibilityWidget from "./AccessibilityWidget";
 import logo from "@/assets/logo.png";
 
 const MIN_THUMB_HEIGHT = 30;
+const ARROW_SIZE = 12;
+const THUMB_RAIL_INSET = ARROW_SIZE + 2;
+const ARROW_SCROLL_AMOUNT = 120;
 
 export default function SiteChrome({ children }: { children: ReactNode }) {
   const pathname = usePathname();
@@ -18,6 +22,7 @@ export default function SiteChrome({ children }: { children: ReactNode }) {
   const [thumb, setThumb] = useState<{ top: number; height: number } | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLElement>(null);
+  const navRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     setIsMenuOpen(false);
@@ -27,6 +32,7 @@ export default function SiteChrome({ children }: { children: ReactNode }) {
   useEffect(() => {
     const scrollEl = scrollContainerRef.current;
     const mainEl = mainRef.current;
+    const navEl = navRef.current;
     if (!scrollEl || !mainEl) return;
 
     function updateThumb() {
@@ -37,22 +43,28 @@ export default function SiteChrome({ children }: { children: ReactNode }) {
         setThumb(null);
         return;
       }
-      const thumbHeight = Math.max((clientHeight / scrollHeight) * clientHeight, MIN_THUMB_HEIGHT);
-      const maxThumbTop = clientHeight - thumbHeight;
+      const trackHeight = clientHeight - (navRef.current?.offsetHeight ?? 0);
+      const railHeight = trackHeight - THUMB_RAIL_INSET * 2;
+      const thumbHeight = Math.max((clientHeight / scrollHeight) * railHeight, MIN_THUMB_HEIGHT);
+      const maxThumbTop = railHeight - thumbHeight;
       const maxScrollTop = scrollHeight - clientHeight;
-      const thumbTop = maxScrollTop > 0 ? (scrollTop / maxScrollTop) * maxThumbTop : 0;
+      const thumbTop = THUMB_RAIL_INSET + (maxScrollTop > 0 ? (scrollTop / maxScrollTop) * maxThumbTop : 0);
       setThumb({ top: thumbTop, height: thumbHeight });
     }
 
     updateThumb();
     scrollEl.addEventListener("scroll", updateThumb);
     window.addEventListener("resize", updateThumb);
+    window.addEventListener("orientationchange", updateThumb);
     const resizeObserver = new ResizeObserver(updateThumb);
     resizeObserver.observe(mainEl);
+    resizeObserver.observe(scrollEl);
+    if (navEl) resizeObserver.observe(navEl);
 
     return () => {
       scrollEl.removeEventListener("scroll", updateThumb);
       window.removeEventListener("resize", updateThumb);
+      window.removeEventListener("orientationchange", updateThumb);
       resizeObserver.disconnect();
     };
   }, [pathname]);
@@ -65,9 +77,14 @@ export default function SiteChrome({ children }: { children: ReactNode }) {
     const startY = event.clientY;
     const startScrollTop = el.scrollTop;
     const { scrollHeight, clientHeight } = el;
-    const thumbHeight = Math.max((clientHeight / scrollHeight) * clientHeight, MIN_THUMB_HEIGHT);
-    const maxThumbTop = clientHeight - thumbHeight;
+    const trackHeight = clientHeight - (navRef.current?.offsetHeight ?? 0);
+    const railHeight = trackHeight - THUMB_RAIL_INSET * 2;
+    const thumbHeight = Math.max((clientHeight / scrollHeight) * railHeight, MIN_THUMB_HEIGHT);
+    const maxThumbTop = railHeight - thumbHeight;
     const maxScrollTop = scrollHeight - clientHeight;
+
+    const previousCursor = document.body.style.cursor;
+    document.body.style.cursor = "pointer";
 
     function handleMove(moveEvent: MouseEvent) {
       const deltaY = moveEvent.clientY - startY;
@@ -75,6 +92,7 @@ export default function SiteChrome({ children }: { children: ReactNode }) {
       el!.scrollTop = startScrollTop + deltaScroll;
     }
     function handleUp() {
+      document.body.style.cursor = previousCursor;
       document.removeEventListener("mousemove", handleMove);
       document.removeEventListener("mouseup", handleUp);
     }
@@ -82,9 +100,13 @@ export default function SiteChrome({ children }: { children: ReactNode }) {
     document.addEventListener("mouseup", handleUp);
   }
 
+  function handleArrowClick(direction: 1 | -1) {
+    scrollContainerRef.current?.scrollBy({ top: direction * ARROW_SCROLL_AMOUNT, behavior: "smooth" });
+  }
+
   return (
     <div>
-      <header className="nav-bar">
+      <header className="nav-bar" ref={navRef}>
         <div className="nav-bar-lang">
           <button
             type="button"
@@ -92,7 +114,10 @@ export default function SiteChrome({ children }: { children: ReactNode }) {
             onClick={() => (isHome ? window.location.reload() : router.push("/"))}
             aria-label="Go to home page"
           >
-            <span className="nav-bar-brand">Reut Cosmetics</span>
+            <span className="nav-bar-brand">
+              <span className="nav-bar-brand-main">Reut</span>
+              <span className="nav-bar-brand-sub">Cosmetics</span>
+            </span>
             <Image src={logo} alt="Reut Yakobi" className="nav-bar-logo" priority />
           </button>
         </div>
@@ -110,13 +135,26 @@ export default function SiteChrome({ children }: { children: ReactNode }) {
       </div>
       {thumb && (
         <div className="custom-scrollbar-track">
+          <button
+            type="button"
+            className="custom-scrollbar-arrow custom-scrollbar-arrow-up"
+            onClick={() => handleArrowClick(-1)}
+            aria-label="Scroll up"
+          />
           <div
             className="custom-scrollbar-thumb"
             style={{ top: thumb.top, height: thumb.height }}
             onMouseDown={handleThumbMouseDown}
           />
+          <button
+            type="button"
+            className="custom-scrollbar-arrow custom-scrollbar-arrow-down"
+            onClick={() => handleArrowClick(1)}
+            aria-label="Scroll down"
+          />
         </div>
       )}
+      <AccessibilityWidget />
     </div>
   );
 }

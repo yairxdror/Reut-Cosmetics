@@ -5,7 +5,7 @@
   "type": "module",
   "main": "src/index.js",
   "scripts": {
-    "dev": "node --watch src/index.js",
+    "dev": "nodemon --legacy-watch --ignore src/data/ src/index.js",
     "start": "node src/index.js"
   },
   "dependencies": {
@@ -15,5 +15,8 @@
     "express": "^4.19.2",
     "express-rate-limit": "^8.6.2",
     "jsonwebtoken": "^9.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
   }
 }

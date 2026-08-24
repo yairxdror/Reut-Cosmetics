@@ -7,7 +7,7 @@ export default function Contact() {
   return (
     <section>
       <h1 className="text-gold">{t("aboutTitle")}</h1>
-      <p>{t("aboutText")}</p>
+      <p>{t("comingSoon")}</p>
     </section>
   );
 }

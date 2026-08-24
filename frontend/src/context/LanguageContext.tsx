@@ -1,18 +1,16 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { LANGUAGE_COOKIE_NAME, type Language } from "@/lib/language";
 
-export type Language = "he" | "en";
+export type { Language };
+const LANGUAGE_COOKIE_MAX_AGE = 60 * 60 * 24 * 365; // 1 year
 
 type Dictionary = Record<string, { he: string; en: string }>;
 
 const dictionary: Dictionary = {
   contactUs: { he: "צור קשר", en: "Contact Us" },
   aboutTitle: { he: "צור קשר", en: "Contact" },
-  aboutText: {
-    he: "זהו עמוד לדוגמה שמדגים את כפתור החזרה.",
-    en: "This is a placeholder page demonstrating the back button.",
-  },
 
   heroTitleMain: { he: "יופי, דיוק ונוכחות", en: "Beauty, Precision, and Presence," },
   heroTitleLine2Prefix: { he: "בדיוק", en: "Made" },
@@ -24,7 +22,7 @@ const dictionary: Dictionary = {
   whatsappCta: { he: "דברו איתנו בוואטסאפ", en: "Chat with us on WhatsApp" },
   featureDiagnostics: { he: "בדיקות מדויקות\nלהתאמה מושלמת", en: "Precise diagnostics\nfor a perfect fit" },
   featurePersonalService: { he: "שירות אישי\nוליווי צמוד", en: "Personal service\nand close guidance" },
-  featureEquipped: { he: "המרכז מאובזר\nבסטנדרטים גבוהים", en: "Facility equipped\nto high standards" },
+  featureEquipped: { he: "מכון מאובזר\nבסטנדרטים גבוהים", en: "Facility equipped\nto high standards" },
   featureMaterials: { he: "חומרים איכותיים\nלמראה מושלם", en: "Quality materials\nfor a flawless look" },
   heroBadgeLine1: { he: "סטנדרט של", en: "A standard of" },
   heroBadgeLine2: { he: "יוקרה", en: "luxury" },
@@ -54,8 +52,60 @@ const dictionary: Dictionary = {
   privateCourses: { he: "הדרכת קורסים פרטניים", en: "Private Course Guidance" },
   login: { he: "התחברות", en: "Login" },
   privacyPolicy: { he: "מדיניות פרטיות", en: "Privacy Policy" },
+  accessibility: { he: "הצהרת נגישות", en: "Accessibility Statement" },
   termsOfUse: { he: "תנאי שימוש", en: "Terms of Use" },
   comingSoon: { he: "תוכן העמוד יתווסף בקרוב.", en: "Page content coming soon." },
+
+  faq1Question: { he: "כואב לעשות איפור קבוע?", en: "Does permanent makeup hurt?" },
+  faq1Answer: {
+    he: "לפני הטיפול מורחים קרם הרדמה מקומי, כך שברוב המקרים מרגישים אי-נוחות קלה בלבד ולא כאב ממשי.",
+    en: "A topical numbing cream is applied before the treatment, so most clients feel only mild discomfort rather than real pain.",
+  },
+  faq2Question: { he: "כמה זמן מחזיק איפור קבוע?", en: "How long does permanent makeup last?" },
+  faq2Answer: {
+    he: "התוצאה נשארת בממוצע 1-3 שנים, בהתאם לסוג העור, החשיפה לשמש והטיפוח היומיומי. מומלץ טאצ'-אפ מדי שנה-שנתיים.",
+    en: "Results typically last 1–3 years, depending on skin type, sun exposure and daily care. A touch-up every 1–2 years is recommended.",
+  },
+  faq3Question: { he: "כמה זמן לוקח תהליך ההחלמה?", en: "How long is the healing process?" },
+  faq3Answer: {
+    he: "ההחלמה הראשונית אורכת כשבוע עד עשרה ימים. פירוט מלא אפשר למצוא בעמוד הוראות הטיפוח שלנו.",
+    en: "Initial healing takes about a week to ten days. Full details are available on our care instructions page.",
+  },
+  faq4Question: { he: "אפשר לעשות טיפול בהריון או בהנקה?", en: "Can I get treated while pregnant or breastfeeding?" },
+  faq4Answer: {
+    he: "לא, מטעמי בטיחות איננו מבצעות איפור קבוע במהלך הריון או הנקה.",
+    en: "No, for safety reasons we do not perform permanent makeup during pregnancy or breastfeeding.",
+  },
+  faq5Question: { he: "האם צריך למלא הצהרת בריאות?", en: "Do I need to fill out a health declaration?" },
+  faq5Answer: {
+    he: "כן, כל לקוחה ממלאת הצהרת בריאות לפני הטיפול הראשון. אפשר למלא אותה מראש בעמוד הצהרת הבריאות שלנו.",
+    en: "Yes, every client fills out a health declaration before the first treatment. You can fill it out in advance on our health declaration page.",
+  },
+  faq6Question: { he: "כמה זמן אורך הטיפול עצמו?", en: "How long does the treatment itself take?" },
+  faq6Answer: {
+    he: "תלוי בסוג הטיפול - בממוצע בין שעה לשעתיים, כולל ייעוץ ובחירת צורה וצבע.",
+    en: "It depends on the treatment type — on average one to two hours, including consultation and shape/color selection.",
+  },
+  faq7Question: { he: "אפשר להתאפר רגיל אחרי הטיפול?", en: "Can I wear regular makeup after the treatment?" },
+  faq7Answer: {
+    he: "מומלץ להימנע מאיפור באזור המטופל למשך כשבוע, עד לסיום תהליך ההחלמה הראשוני.",
+    en: "It's recommended to avoid makeup on the treated area for about a week, until initial healing is complete.",
+  },
+  faq8Question: { he: "מה קורה אם אני לא מרוצה מהתוצאה?", en: "What if I'm not happy with the result?" },
+  faq8Answer: {
+    he: "קובעים פגישת מעקב תוך כמה שבועות לבדיקת התוצאה, ואם צריך מבצעים תיקון קל ללא עלות נוספת.",
+    en: "We schedule a follow-up appointment within a few weeks to check the result, and if needed we make a light correction at no extra charge.",
+  },
+  faq9Question: { he: "אתן מציעות גם קורסים?", en: "Do you also offer courses?" },
+  faq9Answer: {
+    he: "כן, אנחנו מעבירות קורסי הכשרה מקצועיים למיקרובליידינג ועיצוב גבות. אפשר לקרוא עוד בעמוד הדרכת הקורסים הפרטניים.",
+    en: "Yes, we run professional training courses in microblading and eyebrow shaping. Learn more on our private course guidance page.",
+  },
+  faq10Question: { he: "איך קובעים תור?", en: "How do I book an appointment?" },
+  faq10Answer: {
+    he: "הכי קל לתאם תור דרך הוואטסאפ שלנו, או בטלפון.",
+    en: "The easiest way is to book via our WhatsApp, or by phone.",
+  },
 
   loginSubtitle: { he: "כניסת מנהלת אתר", en: "Site admin sign-in" },
   loginEmailLabel: { he: "אימייל", en: "Email" },
@@ -70,6 +120,34 @@ const dictionary: Dictionary = {
   loginGenericError: { he: "אירעה שגיאה. נסי שוב מאוחר יותר.", en: "Something went wrong. Please try again later." },
   loginSuccessTitle: { he: "התחברת בהצלחה", en: "Logged in successfully" },
   loginSuccessText: { he: "התחברת כמנהלת האתר.", en: "You are now signed in as the site admin." },
+
+  locationTitle: { he: "המיקום שלנו", en: "Our Location" },
+  locationAddress: { he: "משה רחמילביץ 34, ירושלים", en: "Moshe Rachmilevitz 34, Jerusalem" },
+  wazeCta: { he: "Waze", en: "Waze" },
+
+  contactSectionTitle: { he: "צרי קשר", en: "Contact Us" },
+  instagramCta: { he: "עקבו באינסטגרם", en: "Follow on Instagram" },
+  phoneCta: { he: "התקשרו אלינו", en: "Call Us" },
+  allRightsReserved: { he: "כל הזכויות שמורות.", en: "All rights reserved." },
+  footerRights: { he: "כל הזכויות שמורות ל-Reut Cosmetics ©", en: "© All rights reserved to Reut Cosmetics" },
+  developedBy: { he: "פותח על ידי Codedly", en: "Developed by Codedly" },
+
+  consultationNamePlaceholder: { he: "שם מלא", en: "Full Name" },
+  consultationPhonePlaceholder: { he: "טלפון", en: "Phone" },
+  consultationServicePlaceholder: { he: "תחום שירות", en: "Service Area" },
+  consultationSubmit: { he: "שלחי פרטים", en: "Send Details" },
+  consultationNameRequired: { he: "יש למלא שם", en: "Name is required" },
+  consultationPhoneRequired: { he: "יש למלא טלפון", en: "Phone is required" },
+  consultationWhatsappMessage: {
+    he: "שלום, אני",
+    en: "Hi, I'm",
+  },
+  consultationWhatsappPhoneLabel: { he: "טלפון", en: "Phone" },
+  consultationWhatsappServiceLabel: { he: "מתעניינת ב", en: "Interested in" },
+
+  openingHoursTitle: { he: "שעות פתיחה", en: "Opening Hours" },
+  openingHoursWeekdays: { he: "ימים א'-ה' 09:00-20:00", en: "Sun-Thu 09:00-20:00" },
+  openingHoursFriday: { he: "יום ו' 09:00-14:00", en: "Fri 09:00-14:00" },
 
   reviewsTitle: { he: "מה הלקוחות שלנו אומרות", en: "What Our Clients Say" },
   addReviewButton: { he: "הוסיפי ביקורת", en: "Add a Review" },
@@ -120,8 +198,17 @@ interface LanguageContextValue {
 
 const LanguageContext = createContext<LanguageContextValue | undefined>(undefined);
 
-export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguageState] = useState<Language>("he");
+export function LanguageProvider({
+  children,
+  initialLanguage = "he",
+}: {
+  children: ReactNode;
+  initialLanguage?: Language;
+}) {
+  // The server reads the customer's saved choice from a cookie and renders
+  // <html> with it directly (see layout.tsx), so this starts correct on the
+  // very first paint — no post-hydration language switch/flash.
+  const [language, setLanguageState] = useState<Language>(initialLanguage);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -137,13 +224,18 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     return () => cancelAnimationFrame(raf);
   }, [language]);
 
+  const setLanguage = useCallback((next: Language) => {
+    setLanguageState(next);
+    document.cookie = `${LANGUAGE_COOKIE_NAME}=${next}; path=/; max-age=${LANGUAGE_COOKIE_MAX_AGE}; SameSite=Lax`;
+  }, []);
+
   const value = useMemo<LanguageContextValue>(
     () => ({
       language,
-      setLanguage: setLanguageState,
+      setLanguage,
       t: (key) => dictionary[key][language],
     }),
-    [language]
+    [language, setLanguage]
   );
 
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;

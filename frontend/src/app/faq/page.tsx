@@ -1,5 +1,5 @@
-import PlaceholderPage from "@/components/PlaceholderPage";
+import Faq from "@/components/Faq";
 
 export default function FaqPage() {
-  return <PlaceholderPage titleKey="faq" />;
+  return <Faq />;
 }

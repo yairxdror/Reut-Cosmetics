@@ -12,6 +12,7 @@ const NAV_ITEMS: { href: string; key: TranslationKey }[] = [
   { href: "/login", key: "login" },
   { href: "/privacy-policy", key: "privacyPolicy" },
   { href: "/terms", key: "termsOfUse" },
+  { href: "/accessibility", key: "accessibility" },
   { href: "/contact", key: "contactUs" },
 ];
 

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import heroProduct from "@/assets/hero-product.jpg";
 import { useLanguage } from "@/context/LanguageContext";
+import { WHATSAPP_URL } from "@/lib/contact";
 import {
   CrownIcon,
   DiamondIcon,
@@ -14,7 +15,10 @@ import {
 } from "@/components/icons";
 import Services from "@/components/Services";
 import Courses from "@/components/Courses";
+import Location from "@/components/Location";
 import Reviews from "@/components/Reviews";
+import Contact from "@/components/Contact";
+import Footer from "@/components/Footer";
 
 const FEATURES = [
   { icon: SparkleIcon, key: "featureDiagnostics" as const },
@@ -68,7 +72,7 @@ export default function Home() {
           <p className="hero-description">{t("heroSubtitle")}</p>
 
           <div className="hero-cta-row">
-            <a className="btn-hero btn-hero-gold" href="#">
+            <a className="btn-hero btn-hero-gold" href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
               <WhatsAppIcon size={18} />
               {t("whatsappCta")}
             </a>
@@ -77,7 +81,7 @@ export default function Home() {
           <div className="hero-features">
             {FEATURES.map(({ icon: FeatureIcon, key }) => (
               <div className="hero-feature" key={key}>
-                <FeatureIcon size={22} />
+                <FeatureIcon size={26} />
                 <span>{t(key)}</span>
               </div>
             ))}
@@ -87,7 +91,10 @@ export default function Home() {
 
       <Services />
       <Courses />
+      <Location />
       <Reviews />
+      <Contact />
+      <Footer />
     </>
   );
 }
