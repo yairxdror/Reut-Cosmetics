@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import { useLanguage, type TranslationKey } from "@/context/LanguageContext";
 import { WhatsAppIcon, InstagramIcon, PhoneIcon } from "@/components/icons";
 import { WHATSAPP_URL, PHONE_TEL_URL, INSTAGRAM_URL, whatsappUrl } from "@/lib/contact";
+import { isValidIsraeliPhone } from "@/lib/israeliValidation";
 
 const SERVICE_OPTIONS: TranslationKey[] = ["service1Title", "service2Title", "service3Title", "service4Title"];
 
@@ -22,6 +23,10 @@ export default function Contact() {
     }
     if (!phone.trim()) {
       setError(t("consultationPhoneRequired"));
+      return;
+    }
+    if (!isValidIsraeliPhone(phone)) {
+      setError(t("consultationPhoneInvalid"));
       return;
     }
     setError("");
@@ -58,17 +63,21 @@ export default function Contact() {
           <div className="consultation-fields">
             <input
               type="text"
+              name="name"
+              autoComplete="name"
               className="consultation-input"
               placeholder={t("consultationNamePlaceholder")}
               value={name}
-              onChange={(event) => setName(event.target.value)}
+              onChange={(event) => setName(event.target.value.replace(/\d/g, ""))}
             />
             <select
               className="consultation-input consultation-select"
               value={service}
               onChange={(event) => setService(event.target.value)}
             >
-              <option value="">{t("consultationServicePlaceholder")}</option>
+              <option value="" disabled hidden>
+                {t("consultationServicePlaceholder")}
+              </option>
               {SERVICE_OPTIONS.map((key) => (
                 <option key={key} value={t(key)}>
                   {t(key)}
@@ -77,10 +86,13 @@ export default function Contact() {
             </select>
             <input
               type="tel"
+              name="tel"
+              autoComplete="tel"
               className="consultation-input"
               placeholder={t("consultationPhonePlaceholder")}
               value={phone}
-              onChange={(event) => setPhone(event.target.value)}
+              onChange={(event) => setPhone(event.target.value.replace(/[^\d\s-]/g, ""))}
+              inputMode="tel"
             />
             <button type="submit" className="btn btn-black consultation-submit">
               {t("consultationSubmit")}

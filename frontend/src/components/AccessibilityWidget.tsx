@@ -2,7 +2,15 @@
 
 import { useEffect, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent } from "react";
 import Link from "next/link";
-import { AccessibilityIcon } from "@/components/icons";
+import {
+  AccessibilityIcon,
+  TextSizeIcon,
+  ContrastIcon,
+  PauseIcon,
+  UnderlineIcon,
+  BookOpenIcon,
+  DropletIcon,
+} from "@/components/icons";
 import { useLanguage } from "@/context/LanguageContext";
 
 type FontScale = "normal" | "large" | "xlarge";
@@ -12,6 +20,8 @@ interface A11yPrefs {
   highContrast: boolean;
   reduceMotion: boolean;
   underlineLinks: boolean;
+  readableFont: boolean;
+  grayscale: boolean;
 }
 
 interface Position {
@@ -41,6 +51,8 @@ const DEFAULT_PREFS: A11yPrefs = {
   highContrast: false,
   reduceMotion: false,
   underlineLinks: false,
+  readableFont: false,
+  grayscale: false,
 };
 const DEFAULT_RAIL: RailPosition = { rail: "bottom", fraction: 1 };
 
@@ -49,11 +61,11 @@ const EDGE_MARGIN = 12;
 const DRAG_THRESHOLD = 4;
 const PANEL_WIDTH = 280;
 const PANEL_GAP = 12;
-// Rough height of the panel's contents (title + 4 options + reset row +
+// Rough height of the panel's contents (title + 6 options + reset row +
 // link). Used only to decide whether it fits above the button — if not, it
 // opens below instead. Doesn't need to be exact: the panel also has its own
 // max-height/overflow safety net for when this estimate runs short.
-const PANEL_HEIGHT_ESTIMATE = 320;
+const PANEL_HEIGHT_ESTIMATE = 410;
 // The custom scrollbar sits at the page's inline-end edge (left in RTL,
 // right in LTR). Keep that side's rail clear of it with a wider margin.
 const SCROLLBAR_CLEARANCE = 28;
@@ -72,6 +84,8 @@ function applyPrefs(prefs: A11yPrefs) {
   root.classList.toggle("a11y-contrast", prefs.highContrast);
   root.classList.toggle("a11y-reduce-motion", prefs.reduceMotion);
   root.classList.toggle("a11y-underline-links", prefs.underlineLinks);
+  root.classList.toggle("a11y-readable-font", prefs.readableFont);
+  root.classList.toggle("a11y-grayscale", prefs.grayscale);
 }
 
 function railToPixel(rail: RailPosition, bounds: Bounds): Position {
@@ -211,7 +225,7 @@ export default function AccessibilityWidget() {
     update({ ...prefs, fontScale: next });
   }
 
-  function toggle(key: "highContrast" | "reduceMotion" | "underlineLinks") {
+  function toggle(key: "highContrast" | "reduceMotion" | "underlineLinks" | "readableFont" | "grayscale") {
     update({ ...prefs, [key]: !prefs[key] });
   }
 
@@ -222,6 +236,15 @@ export default function AccessibilityWidget() {
   function resetPosition() {
     setRail(DEFAULT_RAIL);
   }
+
+  const isDefaultPrefs =
+    prefs.fontScale === DEFAULT_PREFS.fontScale &&
+    prefs.highContrast === DEFAULT_PREFS.highContrast &&
+    prefs.reduceMotion === DEFAULT_PREFS.reduceMotion &&
+    prefs.underlineLinks === DEFAULT_PREFS.underlineLinks &&
+    prefs.readableFont === DEFAULT_PREFS.readableFont &&
+    prefs.grayscale === DEFAULT_PREFS.grayscale;
+  const isDefaultPosition = rail === null || (rail.rail === DEFAULT_RAIL.rail && rail.fraction === DEFAULT_RAIL.fraction);
 
   function handlePointerDown(event: ReactPointerEvent<HTMLButtonElement>) {
     const el = buttonRef.current;
@@ -312,44 +335,69 @@ export default function AccessibilityWidget() {
         <div className="a11y-panel" ref={panelRef} style={getPanelStyle()} role="dialog" aria-label="אפשרויות נגישות">
           <h2 className="a11y-panel-title">נגישות</h2>
 
-          <button type="button" className="a11y-option" onClick={cycleFontScale} aria-pressed={prefs.fontScale !== "normal"}>
-            <span>גודל טקסט</span>
-            <span>{prefs.fontScale === "normal" ? "רגיל" : prefs.fontScale === "large" ? "גדול" : "גדול מאוד"}</span>
-          </button>
+          <div className="a11y-options-grid">
+            <button type="button" className="a11y-option" onClick={cycleFontScale} aria-pressed={prefs.fontScale !== "normal"}>
+              <TextSizeIcon size={22} />
+              <span>גודל טקסט</span>
+            </button>
 
-          <button
-            type="button"
-            className="a11y-option"
-            onClick={() => toggle("highContrast")}
-            aria-pressed={prefs.highContrast}
-          >
-            ניגודיות גבוהה
-          </button>
+            <button
+              type="button"
+              className="a11y-option"
+              onClick={() => toggle("highContrast")}
+              aria-pressed={prefs.highContrast}
+            >
+              <ContrastIcon size={22} />
+              <span>ניגודיות גבוהה</span>
+            </button>
 
-          <button
-            type="button"
-            className="a11y-option"
-            onClick={() => toggle("reduceMotion")}
-            aria-pressed={prefs.reduceMotion}
-          >
-            עצירת אנימציות
-          </button>
+            <button
+              type="button"
+              className="a11y-option"
+              onClick={() => toggle("reduceMotion")}
+              aria-pressed={prefs.reduceMotion}
+            >
+              <PauseIcon size={22} />
+              <span>עצירת אנימציות</span>
+            </button>
 
-          <button
-            type="button"
-            className="a11y-option"
-            onClick={() => toggle("underlineLinks")}
-            aria-pressed={prefs.underlineLinks}
-          >
-            הדגשת קישורים
-          </button>
+            <button
+              type="button"
+              className="a11y-option"
+              onClick={() => toggle("underlineLinks")}
+              aria-pressed={prefs.underlineLinks}
+            >
+              <UnderlineIcon size={22} />
+              <span>הדגשת קישורים</span>
+            </button>
+
+            <button
+              type="button"
+              className="a11y-option"
+              onClick={() => toggle("readableFont")}
+              aria-pressed={prefs.readableFont}
+            >
+              <BookOpenIcon size={22} />
+              <span>גופן קריא</span>
+            </button>
+
+            <button
+              type="button"
+              className="a11y-option"
+              onClick={() => toggle("grayscale")}
+              aria-pressed={prefs.grayscale}
+            >
+              <DropletIcon size={22} />
+              <span>גווני אפור</span>
+            </button>
+          </div>
 
           <div className="a11y-reset-row">
-            <button type="button" className="a11y-reset" onClick={reset}>
+            <button type="button" className="a11y-reset" onClick={reset} disabled={isDefaultPrefs}>
               איפוס הגדרות
             </button>
 
-            <button type="button" className="a11y-reset" onClick={resetPosition}>
+            <button type="button" className="a11y-reset" onClick={resetPosition} disabled={isDefaultPosition}>
               איפוס מיקום
             </button>
           </div>

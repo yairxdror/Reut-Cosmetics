@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { submitHealthDeclaration } from "@/lib/api";
+import { isValidIsraeliId, isValidIsraeliPhone } from "@/lib/israeliValidation";
 
 type YesNo = "yes" | "no";
 
@@ -10,7 +11,7 @@ interface Question {
   text: string;
 }
 
-const QUESTIONS: Question[] = [
+export const QUESTIONS: Question[] = [
   { id: "allergies", text: "האם הינך רגישה לתכשירים קוסמטיים (אלרגיות למשחות/תרופות/חומרים כלשהם)?" },
   { id: "skinConditionAtSite", text: "האם הינך סובלת ממחלת עור/גירוי פצע באזור המיועד לטיפול?" },
   { id: "slowHealing", text: "האם הינך סובלת מריפוי איטי של פצעים/הצטלקותם?" },
@@ -78,7 +79,9 @@ export default function HealthDeclarationForm() {
     const next: Record<string, string> = {};
     if (!form.fullName.trim()) next.fullName = "יש למלא שם מלא";
     if (!form.idNumber.trim()) next.idNumber = "יש למלא מספר תעודת זהות";
+    else if (!isValidIsraeliId(form.idNumber)) next.idNumber = "מספר תעודת הזהות אינו תקין";
     if (!form.phone.trim()) next.phone = "יש למלא מספר טלפון";
+    else if (!isValidIsraeliPhone(form.phone)) next.phone = "מספר הטלפון אינו תקין";
     for (const q of QUESTIONS) {
       if (!form.answers[q.id]) next[q.id] = "יש לבחור תשובה";
     }

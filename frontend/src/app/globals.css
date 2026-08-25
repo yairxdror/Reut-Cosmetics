@@ -66,6 +66,7 @@ a {
   -webkit-backdrop-filter: var(--glass-blur);
   backdrop-filter: var(--glass-blur);
   border: 1.5px solid transparent;
+  text-decoration: none;
   transition: background-color 0.25s ease, border-color 0.25s ease,
     color 0.25s ease, transform 0.15s ease, box-shadow 0.25s ease;
 }
@@ -255,6 +256,15 @@ a {
   border-radius: var(--radius-full);
 }
 
+@media (max-width: 760px) {
+  /* Rounded phone corners visually clip a scrollbar track that runs all the
+     way to bottom:0 — pull it up clear of the corner (and the home
+     indicator, via the safe-area inset) on mobile only. */
+  .custom-scrollbar-track {
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 0.5rem);
+  }
+}
+
 .custom-scrollbar-thumb {
   position: absolute;
   inset-inline: 0;
@@ -378,6 +388,49 @@ a {
   display: flex;
   align-items: center;
   gap: 0.6rem;
+}
+
+.nav-bar-admin-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 0.9rem;
+  border-radius: var(--radius-full);
+  border: none;
+  background: var(--color-gold);
+  color: var(--color-cream);
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: inherit;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.nav-bar-admin-badge:hover {
+  opacity: 0.85;
+}
+
+@media (max-width: 560px) {
+  /* The top bar is too narrow on mobile for the full "מנהל" label next to
+     the language/hamburger/home buttons — keep just the logout icon there. */
+  .nav-bar-admin-badge {
+    display: none;
+  }
+
+  .nav-bar-lang {
+    left: 0.75rem;
+  }
+}
+
+@media (min-width: 375px) and (max-width: 560px) {
+  /* The home page has one fewer button (no Home button), so there's just
+     enough room to keep the label there — but only from ~375px up; below
+     that it still collides with the logo even without the Home button. */
+  .nav-bar-home .nav-bar-admin-badge {
+    display: inline-flex;
+    padding: 0.3rem 0.65rem;
+    font-size: 0.72rem;
+  }
 }
 
 /* ---------- Home hero ---------- */
@@ -704,20 +757,34 @@ html[dir="ltr"] .a11y-panel {
   text-align: center;
 }
 
+.a11y-options-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
 .a11y-option {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  padding: 0.6rem 0.85rem;
+  justify-content: center;
+  gap: 0.4rem;
+  aspect-ratio: 1 / 1;
+  padding: 0.5rem;
   border-radius: 0.6rem;
   border: 1px solid rgba(169, 127, 30, 0.3);
   background: rgba(255, 255, 255, 0.5);
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 0.72rem;
+  line-height: 1.15;
   font-family: inherit;
   color: var(--color-black);
-  text-align: start;
+  text-align: center;
+  transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.a11y-option:hover {
+  border-color: var(--color-gold);
 }
 
 .a11y-option[aria-pressed="true"] {
@@ -746,6 +813,21 @@ html[dir="ltr"] .a11y-panel {
   border: none;
   cursor: pointer;
   font-family: inherit;
+  transition: color 0.2s ease;
+}
+
+.a11y-reset:hover {
+  color: var(--color-gold);
+}
+
+.a11y-reset:disabled {
+  color: var(--color-black);
+  opacity: 0.35;
+  cursor: default;
+}
+
+.a11y-reset:disabled:hover {
+  color: var(--color-black);
 }
 
 .a11y-statement-link {
@@ -798,6 +880,15 @@ html.a11y-reduce-motion *::after {
 
 html.a11y-underline-links a {
   text-decoration: underline !important;
+}
+
+html.a11y-readable-font .nav-bar-brand-main,
+html.a11y-readable-font .footer-brand-main {
+  font-family: "Segoe UI", "Heebo", "Arial", sans-serif;
+}
+
+html.a11y-grayscale {
+  filter: grayscale(1);
 }
 
 /* ---------- Sidebar drawer ---------- */
@@ -914,6 +1005,15 @@ html[dir="ltr"] .sidebar-panel-open {
   flex-direction: column;
   gap: 0.4rem;
   margin-bottom: 1.25rem;
+}
+
+.form-honeypot {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .form-field:last-child {
@@ -1704,6 +1804,11 @@ html[dir="rtl"] .reviews-grid-scroll {
   box-shadow: 0 0 0 3px var(--color-blue-soft);
 }
 
+html[dir="rtl"] input.consultation-input[type="tel"] {
+  direction: rtl;
+  text-align: right;
+}
+
 .consultation-select {
   cursor: pointer;
 }
@@ -1759,25 +1864,57 @@ html[dir="rtl"] .reviews-grid-scroll {
   opacity: 0.75;
 }
 
-.footer-contact-link {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 0.4rem;
-  color: var(--color-black);
+.footer-location-link {
+  color: inherit;
   text-decoration: none;
-  font-weight: 600;
-  font-size: 0.9rem;
-  direction: ltr;
+  transition: opacity 0.2s ease;
 }
 
-.footer-contact-link:hover {
+.footer-location-link:hover {
+  opacity: 0.75;
+}
+
+.footer-links-col {
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.footer-nav-link {
+  color: var(--color-black);
+  opacity: 0.75;
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+.footer-nav-link:hover {
+  opacity: 1;
   color: var(--color-gold);
 }
 
 .footer-socials {
   flex-direction: row;
-  gap: 0.6rem;
+  align-items: stretch;
+  gap: 0;
+  padding-inline: 0.6rem;
+}
+
+.footer-social-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  width: 6rem;
+  flex: 0 0 auto;
+  padding: 0;
+  border-inline-end: 1px solid rgba(169, 127, 30, 0.25);
+  text-decoration: none;
+  color: var(--color-black);
+}
+
+.footer-social-item:last-child {
+  border-inline-end: none;
 }
 
 .footer-social-btn {
@@ -1792,8 +1929,21 @@ html[dir="rtl"] .reviews-grid-scroll {
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.footer-social-btn:hover {
+.footer-social-item:hover .footer-social-btn {
   background: var(--glass-bg-hover);
+}
+
+.footer-social-caption {
+  font-size: 0.75rem;
+  opacity: 0.75;
+  direction: ltr;
+  white-space: nowrap;
+  transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+.footer-social-item:hover .footer-social-caption {
+  opacity: 1;
+  color: var(--color-gold);
 }
 
 .footer-col-brand {
@@ -1842,16 +1992,15 @@ html[dir="rtl"] .reviews-grid-scroll {
   font-size: 0.7rem;
 }
 
-.footer-accessibility-link {
-  color: inherit;
-  text-decoration: underline;
-}
-
-.footer-accessibility-link:hover {
-  color: var(--color-gold);
-}
-
 @media (max-width: 760px) {
+  .site-footer {
+    padding-top: 0.75rem;
+  }
+
+  .footer-columns {
+    padding-top: 0.0625rem;
+  }
+
   .footer-col {
     border-inline-end: none;
     border-bottom: 1px solid rgba(169, 127, 30, 0.2);
@@ -1859,8 +2008,37 @@ html[dir="rtl"] .reviews-grid-scroll {
     padding: 1rem;
   }
 
+  .footer-columns > .footer-col:first-child {
+    padding-top: 0.125rem;
+  }
+
   .footer-col:last-child {
     border-bottom: none;
+  }
+
+  .footer-col-brand {
+    justify-content: center;
+    margin-top: 0.75rem;
+  }
+
+  .footer-socials {
+    padding-inline: 0.6rem;
+  }
+
+  .footer-social-item {
+    width: auto;
+    flex: 1 1 0;
+    min-width: 0;
+    gap: 0.25rem;
+  }
+
+  .footer-social-btn {
+    width: 1.85rem;
+    height: 1.85rem;
+  }
+
+  .footer-social-caption {
+    font-size: 0.62rem;
   }
 }
 
@@ -2058,4 +2236,181 @@ html[dir="rtl"] .reviews-grid-scroll {
 .password-toggle:hover {
   opacity: 1;
   color: var(--color-gold);
+}
+
+/* ---------- Spinner ---------- */
+
+.spinner {
+  display: inline-block;
+  border: 3px solid rgba(169, 127, 30, 0.25);
+  border-top-color: var(--color-gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- Admin dashboard ---------- */
+
+.admin-status {
+  text-align: center;
+  opacity: 0.75;
+  margin-top: 2rem;
+}
+
+.admin-section-title {
+  max-width: 720px;
+  margin: 2rem auto 1rem;
+  text-align: center;
+}
+
+.admin-search-row {
+  max-width: 720px;
+  margin: 0 auto 1.25rem;
+  display: flex;
+  justify-content: center;
+}
+
+.admin-search-wrap {
+  position: relative;
+  display: flex;
+  width: 100%;
+  max-width: 320px;
+}
+
+.admin-search-input {
+  width: 100%;
+  border-radius: var(--radius-full);
+  padding-inline-end: 2.75rem;
+}
+
+.admin-search-clear {
+  position: absolute;
+  top: 50%;
+  inset-inline-end: 0.75rem;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 0.25rem;
+  margin: 0;
+  cursor: pointer;
+  color: var(--color-black);
+  opacity: 0.55;
+  transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+.admin-search-clear:hover {
+  opacity: 1;
+  color: var(--color-gold);
+}
+
+.admin-submission-list {
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.admin-load-more-row {
+  max-width: 720px;
+  margin: 1.5rem auto 0;
+  display: flex;
+  justify-content: center;
+}
+
+.admin-submission {
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid rgba(169, 127, 30, 0.35);
+  border-radius: 1rem;
+  padding: 0 1.25rem;
+}
+
+.admin-submission-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  padding: 1.1rem 0;
+  cursor: pointer;
+  font-weight: 600;
+  list-style: none;
+}
+
+.admin-submission-summary::-webkit-details-marker {
+  display: none;
+}
+
+.admin-submission-date {
+  font-weight: 400;
+  font-size: 0.95rem;
+  opacity: 0.7;
+}
+
+.admin-submission-body {
+  padding: 0 0 1.25rem;
+}
+
+.admin-submission-field {
+  margin: 0 0 0.5rem;
+}
+
+.admin-answer-list {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.admin-answer-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.75rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid rgba(169, 127, 30, 0.15);
+}
+
+.admin-answer-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.admin-answer-question {
+  flex: 1 1 260px;
+}
+
+.admin-answer-value {
+  border-radius: var(--radius-full);
+  padding: 0.2rem 0.85rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.admin-answer-yes {
+  color: var(--color-red);
+  background: var(--color-red-soft);
+}
+
+.admin-answer-no {
+  color: var(--color-blue);
+  background: var(--color-blue-soft);
+}
+
+.admin-answer-detail {
+  flex-basis: 100%;
+  font-size: 0.85rem;
+  opacity: 0.75;
 }

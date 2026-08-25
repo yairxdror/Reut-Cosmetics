@@ -11,7 +11,7 @@ export default function Location() {
   const { t } = useLanguage();
 
   return (
-    <section className="location-section">
+    <section className="location-section" id="location">
       <h2 className="location-title text-gold">{t("locationTitle")}</h2>
       <div className="location-content">
         <div className="location-map-wrap">

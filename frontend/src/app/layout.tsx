@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { cookies } from "next/headers";
 import "./globals.css";
@@ -20,6 +20,15 @@ export const metadata: Metadata = {
     title: "Reut Cosmetics",
     statusBarStyle: "black-translucent",
   },
+};
+
+// viewportFit: "cover" is what makes env(safe-area-inset-*) resolve to real
+// values on notched/rounded-corner phones instead of always being 0 — needed
+// so the custom scrollbar's bottom edge can stay clear of the rounded corner.
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 // The GitHub Pages build is a static export (no server), which can't call

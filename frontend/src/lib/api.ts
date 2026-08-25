@@ -21,6 +21,41 @@ export async function submitHealthDeclaration(payload: HealthDeclarationPayload)
   return res.json();
 }
 
+export interface HealthDeclarationSubmission extends HealthDeclarationPayload {
+  id: number;
+  submittedAt: string;
+}
+
+export class UnauthorizedError extends Error {}
+
+export interface HealthDeclarationsPage {
+  items: HealthDeclarationSubmission[];
+  total: number;
+  hasMore: boolean;
+}
+
+export async function fetchHealthDeclarations(
+  token: string,
+  options: { search?: string; offset?: number; limit?: number } = {}
+): Promise<HealthDeclarationsPage> {
+  const params = new URLSearchParams();
+  if (options.search) params.set("search", options.search);
+  if (options.offset) params.set("offset", String(options.offset));
+  if (options.limit) params.set("limit", String(options.limit));
+  const query = params.toString();
+
+  const res = await fetch(`${API_BASE_URL}/api/health-declarations${query ? `?${query}` : ""}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (res.status === 401 || res.status === 403) {
+    throw new UnauthorizedError("Not authorized");
+  }
+  if (!res.ok) {
+    throw new Error(`Failed to load health declarations: ${res.status}`);
+  }
+  return res.json();
+}
+
 export interface Review {
   id: number;
   name: string;
@@ -45,7 +80,9 @@ export async function fetchReviews(): Promise<Review[]> {
 export class RateLimitError extends Error {}
 export class EditNotAllowedError extends Error {}
 
-export async function submitReview(payload: { name: string; rating: number; text: string }): Promise<CreatedReview> {
+export async function submitReview(
+  payload: { name: string; rating: number; text: string; website?: string }
+): Promise<CreatedReview> {
   const res = await fetch(`${API_BASE_URL}/api/reviews`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

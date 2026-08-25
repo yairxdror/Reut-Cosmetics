@@ -8,6 +8,9 @@ import HamburgerButton from "./HamburgerButton";
 import Sidebar from "./Sidebar";
 import AccessibilityWidget from "./AccessibilityWidget";
 import logo from "@/assets/logo.png";
+import { isAdminLoggedIn, clearAdminToken, ADMIN_AUTH_EVENT } from "@/lib/adminAuth";
+import { useLanguage } from "@/context/LanguageContext";
+import { LogoutIcon } from "@/components/icons";
 
 const MIN_THUMB_HEIGHT = 30;
 const ARROW_SIZE = 12;
@@ -17,9 +20,11 @@ const ARROW_SCROLL_AMOUNT = 120;
 export default function SiteChrome({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
+  const { t } = useLanguage();
   const isHome = pathname === "/";
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [thumb, setThumb] = useState<{ top: number; height: number } | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLElement>(null);
   const navRef = useRef<HTMLElement>(null);
@@ -28,6 +33,19 @@ export default function SiteChrome({ children }: { children: ReactNode }) {
     setIsMenuOpen(false);
     scrollContainerRef.current?.scrollTo(0, 0);
   }, [pathname]);
+
+  useEffect(() => {
+    function checkAdmin() {
+      setIsAdmin(isAdminLoggedIn());
+    }
+    checkAdmin();
+    window.addEventListener(ADMIN_AUTH_EVENT, checkAdmin);
+    window.addEventListener("storage", checkAdmin);
+    return () => {
+      window.removeEventListener(ADMIN_AUTH_EVENT, checkAdmin);
+      window.removeEventListener("storage", checkAdmin);
+    };
+  }, []);
 
   useEffect(() => {
     const scrollEl = scrollContainerRef.current;
@@ -104,9 +122,13 @@ export default function SiteChrome({ children }: { children: ReactNode }) {
     scrollContainerRef.current?.scrollBy({ top: direction * ARROW_SCROLL_AMOUNT, behavior: "smooth" });
   }
 
+  function handleLogout() {
+    clearAdminToken();
+  }
+
   return (
     <div>
-      <header className="nav-bar" ref={navRef}>
+      <header className={`nav-bar ${isHome ? "nav-bar-home" : ""}`} ref={navRef}>
         <div className="nav-bar-lang">
           <button
             type="button"
@@ -125,6 +147,22 @@ export default function SiteChrome({ children }: { children: ReactNode }) {
           <HamburgerButton isOpen={isMenuOpen} onClick={() => setIsMenuOpen((prev) => !prev)} />
           <LanguageButton />
           {!isHome && <HomeButton />}
+          {isAdmin && (
+            <button
+              type="button"
+              className="btn-glass-thin btn-icon-only"
+              onClick={handleLogout}
+              aria-label={t("logout")}
+              title={t("logout")}
+            >
+              <LogoutIcon size={18} />
+            </button>
+          )}
+          {isAdmin && (
+            <button type="button" className="nav-bar-admin-badge" onClick={() => router.push("/admin")}>
+              {t("adminBadge")}
+            </button>
+          )}
         </div>
       </header>
       <Sidebar isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />

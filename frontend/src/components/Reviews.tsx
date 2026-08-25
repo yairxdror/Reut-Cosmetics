@@ -55,6 +55,7 @@ export default function Reviews() {
   const [name, setName] = useState("");
   const [rating, setRating] = useState(0);
   const [text, setText] = useState("");
+  const [website, setWebsite] = useState("");
   const [errors, setErrors] = useState<{ name?: string; rating?: string; text?: string; form?: string }>({});
   const [status, setStatus] = useState<"idle" | "submitting">("idle");
   const [editingReview, setEditingReview] = useState<Review | null>(null);
@@ -136,6 +137,7 @@ export default function Reviews() {
     setName("");
     setRating(0);
     setText("");
+    setWebsite("");
     setErrors({});
     setStatus("idle");
   }
@@ -188,7 +190,7 @@ export default function Reviews() {
         });
         setReviews((prev) => prev.map((r) => (r.id === updated.id ? updated : r)));
       } else {
-        const created = await submitReview({ name: trimmedName, rating, text: trimmedText });
+        const created = await submitReview({ name: trimmedName, rating, text: trimmedText, website });
         saveEditToken(created.id, created.editToken);
         const { editToken: _editToken, ...publicReview } = created;
         setReviews((prev) => [publicReview, ...prev]);
@@ -278,6 +280,17 @@ export default function Reviews() {
             </p>
 
             <form onSubmit={handleSubmit} noValidate>
+              <input
+                type="text"
+                name="website"
+                className="form-honeypot"
+                value={website}
+                onChange={(e) => setWebsite(e.target.value)}
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+              />
+
               <div className="form-field">
                 <label className="form-label" htmlFor="review-name">
                   {t("reviewNameLabel")} <span className="form-required">*</span>

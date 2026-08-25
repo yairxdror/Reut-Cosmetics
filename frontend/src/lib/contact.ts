@@ -9,6 +9,6 @@ export const WHATSAPP_URL = whatsappUrl();
 export const PHONE_TEL_URL = `tel:+${PHONE_INTL_DIGITS}`;
 export const PHONE_DISPLAY_NUMBER = PHONE_DISPLAY;
 export const INSTAGRAM_URL = "https://www.instagram.com/reut_cosmetics_/";
-// Not provided yet — placeholders until real profile links are available.
-export const FACEBOOK_URL = "#";
-export const TIKTOK_URL = "#";
+export const INSTAGRAM_HANDLE = "reut_cosmetics_";
+export const FACEBOOK_URL = "https://www.facebook.com/reutyakobi1";
+export const FACEBOOK_NAME = "Reut Yakobi";

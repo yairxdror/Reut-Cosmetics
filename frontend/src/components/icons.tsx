@@ -217,14 +217,6 @@ export function FacebookIcon(props: IconProps) {
   );
 }
 
-export function TikTokIcon(props: IconProps) {
-  return (
-    <Icon {...props} fill="currentColor" strokeWidth="0">
-      <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z" />
-    </Icon>
-  );
-}
-
 export function AccessibilityIcon(props: IconProps) {
   return (
     <Icon {...props} fill="currentColor" strokeWidth="0">
@@ -267,6 +259,69 @@ export function EyeOffIcon(props: IconProps) {
       <path d="M10.6 5.1A9.9 9.9 0 0 1 12 5c7 0 10.5 7 10.5 7a13.3 13.3 0 0 1-3.1 4" />
       <path d="M6.6 6.6C3.6 8.5 1.5 12 1.5 12s3.5 7 10.5 7a9.9 9.9 0 0 0 4.4-1" />
       <path d="M9.9 9.9a3 3 0 0 0 4.2 4.2" />
+    </Icon>
+  );
+}
+
+export function LogoutIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+      <path d="M16 17l5-5-5-5" />
+      <path d="M21 12H9" />
+    </Icon>
+  );
+}
+
+export function TextSizeIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M4 20L12 4L20 20" />
+      <path d="M7.4 14h9.2" />
+    </Icon>
+  );
+}
+
+export function ContrastIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <circle cx="12" cy="12" r="8" />
+      <path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor" stroke="none" />
+    </Icon>
+  );
+}
+
+export function PauseIcon(props: IconProps) {
+  return (
+    <Icon {...props} fill="currentColor" strokeWidth="0">
+      <rect x="4.5" y="4" width="4" height="16" rx="1.3" />
+      <rect x="15.5" y="4" width="4" height="16" rx="1.3" />
+    </Icon>
+  );
+}
+
+export function UnderlineIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M4 4v7a8 8 0 0 0 16 0V4" />
+      <path d="M4 20h16" />
+    </Icon>
+  );
+}
+
+export function BookOpenIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M12 5c-2-1.5-4.9-2-8-1v14c3.1-1 6-.5 8 1 2-1.5 4.9-2 8-1V4c-3.1-1-6-.5-8 1z" />
+      <path d="M12 5v15" />
+    </Icon>
+  );
+}
+
+export function DropletIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M12 4s7.5 6.2 7.5 9.5a7.5 7.5 0 0 1-15 0C4.5 10.2 12 4 12 4z" />
     </Icon>
   );
 }

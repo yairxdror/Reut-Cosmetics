@@ -9,8 +9,6 @@ const LANGUAGE_COOKIE_MAX_AGE = 60 * 60 * 24 * 365; // 1 year
 type Dictionary = Record<string, { he: string; en: string }>;
 
 const dictionary: Dictionary = {
-  contactUs: { he: "צור קשר", en: "Contact Us" },
-  aboutTitle: { he: "צור קשר", en: "Contact" },
 
   heroTitleMain: { he: "יופי, דיוק ונוכחות", en: "Beauty, Precision, and Presence," },
   heroTitleLine2Prefix: { he: "בדיוק", en: "Made" },
@@ -120,6 +118,21 @@ const dictionary: Dictionary = {
   loginGenericError: { he: "אירעה שגיאה. נסי שוב מאוחר יותר.", en: "Something went wrong. Please try again later." },
   loginSuccessTitle: { he: "התחברת בהצלחה", en: "Logged in successfully" },
   loginSuccessText: { he: "התחברת כמנהלת האתר.", en: "You are now signed in as the site admin." },
+  adminBadge: { he: "מנהל", en: "Admin" },
+  logout: { he: "התנתקות", en: "Log Out" },
+  adminDashboardTitle: { he: "אזור ניהול", en: "Admin Area" },
+  adminHealthDeclarationsTitle: { he: "הצהרות בריאות שהתקבלו", en: "Received Health Declarations" },
+  adminHealthDeclarationsEmpty: { he: "לא התקבלו הצהרות בריאות עדיין.", en: "No health declarations received yet." },
+  adminHealthDeclarationsError: { he: "שגיאה בטעינת ההצהרות. נסי לרענן את הדף.", en: "Failed to load declarations. Try refreshing the page." },
+  adminUnauthorized: { he: "אין הרשאה לצפות בעמוד זה.", en: "You are not authorized to view this page." },
+  adminAnswerYes: { he: "כן", en: "Yes" },
+  adminAnswerNo: { he: "לא", en: "No" },
+  adminDetailLabel: { he: "פירוט", en: "Details" },
+  adminSearchPlaceholder: { he: "חיפוש לפי שם הלקוחה", en: "Search by customer name" },
+  adminClearSearch: { he: "ניקוי חיפוש", en: "Clear search" },
+  adminNoSearchResults: { he: "לא נמצאו הצהרות בריאות התואמות לחיפוש.", en: "No health declarations match your search." },
+  adminLoadMore: { he: "הצג עוד", en: "Show More" },
+  adminLoadingMore: { he: "טוען עוד...", en: "Loading more..." },
 
   locationTitle: { he: "המיקום שלנו", en: "Our Location" },
   locationAddress: { he: "משה רחמילביץ 34, ירושלים", en: "Moshe Rachmilevitz 34, Jerusalem" },
@@ -138,16 +151,13 @@ const dictionary: Dictionary = {
   consultationSubmit: { he: "שלחי פרטים", en: "Send Details" },
   consultationNameRequired: { he: "יש למלא שם", en: "Name is required" },
   consultationPhoneRequired: { he: "יש למלא טלפון", en: "Phone is required" },
+  consultationPhoneInvalid: { he: "מספר הטלפון אינו תקין", en: "Invalid phone number" },
   consultationWhatsappMessage: {
     he: "שלום, אני",
     en: "Hi, I'm",
   },
   consultationWhatsappPhoneLabel: { he: "טלפון", en: "Phone" },
   consultationWhatsappServiceLabel: { he: "מתעניינת ב", en: "Interested in" },
-
-  openingHoursTitle: { he: "שעות פתיחה", en: "Opening Hours" },
-  openingHoursWeekdays: { he: "ימים א'-ה' 09:00-20:00", en: "Sun-Thu 09:00-20:00" },
-  openingHoursFriday: { he: "יום ו' 09:00-14:00", en: "Fri 09:00-14:00" },
 
   reviewsTitle: { he: "מה הלקוחות שלנו אומרות", en: "What Our Clients Say" },
   addReviewButton: { he: "הוסיפי ביקורת", en: "Add a Review" },

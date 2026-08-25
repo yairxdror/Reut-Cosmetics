@@ -13,7 +13,6 @@ const NAV_ITEMS: { href: string; key: TranslationKey }[] = [
   { href: "/privacy-policy", key: "privacyPolicy" },
   { href: "/terms", key: "termsOfUse" },
   { href: "/accessibility", key: "accessibility" },
-  { href: "/contact", key: "contactUs" },
 ];
 
 export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {

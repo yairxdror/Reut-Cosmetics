@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import { loginAdmin, InvalidCredentialsError } from "@/lib/api";
 import { useLanguage } from "@/context/LanguageContext";
+import { setAdminToken } from "@/lib/adminAuth";
 import { EyeIcon, EyeOffIcon } from "@/components/icons";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -10,6 +12,7 @@ const MIN_PASSWORD_LENGTH = 6;
 
 export default function LoginForm() {
   const { t } = useLanguage();
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -36,8 +39,9 @@ export default function LoginForm() {
     setStatus("submitting");
     try {
       const { token } = await loginAdmin(email.trim(), password);
-      localStorage.setItem("adminToken", token);
+      setAdminToken(token);
       setStatus("success");
+      router.push("/");
     } catch (err) {
       setStatus("idle");
       const message = err instanceof InvalidCredentialsError ? t("loginInvalidCredentials") : t("loginGenericError");

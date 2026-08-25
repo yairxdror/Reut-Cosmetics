@@ -59,7 +59,7 @@ function validateReviewFields({ name, rating, text }) {
 
 const createReviewLimiter = rateLimit({
   windowMs: 60 * 60 * 1000,
-  limit: 20,
+  limit: 3,
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: "Too many reviews submitted. Please try again later." },
@@ -79,6 +79,13 @@ router.get("/", (req, res) => {
 });
 
 router.post("/", createReviewLimiter, (req, res) => {
+  // Honeypot: a field real users never see or fill in. A bot that blindly
+  // fills every input in the form trips it, and gets the same generic
+  // validation error as any other bad submission — no distinct signal.
+  if (typeof req.body?.website === "string" && req.body.website.trim() !== "") {
+    return res.status(400).json({ error: "Invalid submission" });
+  }
+
   const fields = validateReviewFields(req.body || {});
   if (fields.error) {
     return res.status(400).json({ error: fields.error });

@@ -4,6 +4,8 @@ import crypto from "crypto";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { requireAdmin } from "../middleware/requireAdmin.js";
+import { isValidIsraeliId, isValidIsraeliPhone } from "../utils/israeliValidation.js";
 
 const router = Router();
 
@@ -74,13 +76,65 @@ function saveSubmissions(submissions) {
   fs.writeFileSync(DATA_FILE, JSON.stringify(submissions, null, 2));
 }
 
+const RETENTION_YEARS = 7;
+
+// Health declarations are kept for RETENTION_YEARS from submission and then
+// deleted automatically — no manual cleanup step needed. Swept on every
+// request rather than on a timer, since this route only runs inside a
+// long-lived Node process and a per-request check is cheap at this scale.
+function purgeExpiredSubmissions() {
+  const cutoff = new Date();
+  cutoff.setFullYear(cutoff.getFullYear() - RETENTION_YEARS);
+  const before = submissions.length;
+  submissions = submissions.filter((record) => new Date(record.submittedAt) > cutoff);
+  if (submissions.length !== before) {
+    saveSubmissions(submissions);
+  }
+}
+
 let submissions = loadSubmissions();
+purgeExpiredSubmissions();
+
+const DEFAULT_PAGE_SIZE = 20;
+const MAX_PAGE_SIZE = 100;
+
+router.get("/", requireAdmin, (req, res) => {
+  purgeExpiredSubmissions();
+
+  const sorted = [...submissions].sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
+  const decrypted = sorted.map(decryptSubmission);
+
+  // Names are only ever available in plaintext after decryption, so the
+  // search necessarily happens post-decrypt rather than against the stored
+  // (encrypted) records directly.
+  const search = typeof req.query.search === "string" ? req.query.search.trim().toLowerCase() : "";
+  const filtered = search ? decrypted.filter((s) => s.fullName.toLowerCase().includes(search)) : decrypted;
+
+  const offset = Math.max(0, Number(req.query.offset) || 0);
+  const limit = Math.min(MAX_PAGE_SIZE, Math.max(1, Number(req.query.limit) || DEFAULT_PAGE_SIZE));
+  const page = filtered.slice(offset, offset + limit);
+
+  res.json({
+    items: page,
+    total: filtered.length,
+    hasMore: offset + page.length < filtered.length,
+  });
+});
 
 router.post("/", submitLimiter, (req, res) => {
+  purgeExpiredSubmissions();
   const { fullName, idNumber, phone, answers, details, agreementAccepted } = req.body || {};
 
   if (!fullName || !idNumber || !phone) {
     return res.status(400).json({ error: "fullName, idNumber and phone are required" });
+  }
+
+  if (!isValidIsraeliId(idNumber)) {
+    return res.status(400).json({ error: "Invalid Israeli ID number" });
+  }
+
+  if (!isValidIsraeliPhone(phone)) {
+    return res.status(400).json({ error: "Invalid Israeli phone number" });
   }
 
   if (!answers || YES_NO_QUESTION_IDS.some((id) => answers[id] !== "yes" && answers[id] !== "no")) {
@@ -102,7 +156,7 @@ router.post("/", submitLimiter, (req, res) => {
   });
 
   const record = {
-    id: submissions.length + 1,
+    id: Date.now(),
     submittedAt,
     ...encrypted,
   };
