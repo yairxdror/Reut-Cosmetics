@@ -1,5 +1,12 @@
-import PlaceholderPage from "@/components/PlaceholderPage";
+import TermsOfUse from "@/components/TermsOfUse";
 
 export default function TermsPage() {
-  return <PlaceholderPage titleKey="termsOfUse" />;
+  return (
+    <section>
+      <h1 className="text-gold" style={{ textAlign: "center" }}>
+        תנאי שימוש
+      </h1>
+      <TermsOfUse />
+    </section>
+  );
 }

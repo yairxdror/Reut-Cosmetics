@@ -12,6 +12,12 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: isGithubPagesBuild,
   },
+  env: {
+    // Exposed to the browser so the service worker (a plain static file,
+    // registered by absolute URL) can be found under the GitHub Pages
+    // subpath the same way every other asset is.
+    NEXT_PUBLIC_BASE_PATH: basePath,
+  },
 };
 
 export default nextConfig;

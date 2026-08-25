@@ -1,5 +1,12 @@
-import PlaceholderPage from "@/components/PlaceholderPage";
+import PrivacyPolicy from "@/components/PrivacyPolicy";
 
 export default function PrivacyPolicyPage() {
-  return <PlaceholderPage titleKey="privacyPolicy" />;
+  return (
+    <section>
+      <h1 className="text-gold" style={{ textAlign: "center" }}>
+        מדיניות פרטיות
+      </h1>
+      <PrivacyPolicy />
+    </section>
+  );
 }

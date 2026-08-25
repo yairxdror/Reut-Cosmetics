@@ -72,7 +72,12 @@ export default function Home() {
           <p className="hero-description">{t("heroSubtitle")}</p>
 
           <div className="hero-cta-row">
-            <a className="btn-hero btn-hero-gold" href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
+            <a
+              className="btn-hero btn-hero-gold hero-whatsapp-cta"
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <WhatsAppIcon size={18} />
               {t("whatsappCta")}
             </a>
@@ -87,6 +92,8 @@ export default function Home() {
             ))}
           </div>
         </div>
+
+        <div className="hero-wave" aria-hidden="true" />
       </section>
 
       <Services />

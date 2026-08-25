@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useLanguage, type TranslationKey } from "@/context/LanguageContext";
+import { isAdminLoggedIn, ADMIN_AUTH_EVENT } from "@/lib/adminAuth";
 
 const NAV_ITEMS: { href: string; key: TranslationKey }[] = [
   { href: "/faq", key: "faq" },
@@ -17,6 +18,20 @@ const NAV_ITEMS: { href: string; key: TranslationKey }[] = [
 
 export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const { t } = useLanguage();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    function checkAdmin() {
+      setIsAdmin(isAdminLoggedIn());
+    }
+    checkAdmin();
+    window.addEventListener(ADMIN_AUTH_EVENT, checkAdmin);
+    window.addEventListener("storage", checkAdmin);
+    return () => {
+      window.removeEventListener(ADMIN_AUTH_EVENT, checkAdmin);
+      window.removeEventListener("storage", checkAdmin);
+    };
+  }, []);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -47,7 +62,7 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
           </button>
         </div>
         <nav className="sidebar-nav">
-          {NAV_ITEMS.map((item) => (
+          {NAV_ITEMS.filter((item) => item.href !== "/login" || !isAdmin).map((item) => (
             <Link key={item.href} href={item.href} className="sidebar-link" onClick={onClose}>
               {t(item.key)}
             </Link>
