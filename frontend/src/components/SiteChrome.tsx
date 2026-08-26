@@ -11,8 +11,7 @@ import ServiceWorkerRegistration from "./ServiceWorkerRegistration";
 import logo from "@/assets/logo.png";
 import { isAdminLoggedIn, clearAdminToken, ADMIN_AUTH_EVENT } from "@/lib/adminAuth";
 import { useLanguage } from "@/context/LanguageContext";
-import { LogoutIcon, WhatsAppIcon } from "@/components/icons";
-import { WHATSAPP_URL } from "@/lib/contact";
+import { LogoutIcon } from "@/components/icons";
 
 const MIN_THUMB_HEIGHT = 30;
 const ARROW_SIZE = 12;
@@ -27,7 +26,6 @@ export default function SiteChrome({ children }: { children: ReactNode }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [thumb, setThumb] = useState<{ top: number; height: number } | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [isWhatsAppDocked, setIsWhatsAppDocked] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLElement>(null);
   const navRef = useRef<HTMLElement>(null);
@@ -49,62 +47,6 @@ export default function SiteChrome({ children }: { children: ReactNode }) {
       window.removeEventListener("storage", checkAdmin);
     };
   }, []);
-
-  // Scroll-linked "dock" effect for the hero WhatsApp CTA: as the guest
-  // scrolls the home page, --wa-dock-progress (0 -> 1) tracks how close the
-  // button's natural position has come to sliding under the nav bar. The
-  // hero button (see .hero-whatsapp-cta) shrinks/fades out on the first
-  // half of that range, and a small icon button here in the nav bar
-  // (.nav-bar-whatsapp-dock) fades in on the second half, so it looks like
-  // the same button rising into the bar and locking in place.
-  useEffect(() => {
-    const root = document.documentElement;
-    const scrollEl = scrollContainerRef.current;
-    const navEl = navRef.current;
-
-    if (!isHome || isAdmin || !scrollEl || !navEl) {
-      root.style.setProperty("--wa-dock-progress", "0");
-      setIsWhatsAppDocked(false);
-      return;
-    }
-
-    let threshold = 0;
-    let rafId: number | null = null;
-
-    function measure() {
-      const ctaEl = document.querySelector(".hero-whatsapp-cta");
-      if (!ctaEl || !navEl || !scrollEl) return;
-      const ctaRect = ctaEl.getBoundingClientRect();
-      const documentTop = ctaRect.top + scrollEl.scrollTop;
-      threshold = Math.max(documentTop - navEl.offsetHeight, 1);
-    }
-
-    function updateProgress() {
-      rafId = null;
-      if (!scrollEl) return;
-      const progress = Math.min(Math.max(scrollEl.scrollTop / threshold, 0), 1);
-      root.style.setProperty("--wa-dock-progress", String(progress));
-      const nextDocked = progress > 0.5;
-      setIsWhatsAppDocked((prev) => (prev === nextDocked ? prev : nextDocked));
-    }
-
-    function onScroll() {
-      if (rafId !== null) return;
-      rafId = requestAnimationFrame(updateProgress);
-    }
-
-    measure();
-    updateProgress();
-    scrollEl.addEventListener("scroll", onScroll);
-    window.addEventListener("resize", measure);
-
-    return () => {
-      scrollEl.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", measure);
-      if (rafId !== null) cancelAnimationFrame(rafId);
-      root.style.setProperty("--wa-dock-progress", "0");
-    };
-  }, [isHome, isAdmin, pathname]);
 
   useEffect(() => {
     const scrollEl = scrollContainerRef.current;
@@ -203,19 +145,6 @@ export default function SiteChrome({ children }: { children: ReactNode }) {
           </button>
         </div>
         <div className="nav-bar-side">
-          {isHome && !isAdmin && (
-            <a
-              className={`nav-bar-whatsapp-dock ${isWhatsAppDocked ? "is-active" : ""}`}
-              href={WHATSAPP_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={t("whatsappCta")}
-              aria-hidden={!isWhatsAppDocked}
-              tabIndex={isWhatsAppDocked ? 0 : -1}
-            >
-              <WhatsAppIcon size={16} />
-            </a>
-          )}
           <HamburgerButton isOpen={isMenuOpen} onClick={() => setIsMenuOpen((prev) => !prev)} />
           <LanguageButton />
           {!isHome && <HomeButton />}

@@ -7,8 +7,8 @@ import { useLanguage, type Language } from "@/context/LanguageContext";
 function GlobeIcon() {
   return (
     <svg
-      width="20"
-      height="20"
+      width="22"
+      height="22"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"

@@ -358,6 +358,12 @@ a {
   gap: 0.6rem;
 }
 
+@media (min-width: 861px) {
+  .nav-bar-lang {
+    left: 3rem;
+  }
+}
+
 .nav-bar-logo-link {
   display: flex;
   align-items: center;
@@ -408,31 +414,6 @@ a {
   display: flex;
   align-items: center;
   gap: 0.6rem;
-}
-
-.nav-bar-whatsapp-dock {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: var(--radius-full);
-  border: none;
-  background: var(--color-gold-bright);
-  color: var(--color-black);
-  cursor: pointer;
-  pointer-events: none;
-  opacity: max(0, calc((var(--wa-dock-progress, 0) - 0.4) * 1.667));
-  transform: scale(calc(0.7 + max(0, var(--wa-dock-progress, 0) - 0.4) * 0.5));
-  transition: filter 0.2s ease;
-}
-
-.nav-bar-whatsapp-dock.is-active {
-  pointer-events: auto;
-}
-
-.nav-bar-whatsapp-dock:hover {
-  filter: brightness(1.08);
 }
 
 .nav-bar-admin-badge {
@@ -493,17 +474,18 @@ a {
 
 /* A single wavy edge instead of a straight cutoff at the bottom of the hero
    — the SVG only supplies the curve shape (as a mask); the actual color is
-   a plain CSS gradient so it can fade from a bright band right at the wave
-   back down to the ordinary page background underneath. */
+   plain CSS so it can be tuned independently of the shape. Solid white
+   (not a fade back to the cream background) keeps the wave's edge crisp
+   instead of letting it soften into the page behind it. */
 .hero-wave {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  height: 70px;
-  background: linear-gradient(180deg, #ffffff 0%, var(--color-cream-soft) 100%);
-  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 100' preserveAspectRatio='none'%3E%3Cpath d='M0,20 C500,20 900,90 1440,90 L1440,100 L0,100 Z' fill='white'/%3E%3C/svg%3E");
-  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 100' preserveAspectRatio='none'%3E%3Cpath d='M0,20 C500,20 900,90 1440,90 L1440,100 L0,100 Z' fill='white'/%3E%3C/svg%3E");
+  height: 50px;
+  background: #ffffff;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 100' preserveAspectRatio='none'%3E%3Cpath d='M0,50 C240,5 480,5 720,50 C960,95 1200,95 1440,50 L1440,100 L0,100 Z' fill='white'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 100' preserveAspectRatio='none'%3E%3Cpath d='M0,50 C240,5 480,5 720,50 C960,95 1200,95 1440,50 L1440,100 L0,100 Z' fill='white'/%3E%3C/svg%3E");
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
   -webkit-mask-repeat: no-repeat;
@@ -562,6 +544,10 @@ a {
   flex-wrap: wrap;
   justify-content: center;
   margin-top: 0.5rem;
+  /* Reserves the CTA's natural height so the row doesn't collapse once the
+     guest button is portaled out to document.body (position: fixed) — see
+     .hero-whatsapp-cta below. Also doubles as its measurement anchor. */
+  min-height: 3rem;
 }
 
 .btn-hero {
@@ -591,13 +577,87 @@ a {
   color: var(--color-black);
 }
 
-/* Scroll-linked hand-off with .nav-bar-whatsapp-dock: shrinks and fades out
-   over the first half of --wa-dock-progress while it scrolls (in normal
-   flow) toward the nav bar; the docked nav-bar button fades in over the
-   second half so it reads as one button rising into the bar. */
+/* A single persistent element (portaled to document.body in page.tsx —
+   see the comment there for why) that is always position: fixed for
+   guests. --wa-progress (0 -> 1, updated every scroll tick) drives one
+   continuous interpolation between its natural on-screen spot in the hero
+   (the --wa-start-* vars, measured from the .hero-cta-row placeholder) and
+   its docked spot in the nav bar (the --wa-end-* vars) — so it visibly
+   rises and shrinks together with the scroll, then holds in place once
+   progress reaches 1, with no swap to a different element at any point. */
 .hero-whatsapp-cta {
-  opacity: max(0, calc(1 - var(--wa-dock-progress, 0) * 1.667));
-  transform: scale(calc(1 - var(--wa-dock-progress, 0) * 0.45));
+  --wa-progress: 0;
+  --wa-shrink: 0;
+  --wa-font-end: 0.8rem;
+  --wa-pad-block-end: 0.5rem;
+  --wa-pad-inline-end-size: 1rem;
+  --wa-gap-end: 0.35rem;
+  --wa-icon-end: 15px;
+  position: fixed;
+  top: calc(var(--wa-start-top, 0px) * (1 - var(--wa-progress)) + var(--wa-end-top, 0px) * var(--wa-progress));
+  left: calc(var(--wa-start-left, 0px) * (1 - var(--wa-progress)) + var(--wa-end-left, 0px) * var(--wa-progress));
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  font-size: calc(0.95rem * (1 - var(--wa-shrink)) + var(--wa-font-end) * var(--wa-shrink));
+  padding-block: calc(0.8rem * (1 - var(--wa-shrink)) + var(--wa-pad-block-end) * var(--wa-shrink));
+  padding-inline: calc(1.5rem * (1 - var(--wa-shrink)) + var(--wa-pad-inline-end-size) * var(--wa-shrink));
+  gap: calc(0.5rem * (1 - var(--wa-shrink)) + var(--wa-gap-end) * var(--wa-shrink));
+  z-index: 150;
+}
+
+/* .btn-hero:active's transform: scale(0.97) would otherwise completely
+   replace (not combine with) the translate(-50%, -50%) this button relies
+   on for its centering — losing that offset for the press's duration made
+   it visibly jump sideways. Combine both instead, so it still gets the
+   same press feedback as the other buttons (e.g. .btn-glass-thin:active)
+   without losing its position. */
+.hero-whatsapp-cta:active {
+  transform: translate(-50%, -50%) scale(0.97);
+}
+
+.hero-whatsapp-cta svg {
+  width: calc(18px * (1 - var(--wa-shrink, 0)) + var(--wa-icon-end, 15px) * var(--wa-shrink, 0));
+  height: calc(18px * (1 - var(--wa-shrink, 0)) + var(--wa-icon-end, 15px) * var(--wa-shrink, 0));
+  flex-shrink: 0;
+  /* SVGs are inline by default, which carries baseline-alignment quirks
+     of its own even inside a flex row — block sidesteps that entirely. */
+  display: block;
+}
+
+/* A flex row (not vertical-align, which centers on font-metric baselines
+   that don't line up cleanly with the icon) so "core" and "suffix" are
+   geometrically centered against each other and against the icon. gap
+   replaces the space text node between them, which flexbox would
+   otherwise collapse as whitespace-only. line-height: 1 removes the
+   browser's default font leading, which is rarely split evenly
+   above/below the glyphs and was leaving the text looking off-center. */
+.hero-whatsapp-cta-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  line-height: 1;
+}
+
+.hero-whatsapp-cta-label-suffix {
+  display: inline-block;
+  overflow: hidden;
+  opacity: calc(1 - var(--wa-shrink, 0) * var(--wa-suffix-collapse, 0));
+  max-width: calc(var(--wa-suffix-width, 100px) * (1 - var(--wa-shrink, 0) * var(--wa-suffix-collapse, 0)));
+}
+
+@media (max-width: 560px) {
+  /* Not enough room between the logo and the hamburger/language cluster
+     for the full "Chat with us on WhatsApp" once docked — collapse just
+     the "on WhatsApp" part away, keeping "Chat with us" + the icon, which
+     fits. The collapse still tracks --wa-progress, so it shrinks away
+     gradually together with the rest of the button. */
+  .hero-whatsapp-cta {
+    --wa-pad-inline-end-size: 0.75rem;
+  }
+
+  .hero-whatsapp-cta-label-suffix {
+    --wa-suffix-collapse: 1;
+  }
 }
 
 .hero-features {
@@ -715,7 +775,7 @@ html[dir="ltr"] .hero-image-placeholder-full {
 
   .hero-badge {
     inset-inline-end: 1.25rem;
-    bottom: 1.5rem;
+    bottom: 1rem;
     width: 6.5rem;
     height: 6.5rem;
     padding: 0.375rem;
@@ -735,6 +795,16 @@ html[dir="ltr"] .hero-image-placeholder-full {
     width: 20px;
     height: 20px;
   }
+
+  /* The double-hump curve reads as a nice wave stretched across a wide
+     desktop screen, but the same curve compressed into a narrow mobile
+     viewport looks jarring rather than gentle — a softer, lower-amplitude
+     version here instead. */
+  .hero-wave {
+    height: 35px;
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 100' preserveAspectRatio='none'%3E%3Cpath d='M0,45 C240,25 480,25 720,45 C960,65 1200,65 1440,45 L1440,100 L0,100 Z' fill='white'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 100' preserveAspectRatio='none'%3E%3Cpath d='M0,45 C240,25 480,25 720,45 C960,65 1200,65 1440,45 L1440,100 L0,100 Z' fill='white'/%3E%3C/svg%3E");
+  }
 }
 
 /* ---------- Hamburger button ---------- */
@@ -745,39 +815,30 @@ html[dir="ltr"] .hero-image-placeholder-full {
   padding: 0;
 }
 
+/* A flex column, not three independently position: absolute + top: Npx
+   bars — letting the browser's flex layout compute the even spacing in
+   one pass guarantees all three bars get identical height/spacing, with
+   no risk of one landing on a different sub-pixel boundary than the
+   others (which independently hand-picked top values were prone to). */
 .hamburger-icon {
-  position: relative;
-  display: block;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   width: 20px;
-  height: 15px;
+  height: 16px;
 }
 
 .hamburger-icon span {
-  position: absolute;
-  left: 0;
+  display: block;
   width: 100%;
-  height: 2px;
-  border-radius: 2px;
+  height: 2.5px;
+  border-radius: var(--radius-full);
   background: currentColor;
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease,
-    top 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.hamburger-icon span:nth-child(1) {
-  top: 0;
-}
-
-.hamburger-icon span:nth-child(2) {
-  top: 6.5px;
-}
-
-.hamburger-icon span:nth-child(3) {
-  top: 13px;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease;
 }
 
 .hamburger-icon-open span:nth-child(1) {
-  top: 6.5px;
-  transform: rotate(45deg);
+  transform: translateY(6.75px) rotate(45deg);
 }
 
 .hamburger-icon-open span:nth-child(2) {
@@ -785,8 +846,7 @@ html[dir="ltr"] .hero-image-placeholder-full {
 }
 
 .hamburger-icon-open span:nth-child(3) {
-  top: 6.5px;
-  transform: rotate(-45deg);
+  transform: translateY(-7px) rotate(-45deg);
 }
 
 .no-transitions,
@@ -1288,21 +1348,143 @@ html[dir="ltr"] .sidebar-panel-open {
 /* ---------- Services section ---------- */
 
 .services-section {
+  position: relative;
   max-width: 1150px;
   margin: 0 auto;
-  padding: 1rem 1.5rem 4rem;
+  padding: 4.5rem 1.5rem 4rem;
+}
+
+/* Rather than a second, separate wave accent (which just left a visible
+   cream gap between it and the hero's own wave), this extends solid
+   white up through that gap — .hero-banner's margin-bottom is 40px — so
+   the two white areas read as one continuous ribbon. ::after then closes
+   that ribbon off with a wave shape at the bottom, revealing the normal
+   page background again in the same curve used above, instead of a flat
+   cutoff. Both are full-bleed (left: 50% + translateX(-50%) + 100vw) so
+   they span edge to edge like the hero's wave does. */
+.services-section::before {
+  content: "";
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  height: 90px;
+  background: #ffffff;
+  pointer-events: none;
+}
+
+/* Same height as .hero-wave (50px) — a wave's curve reads as wavy in
+   proportion to how much vertical room it has to curve within; shrinking
+   this well below the hero-wave's height (as earlier "thinner" passes
+   did) flattened it out into barely a diagonal, unlike the top curve. */
+.services-section::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  height: 50px;
+  background: var(--color-cream-soft);
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 100' preserveAspectRatio='none'%3E%3Cpath d='M0,50 C240,5 480,5 720,50 C960,95 1200,95 1440,50 L1440,100 L0,100 Z' fill='white'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 100' preserveAspectRatio='none'%3E%3Cpath d='M0,50 C240,5 480,5 720,50 C960,95 1200,95 1440,50 L1440,100 L0,100 Z' fill='white'/%3E%3C/svg%3E");
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  pointer-events: none;
 }
 
 .services-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
   text-align: center;
-  font-size: 1.75rem;
+  color: #573724;
+  line-height: 1;
   margin-bottom: 2rem;
 }
 
+.services-title-kicker,
+.services-title-main {
+  display: block;
+  font-weight: 300;
+}
+
+.services-title-kicker {
+  font-size: clamp(1.5rem, 3.2vw, 2.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.services-title-main {
+  font-size: clamp(3.25rem, 6.5vw, 5rem);
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+}
+
+@media (min-width: 861px) {
+  /* Rather than sitting centered above the whole list, the title moves
+     beside the first card, on its opposite side (the first card sits on
+     the left, so the title goes on the right) — echoing the reference's
+     heading placed next to its first row instead of spanning the top of
+     the section. */
+  .services-title {
+    position: absolute;
+    top: 4.5rem;
+    inset-inline-start: 1.5rem;
+    width: 38%;
+    height: 400px;
+    margin: 0;
+    display: grid;
+    grid-template-columns: max-content;
+    align-content: center;
+    justify-content: center;
+    justify-items: start;
+    text-align: center;
+  }
+}
+
+/* One card per row (not a multi-column grid) so each is shown on its
+   own, echoing the reference's separated rows — the card itself (below)
+   is unchanged, only its position/layout here. */
 .services-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.75rem;
+  grid-template-columns: 1fr;
+  gap: 4.5rem;
+  /* The halo intentionally extends beyond its card and must not be clipped
+     at the grid edge. The page scroll container remains the horizontal
+     viewport boundary, so this does not introduce sideways scrolling. */
+  overflow: visible;
+}
+
+/* min(420px, 85%) rather than a flat max-width so there's always some
+   slack space (at least 15% of the row) left/right for the alternating
+   margins below to actually shift the card into — a flat cap wider than
+   the mobile viewport would just fill it edge to edge with no room to
+   move, hiding the effect there. */
+.service-card {
+  width: 100%;
+  max-width: min(420px, 85%);
+}
+
+/* Alternates which side each card sits on, matching the reference's
+   left/right rhythm instead of everything pinned to one edge — the first
+   card starts on the left, the second on the right, and so on. */
+.service-card:nth-child(odd) {
+  margin-inline-start: auto;
+}
+
+.service-card:nth-child(even) {
+  margin-inline-end: auto;
+}
+
+@media (min-width: 861px) {
+  .service-card-courses {
+    margin-top: 6rem;
+  }
 }
 
 .service-card {
@@ -1316,6 +1498,192 @@ html[dir="ltr"] .sidebar-panel-open {
   border-radius: 1rem;
   overflow: hidden;
   padding-bottom: 1.25rem;
+}
+
+.service-card-permanent {
+  --sparkle-outer-angle: 0deg;
+  --sparkle-inner-angle: 0deg;
+  --sparkle-flare-angle: 0deg;
+  --sparkle-effect-x-scale: 1;
+  --sparkle-halo-inset: -17% -21% -19%;
+  position: relative;
+  isolation: isolate;
+  overflow: visible;
+  border-color: rgba(197, 138, 22, 0.58);
+  box-shadow: 0 18px 44px rgba(104, 67, 7, 0.12), 0 0 0 1px rgba(240, 207, 112, 0.12);
+}
+
+/* A translucent surface above the rear half of the orbit makes those
+   particles read as being behind the card. The front half is stacked over
+   this surface below, creating one continuous ring with real depth. */
+.service-card-permanent::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: 1;
+  border: 1px solid rgba(197, 138, 22, 0.58);
+  border-radius: 1rem;
+  background: linear-gradient(160deg, #fbf5e5 0%, var(--color-cream) 58%, #faf8f2 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.42);
+  pointer-events: none;
+}
+
+/* The featured card needs visible overflow so its gold halo can sit beyond
+   the border. Restoring the image's top corner radii preserves the same
+   clipped-card silhouette the other cards get from overflow: hidden. */
+.service-card-permanent .service-image {
+  border-radius: calc(1rem - 1px) calc(1rem - 1px) 0 0;
+}
+
+.service-card-permanent > .service-image,
+.service-card-permanent > .service-card-title,
+.service-card-permanent > .service-card-desc,
+.service-card-permanent > .service-card-link {
+  position: relative;
+  z-index: 2;
+}
+
+.service-sparkle-halo {
+  position: absolute;
+  inset: var(--sparkle-halo-inset);
+  overflow: visible;
+  pointer-events: none;
+  transform-origin: 50% 50%;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+.service-sparkle-base-glow {
+  position: absolute;
+  inset: var(--sparkle-halo-inset);
+  z-index: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.service-sparkle-base-glow svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.service-sparkle-glow-wide,
+.service-sparkle-glow-core {
+  fill: none;
+}
+
+.service-sparkle-glow-wide {
+  stroke: rgba(223, 173, 53, 0.16);
+  stroke-width: 50;
+  filter: blur(14px);
+}
+
+.service-sparkle-glow-core {
+  stroke: rgba(240, 207, 112, 0.15);
+  stroke-width: 17;
+  filter: blur(6px);
+}
+
+.service-sparkle-halo-back {
+  z-index: 0;
+  -webkit-mask-image: linear-gradient(
+    174deg,
+    transparent 0%,
+    transparent 43%,
+    rgba(0, 0, 0, 0.08) 48%,
+    rgba(0, 0, 0, 0.26) 53%,
+    rgba(0, 0, 0, 0.52) 58%,
+    rgba(0, 0, 0, 0.78) 64%,
+    #000 72%,
+    #000 100%
+  );
+  mask-image: linear-gradient(
+    174deg,
+    transparent 0%,
+    transparent 43%,
+    rgba(0, 0, 0, 0.08) 48%,
+    rgba(0, 0, 0, 0.26) 53%,
+    rgba(0, 0, 0, 0.52) 58%,
+    rgba(0, 0, 0, 0.78) 64%,
+    #000 72%,
+    #000 100%
+  );
+  opacity: 0.58;
+  transform: none;
+  filter: blur(0.45px) saturate(0.82);
+}
+
+.service-sparkle-halo-front {
+  z-index: 3;
+  -webkit-mask-image: linear-gradient(
+    174deg,
+    #000 0%,
+    #000 43%,
+    rgba(0, 0, 0, 0.92) 48%,
+    rgba(0, 0, 0, 0.74) 53%,
+    rgba(0, 0, 0, 0.48) 58%,
+    rgba(0, 0, 0, 0.22) 64%,
+    transparent 72%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    174deg,
+    #000 0%,
+    #000 43%,
+    rgba(0, 0, 0, 0.92) 48%,
+    rgba(0, 0, 0, 0.74) 53%,
+    rgba(0, 0, 0, 0.48) 58%,
+    rgba(0, 0, 0, 0.22) 64%,
+    transparent 72%,
+    transparent 100%
+  );
+  opacity: 0.97;
+  transform: none;
+  filter: drop-shadow(0 6px 6px rgba(111, 72, 7, 0.18));
+}
+
+.service-sparkle-layer {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+
+.service-sparkle-layer-outer {
+  transform: rotate(var(--sparkle-outer-angle));
+}
+
+.service-sparkle-layer-inner {
+  transform: rotate(var(--sparkle-inner-angle));
+  opacity: 0.78;
+}
+
+.service-sparkle-layer-flares {
+  transform: rotate(var(--sparkle-flare-angle));
+  filter: drop-shadow(0 0 3px rgba(223, 173, 53, 0.52));
+}
+
+.service-sparkle-halo-back .service-sparkle-layer-flares {
+  opacity: 0.32;
+}
+
+html.a11y-reduce-motion .service-sparkle-layer {
+  transform: none !important;
+  will-change: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .service-sparkle-layer {
+    transform: none !important;
+    will-change: auto;
+  }
 }
 
 .service-image {
@@ -1367,89 +1735,267 @@ html[dir="ltr"] .sidebar-panel-open {
 }
 
 .service-card-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
   margin: 0 1.25rem;
+  padding: 0.5rem 1.5rem;
+  border: 1.5px solid var(--color-gold);
+  border-radius: var(--radius-full);
   color: var(--color-gold);
   font-size: 0.85rem;
   font-weight: 600;
   text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
 }
 
 .service-card-link:hover {
-  text-decoration: underline;
+  background: var(--color-gold);
+  color: var(--color-cream);
+  text-decoration: none;
+}
+
+.service-card-link:active {
+  transform: scale(0.97);
 }
 
 @media (max-width: 860px) {
+  /* Rotating sparkle SVGs change their horizontal ink bounds as the page
+     scrolls. Keep that changing overflow inside a fixed, viewport-sized
+     paint envelope so it cannot create an RTL horizontal scroll range.
+     The clip margin spans the main + section gutters, keeping the complete
+     mobile halo visible all the way to the screen edge. */
   .services-grid {
-    grid-template-columns: repeat(2, 1fr);
+    overflow: clip;
+    overflow-clip-margin: 3rem;
+  }
+
+  /* Matches .hero-wave's mobile override — a calmer, lower-amplitude
+     curve than the desktop double-hump, and shorter to match .hero-wave's
+     own mobile height reduction. */
+  .services-section::before {
+    height: 75px;
+  }
+
+  .services-section::after {
+    height: 35px;
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 100' preserveAspectRatio='none'%3E%3Cpath d='M0,45 C240,25 480,25 720,45 C960,65 1200,65 1440,45 L1440,100 L0,100 Z' fill='white'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 100' preserveAspectRatio='none'%3E%3Cpath d='M0,45 C240,25 480,25 720,45 C960,65 1200,65 1440,45 L1440,100 L0,100 Z' fill='white'/%3E%3C/svg%3E");
+  }
+
+  /* Straight, centered stacking on mobile — no left/right alternation
+     (that's a desktop-only effect, see the base rules above) and no
+     edge-hugging pull. */
+  .service-card:nth-child(odd),
+  .service-card:nth-child(even) {
+    margin-inline: auto;
+  }
+
+  .service-sparkle-halo {
+    inset: var(--sparkle-halo-inset);
+  }
+
+  /* .services-grid now clips horizontal overflow itself (added to fix a
+     scroll-triggered page shift on mobile), so this no longer needs to be
+     shrunk nearly as far down from the desktop values just to stay
+     contained — bumped back up closer to full strength. */
+  .service-card-permanent {
+    --sparkle-effect-x-scale: 0.98;
+    --sparkle-halo-inset: -15% -18% -17%;
+  }
+
+  /* Keep the complete rotating orbit inside narrow viewports. Compressing
+     the decorative stack after its internal rotations also contains stars
+     that temporarily move sideways as the page is scrolled. */
+  .service-sparkle-halo,
+  .service-sparkle-base-glow {
+    transform: scaleX(var(--sparkle-effect-x-scale));
+    transform-origin: 50% 50%;
+  }
+
+  .service-sparkle-halo-front {
+    opacity: 0.97;
+  }
+
+  .service-sparkle-halo-back {
+    opacity: 0.58;
+  }
+
+  /* More breathing room above the first card and below the last one. */
+  .services-title {
+    margin-bottom: 3rem;
+  }
+
+  .services-section {
+    padding-bottom: 5.5rem;
   }
 }
 
-@media (max-width: 480px) {
-  .services-grid {
-    grid-template-columns: 1fr;
+@media (max-width: 560px) {
+  .service-card-permanent {
+    --sparkle-effect-x-scale: 0.94;
   }
 }
 
-/* ---------- Courses section ---------- */
+@media (max-width: 380px) {
+  .service-card-permanent {
+    --sparkle-effect-x-scale: 0.9;
+  }
+}
 
-.courses-section {
+/* ---------- Private courses page ---------- */
+
+.private-courses-section {
   max-width: 1150px;
   margin: 0 auto;
   padding: 1rem 1.5rem 4rem;
 }
 
-.courses-title {
+.private-courses-intro {
+  max-width: 40rem;
+  margin: 0 auto 3rem;
   text-align: center;
-  font-size: 1.75rem;
-  margin-bottom: 2rem;
+  opacity: 0.8;
 }
 
-.courses-grid {
+.pc-list {
   display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 3rem;
+  flex-direction: column;
+  gap: 5rem;
 }
 
-.course-card {
+.pc-card {
+  display: flex;
+  align-items: center;
+  max-width: 900px;
+}
+
+/* Odd cards: image on the inline-end side (right, in RTL) with the
+   content box's end edge tucked slightly behind it. Even cards mirror
+   this — image on the inline-start side instead. */
+.pc-card:not(.pc-card-flip) {
+  margin-inline-end: auto;
+  flex-direction: row;
+}
+
+.pc-card.pc-card-flip {
+  margin-inline-start: auto;
+  flex-direction: row-reverse;
+}
+
+.pc-card-image {
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+  width: 40%;
+  aspect-ratio: 0.85;
+  border-radius: 999px 999px 0 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  text-align: center;
-  width: 200px;
-}
-
-.course-circle {
-  width: 180px;
-  height: 180px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
   justify-content: center;
-  margin-bottom: 1rem;
+  gap: 0.4rem;
   color: var(--color-gold);
-  background: linear-gradient(160deg, rgba(212, 175, 55, 0.16), rgba(255, 255, 255, 0.3));
-  -webkit-backdrop-filter: var(--glass-blur);
-  backdrop-filter: var(--glass-blur);
-  border: 1px solid rgba(169, 127, 30, 0.35);
+  background: linear-gradient(160deg, rgba(212, 175, 55, 0.2), rgba(255, 255, 255, 0.35));
+  box-shadow: 0 12px 28px rgba(26, 23, 18, 0.16);
 }
 
-.course-card-title {
-  font-size: 1.1rem;
-  margin: 0 0 0.35rem;
+.pc-card-image span {
+  font-size: 0.7rem;
+  color: var(--color-black);
+  opacity: 0.55;
+  padding: 0 1rem;
+  text-align: center;
 }
 
-.course-card-desc {
+.pc-card-content {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-width: 0;
+  background: var(--color-cream);
+  border-radius: 0.5rem;
+  padding: 2rem 2.25rem;
+  box-shadow: 0 8px 20px rgba(26, 23, 18, 0.1);
+  text-align: center;
+}
+
+/* A generous overlap (not just enough to touch) so the image's own edge
+   fully covers the content box's edge underneath it, with no border on
+   either piece to leave a seam line — the two read as one glued shape
+   instead of two boxes merely placed next to each other. */
+.pc-card:not(.pc-card-flip) .pc-card-content {
+  margin-inline-end: -2.5rem;
+}
+
+.pc-card.pc-card-flip .pc-card-content {
+  margin-inline-start: -2.5rem;
+}
+
+.pc-card-title {
+  font-size: 1.2rem;
+  color: #573724;
+  margin-bottom: 0.5rem;
+}
+
+.pc-card-desc {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  opacity: 0.8;
+}
+
+.pc-card-methods-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-gold);
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.pc-card-methods {
+  margin: 0 auto;
+  padding-inline-start: 1.25rem;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4rem;
   font-size: 0.85rem;
   line-height: 1.5;
-  opacity: 0.75;
-  margin: 0;
+  opacity: 0.85;
+  text-align: start;
 }
 
-@media (max-width: 480px) {
-  .course-circle {
-    width: 140px;
-    height: 140px;
+.pc-card-methods li::marker {
+  color: var(--color-gold);
+}
+
+@media (max-width: 700px) {
+  /* :not(.pc-card-flip), not a bare .pc-card, to match the base rule's
+     specificity — a plain .pc-card here lost the cascade against
+     .pc-card:not(.pc-card-flip) (whose :not() counts as a class for
+     specificity), leaving non-flip cards stuck in flex-direction: row. */
+  .pc-card:not(.pc-card-flip),
+  .pc-card.pc-card-flip {
+    max-width: 100%;
+    margin-inline: 0;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .pc-card-image {
+    width: 60%;
+    max-width: 220px;
+    margin: 0 auto;
+    align-self: center;
+  }
+
+  .pc-card:not(.pc-card-flip) .pc-card-content,
+  .pc-card.pc-card-flip .pc-card-content {
+    margin-inline: 0;
+    margin-top: -2.5rem;
+    text-align: center;
   }
 }
 

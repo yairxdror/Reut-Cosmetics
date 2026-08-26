@@ -19,6 +19,9 @@ Thumbs.db
 # editor
 .vscode/
 
+# local browser automation profile/cache, machine-specific
+.chrome-cdp-profile/
+
 # Claude Code session data
 .claude/
 

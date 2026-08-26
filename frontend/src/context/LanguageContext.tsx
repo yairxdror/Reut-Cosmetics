@@ -18,6 +18,8 @@ const dictionary: Dictionary = {
     en: "Advanced cosmetic treatments, permanent makeup, evening makeup, bridal makeup, eyebrow shaping, facial waxing, professional training courses.\nEverything you need to feel perfect.",
   },
   whatsappCta: { he: "דברו איתנו בוואטסאפ", en: "Chat with us on WhatsApp" },
+  whatsappCtaCore: { he: "דברו איתנו", en: "Chat with us" },
+  whatsappCtaSuffix: { he: "בוואטסאפ", en: "on WhatsApp" },
   featureDiagnostics: { he: "בדיקות מדויקות\nלהתאמה מושלמת", en: "Precise diagnostics\nfor a perfect fit" },
   featurePersonalService: { he: "שירות אישי\nוליווי צמוד", en: "Personal service\nand close guidance" },
   featureEquipped: { he: "מכון מאובזר\nבסטנדרטים גבוהים", en: "Facility equipped\nto high standards" },
@@ -26,7 +28,9 @@ const dictionary: Dictionary = {
   heroBadgeLine2: { he: "יוקרה", en: "luxury" },
   heroBadgeLine3: { he: "ותוצאות מושלמות", en: "and flawless results" },
 
-  servicesTitle: { he: "השירותים שלנו", en: "Our Services" },
+  servicesTitle: { he: "עולם האיפור", en: "Our Services" },
+  servicesTitleKicker: { he: "עולם", en: "Our" },
+  servicesTitleMain: { he: "האיפור", en: "Services" },
   servicesImageLabel: { he: "תמונה תתווסף בקרוב", en: "Image coming soon" },
   detailsLink: { he: "לפרטים נוספים", en: "Learn more" },
   service1Title: { he: "איפור קבוע", en: "Permanent Makeup" },
@@ -38,10 +42,24 @@ const dictionary: Dictionary = {
   service4Title: { he: "שעווה בפנים", en: "Facial Waxing" },
   service4Desc: { he: "עיצוב וחיטוב הפנים בטכניקה עדינה ומדויקת.", en: "Gentle, precise facial hair removal and shaping." },
 
-  coursesTitle: { he: "הקורסים שלנו", en: "Our Courses" },
-  course1Title: { he: "מיקרובליידינג", en: "Microblading" },
-  course1Desc: { he: "איפור קבוע לגבות - כל השיטות", en: "Permanent eyebrow makeup - all methods" },
-  course2Title: { he: "עיצוב גבות", en: "Eyebrow Shaping" },
+  privateCoursesIntro: {
+    he: "קורסי הכשרה פרטניים בליווי אישי צמוד, המותאמים לקצב ולרמת הידע שלך.",
+    en: "Private training courses with close personal guidance, tailored to your pace and level.",
+  },
+  pcCourse1Title: { he: "מיקרובליידינג איפור קבוע", en: "Microblading Permanent Makeup" },
+  pcCourse1Desc: {
+    he: "לימוד מקצועי של טכניקת המיקרובליידינג ליצירת גבות טבעיות ומדויקות, בליווי אישי צעד אחר צעד.",
+    en: "Professional training in the microblading technique for natural, precise eyebrows, with personal step-by-step guidance.",
+  },
+  pcCourse1MethodsLabel: { he: "שלוש שיטות ללימוד:", en: "Three methods taught:" },
+  pcCourse1Method1: { he: "שיטת השערה", en: "Hair-stroke method" },
+  pcCourse1Method2: { he: "שיטת הפודרה", en: "Powder method" },
+  pcCourse1Method3: { he: "השיטה המשולבת", en: "Combined method" },
+  pcCourse2Title: { he: "עיצוב גבות", en: "Eyebrow Shaping" },
+  pcCourse2Desc: {
+    he: "הקניית כלים מקצועיים לעיצוב וחיטוב גבות בהתאמה אישית, מהתאוריה ועד תרגול מעשי.",
+    en: "Professional tools for personalized eyebrow shaping and grooming, from theory to hands-on practice.",
+  },
 
   menu: { he: "תפריט", en: "Menu" },
   faq: { he: "שאלות ותשובות", en: "FAQ" },
