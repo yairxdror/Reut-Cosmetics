@@ -2,16 +2,17 @@
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import Image from "next/image";
 import { HomeButton, LanguageButton } from "./NavControls";
 import HamburgerButton from "./HamburgerButton";
 import Sidebar from "./Sidebar";
 import AccessibilityWidget from "./AccessibilityWidget";
 import ServiceWorkerRegistration from "./ServiceWorkerRegistration";
+import EditableImage from "@/components/EditableImage";
 import logo from "@/assets/logo.png";
-import { isAdminLoggedIn, clearAdminToken, ADMIN_AUTH_EVENT } from "@/lib/adminAuth";
+import { clearAdminToken } from "@/lib/adminAuth";
 import { useLanguage } from "@/context/LanguageContext";
-import { LogoutIcon } from "@/components/icons";
+import { useAdmin } from "@/context/AdminContext";
+import { LogoutIcon, PencilIcon } from "@/components/icons";
 
 const MIN_THUMB_HEIGHT = 30;
 const ARROW_SIZE = 12;
@@ -25,7 +26,7 @@ export default function SiteChrome({ children }: { children: ReactNode }) {
   const isHome = pathname === "/";
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [thumb, setThumb] = useState<{ top: number; height: number } | null>(null);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const { isAdmin, isEditMode, toggleEditMode } = useAdmin();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLElement>(null);
   const navRef = useRef<HTMLElement>(null);
@@ -34,19 +35,6 @@ export default function SiteChrome({ children }: { children: ReactNode }) {
     setIsMenuOpen(false);
     scrollContainerRef.current?.scrollTo(0, 0);
   }, [pathname]);
-
-  useEffect(() => {
-    function checkAdmin() {
-      setIsAdmin(isAdminLoggedIn());
-    }
-    checkAdmin();
-    window.addEventListener(ADMIN_AUTH_EVENT, checkAdmin);
-    window.addEventListener("storage", checkAdmin);
-    return () => {
-      window.removeEventListener(ADMIN_AUTH_EVENT, checkAdmin);
-      window.removeEventListener("storage", checkAdmin);
-    };
-  }, []);
 
   useEffect(() => {
     const scrollEl = scrollContainerRef.current;
@@ -141,13 +129,34 @@ export default function SiteChrome({ children }: { children: ReactNode }) {
               <span className="nav-bar-brand-main">Reut</span>
               <span className="nav-bar-brand-sub">Cosmetics</span>
             </span>
-            <Image src={logo} alt="Reut Yakobi" className="nav-bar-logo" priority />
+            <span className="nav-bar-logo-frame">
+              <EditableImage
+                imageKey="logo"
+                fallbackSrc={logo}
+                alt="Reut Yakobi"
+                sizes="44px"
+                style={{ objectFit: "contain" }}
+                priority
+              />
+            </span>
           </button>
         </div>
         <div className="nav-bar-side">
           <HamburgerButton isOpen={isMenuOpen} onClick={() => setIsMenuOpen((prev) => !prev)} />
           <LanguageButton />
           {!isHome && <HomeButton />}
+          {isAdmin && (
+            <button
+              type="button"
+              className="btn-glass-thin btn-icon-only"
+              onClick={toggleEditMode}
+              aria-pressed={isEditMode}
+              aria-label={t("editModeToggle")}
+              title={t("editModeToggle")}
+            >
+              <PencilIcon size={18} />
+            </button>
+          )}
           {isAdmin && (
             <button
               type="button"

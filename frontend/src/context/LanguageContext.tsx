@@ -2,6 +2,8 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { LANGUAGE_COOKIE_NAME, type Language } from "@/lib/language";
+import { API_BASE_URL, fetchSiteContent } from "@/lib/api";
+import type { EditableImageKey, EditableTextKey } from "@/lib/editableContent";
 
 export type { Language };
 const LANGUAGE_COOKIE_MAX_AGE = 60 * 60 * 24 * 365; // 1 year
@@ -65,7 +67,7 @@ const dictionary: Dictionary = {
   faq: { he: "שאלות ותשובות", en: "FAQ" },
   healthDeclaration: { he: "הצהרת בריאות", en: "Health Declaration" },
   careInstructions: { he: "הוראות לטיפול", en: "Treatment Instructions" },
-  privateCourses: { he: "הדרכת קורסים פרטניים", en: "Private Course Guidance" },
+  privateCourses: { he: "הדרכת קורסים", en: "Course Guidance" },
   login: { he: "התחברות", en: "Login" },
   privacyPolicy: { he: "מדיניות פרטיות", en: "Privacy Policy" },
   accessibility: { he: "הצהרת נגישות", en: "Accessibility Statement" },
@@ -114,7 +116,7 @@ const dictionary: Dictionary = {
   },
   faq9Question: { he: "אתן מציעות גם קורסים?", en: "Do you also offer courses?" },
   faq9Answer: {
-    he: "כן, אנחנו מעבירות קורסי הכשרה מקצועיים למיקרובליידינג ועיצוב גבות. אפשר לקרוא עוד בעמוד הדרכת הקורסים הפרטניים.",
+    he: "כן, אנחנו מעבירות קורסי הכשרה מקצועיים למיקרובליידינג ועיצוב גבות. אפשר לקרוא עוד בעמוד הדרכת הקורסים.",
     en: "Yes, we run professional training courses in microblading and eyebrow shaping. Learn more on our private course guidance page.",
   },
   faq10Question: { he: "איך קובעים תור?", en: "How do I book an appointment?" },
@@ -138,6 +140,22 @@ const dictionary: Dictionary = {
   loginSuccessText: { he: "התחברת כמנהלת האתר.", en: "You are now signed in as the site admin." },
   adminBadge: { he: "מנהל", en: "Admin" },
   logout: { he: "התנתקות", en: "Log Out" },
+  editModeToggle: { he: "מצב עריכה", en: "Edit Mode" },
+  editFieldTitle: { he: "עריכת טקסט", en: "Edit Text" },
+  editTextHebrewLabel: { he: "עברית", en: "Hebrew" },
+  editTextEnglishLabel: { he: "אנגלית", en: "English" },
+  editSave: { he: "שמירה", en: "Save" },
+  editSaving: { he: "שומר...", en: "Saving..." },
+  editBothFieldsRequired: { he: "יש למלא את שני השדות", en: "Both fields are required" },
+  editSessionExpired: { he: "ההתחברות פגה, יש להתחבר מחדש", en: "Your session has expired, please log in again" },
+  editGenericError: { he: "אירעה שגיאה. נסי שוב.", en: "Something went wrong. Please try again." },
+  editImageTitle: { he: "עריכת תמונה", en: "Edit Image" },
+  editImageUploadLabel: { he: "העלאת תמונה חדשה", en: "Upload a new image" },
+  editImageInvalidType: {
+    he: "יש לבחור קובץ מסוג JPEG, PNG או WebP",
+    en: "Please choose a JPEG, PNG or WebP file",
+  },
+  editImageTooLarge: { he: "התמונה גדולה מדי (עד 5MB)", en: "Image is too large (max 5MB)" },
   adminDashboardTitle: { he: "אזור ניהול", en: "Admin Area" },
   adminHealthDeclarationsTitle: { he: "הצהרות בריאות שהתקבלו", en: "Received Health Declarations" },
   adminHealthDeclarationsEmpty: { he: "לא התקבלו הצהרות בריאות עדיין.", en: "No health declarations received yet." },
@@ -218,10 +236,17 @@ const dictionary: Dictionary = {
 
 export type TranslationKey = keyof typeof dictionary;
 
+type TextOverrides = Partial<Record<TranslationKey, { he: string; en: string }>>;
+type ImageOverrides = Partial<Record<EditableImageKey, string>>;
+
 interface LanguageContextValue {
   language: Language;
   setLanguage: (language: Language) => void;
   t: (key: TranslationKey) => string;
+  getTextPair: (key: EditableTextKey) => { he: string; en: string };
+  getImageUrl: (key: EditableImageKey) => string | undefined;
+  applyTextOverride: (key: EditableTextKey, he: string, en: string) => void;
+  applyImageOverride: (key: EditableImageKey, url: string) => void;
 }
 
 const LanguageContext = createContext<LanguageContextValue | undefined>(undefined);
@@ -237,6 +262,8 @@ export function LanguageProvider({
   // <html> with it directly (see layout.tsx), so this starts correct on the
   // very first paint — no post-hydration language switch/flash.
   const [language, setLanguageState] = useState<Language>(initialLanguage);
+  const [textOverrides, setTextOverrides] = useState<TextOverrides>({});
+  const [imageOverrides, setImageOverrides] = useState<ImageOverrides>({});
 
   useEffect(() => {
     const root = document.documentElement;
@@ -252,18 +279,47 @@ export function LanguageProvider({
     return () => cancelAnimationFrame(raf);
   }, [language]);
 
+  // Admin-edited content layers on top of the static defaults above once
+  // loaded. Production is a static export with no server behind it, so this
+  // is the only way edited content can ever reach a visitor. A fetch
+  // failure (backend unreachable) just leaves both maps empty, which falls
+  // back to the fully static site exactly as it behaved before this existed.
+  useEffect(() => {
+    fetchSiteContent()
+      .then((content) => {
+        setTextOverrides(content.text as TextOverrides);
+        setImageOverrides(content.images as ImageOverrides);
+      })
+      .catch(() => {});
+  }, []);
+
   const setLanguage = useCallback((next: Language) => {
     setLanguageState(next);
     document.cookie = `${LANGUAGE_COOKIE_NAME}=${next}; path=/; max-age=${LANGUAGE_COOKIE_MAX_AGE}; SameSite=Lax`;
+  }, []);
+
+  const applyTextOverride = useCallback((key: EditableTextKey, he: string, en: string) => {
+    setTextOverrides((prev) => ({ ...prev, [key]: { he, en } }));
+  }, []);
+
+  const applyImageOverride = useCallback((key: EditableImageKey, url: string) => {
+    setImageOverrides((prev) => ({ ...prev, [key]: url }));
   }, []);
 
   const value = useMemo<LanguageContextValue>(
     () => ({
       language,
       setLanguage,
-      t: (key) => dictionary[key][language],
+      t: (key) => (textOverrides[key] ?? dictionary[key])[language],
+      getTextPair: (key) => textOverrides[key] ?? dictionary[key],
+      getImageUrl: (key) => {
+        const path = imageOverrides[key];
+        return path ? `${API_BASE_URL}${path}` : undefined;
+      },
+      applyTextOverride,
+      applyImageOverride,
     }),
-    [language, setLanguage]
+    [language, setLanguage, textOverrides, imageOverrides, applyTextOverride, applyImageOverride]
   );
 
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;

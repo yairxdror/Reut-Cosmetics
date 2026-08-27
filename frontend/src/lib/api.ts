@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:4001";
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:4001";
 
 export interface HealthDeclarationPayload {
   fullName: string;
@@ -115,6 +115,64 @@ export async function updateReview(
   }
   if (!res.ok) {
     throw new Error(`Failed to update review: ${res.status}`);
+  }
+  return res.json();
+}
+
+export interface SiteContent {
+  text: Record<string, { he: string; en: string }>;
+  images: Record<string, string>;
+}
+
+export async function fetchSiteContent(): Promise<SiteContent> {
+  const res = await fetch(`${API_BASE_URL}/api/content`);
+  if (!res.ok) {
+    throw new Error(`Failed to load site content: ${res.status}`);
+  }
+  return res.json();
+}
+
+export async function updateContentText(
+  token: string,
+  key: string,
+  payload: { he: string; en: string }
+): Promise<{ key: string; he: string; en: string }> {
+  const res = await fetch(`${API_BASE_URL}/api/content/text/${key}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+    body: JSON.stringify(payload),
+  });
+  if (res.status === 401 || res.status === 403) {
+    throw new UnauthorizedError("Not authorized");
+  }
+  if (!res.ok) {
+    throw new Error(`Failed to update content: ${res.status}`);
+  }
+  return res.json();
+}
+
+export async function uploadContentImage(
+  token: string,
+  key: string,
+  file: File
+): Promise<{ key: string; url: string }> {
+  const formData = new FormData();
+  formData.append("image", file);
+
+  // No Content-Type header here — the browser sets the multipart boundary
+  // itself. Setting it manually (like every JSON call above does) strips
+  // that boundary and breaks the upload.
+  const res = await fetch(`${API_BASE_URL}/api/content/images/${key}`, {
+    method: "PUT",
+    headers: { Authorization: `Bearer ${token}` },
+    body: formData,
+  });
+  if (res.status === 401 || res.status === 403) {
+    throw new UnauthorizedError("Not authorized");
+  }
+  if (!res.ok) {
+    const body = await res.json().catch(() => null);
+    throw new Error(body?.error || `Failed to upload image: ${res.status}`);
   }
   return res.json();
 }

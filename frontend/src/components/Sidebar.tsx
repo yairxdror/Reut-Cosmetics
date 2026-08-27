@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Link from "next/link";
 import { useLanguage, type TranslationKey } from "@/context/LanguageContext";
-import { isAdminLoggedIn, ADMIN_AUTH_EVENT } from "@/lib/adminAuth";
+import { useAdmin } from "@/context/AdminContext";
 
 const NAV_ITEMS: { href: string; key: TranslationKey }[] = [
   { href: "/faq", key: "faq" },
@@ -18,20 +18,7 @@ const NAV_ITEMS: { href: string; key: TranslationKey }[] = [
 
 export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const { t } = useLanguage();
-  const [isAdmin, setIsAdmin] = useState(false);
-
-  useEffect(() => {
-    function checkAdmin() {
-      setIsAdmin(isAdminLoggedIn());
-    }
-    checkAdmin();
-    window.addEventListener(ADMIN_AUTH_EVENT, checkAdmin);
-    window.addEventListener("storage", checkAdmin);
-    return () => {
-      window.removeEventListener(ADMIN_AUTH_EVENT, checkAdmin);
-      window.removeEventListener("storage", checkAdmin);
-    };
-  }, []);
+  const { isAdmin } = useAdmin();
 
   useEffect(() => {
     if (!isOpen) return;

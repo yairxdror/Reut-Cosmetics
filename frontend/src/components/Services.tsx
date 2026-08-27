@@ -2,7 +2,9 @@
 
 import { useEffect, useRef } from "react";
 import { useLanguage } from "@/context/LanguageContext";
-import { FeatherIcon, GraduationCapIcon, ImageIcon, LeafIcon, MakeupBrushIcon } from "@/components/icons";
+import { FeatherIcon, GraduationCapIcon, LeafIcon, MakeupBrushIcon } from "@/components/icons";
+import Editable from "@/components/Editable";
+import EditableImage from "@/components/EditableImage";
 
 const GOLD_TONES = ["#9f6a0b", "#c58a16", "#dfad35", "#f0cf70", "#fff0ad"] as const;
 
@@ -168,9 +170,9 @@ function SparkleLayers() {
   );
 }
 
-function SparkleBaseGlow() {
+function SparkleBaseGlow({ className = "" }: { className?: string }) {
   return (
-    <div className="service-sparkle-base-glow" aria-hidden="true">
+    <div className={`service-sparkle-base-glow ${className}`.trim()} aria-hidden="true">
       <svg viewBox="0 0 600 560" preserveAspectRatio="none" focusable="false">
         <ellipse className="service-sparkle-glow-wide" cx="300" cy="280" rx="254" ry="219" />
         <ellipse className="service-sparkle-glow-core" cx="300" cy="280" rx="251" ry="216" />
@@ -183,6 +185,7 @@ function PermanentMakeupSparkles() {
   return (
     <>
       <SparkleBaseGlow />
+      <SparkleBaseGlow className="service-sparkle-base-glow-mobile-front" />
       <div className="service-sparkle-halo service-sparkle-halo-back" aria-hidden="true">
         <SparkleLayers />
       </div>
@@ -245,9 +248,13 @@ export default function Services() {
 
   return (
     <section className="services-section">
-      <h2 className="services-title" aria-label={t("servicesTitle")}>
-        <span className="services-title-kicker">{t("servicesTitleKicker")}</span>
-        <span className="services-title-main">{t("servicesTitleMain")}</span>
+      <h2 className="services-title" aria-label={`${t("servicesTitleKicker")} ${t("servicesTitleMain")}`}>
+        <span className="services-title-kicker">
+          <Editable contentKey="servicesTitleKicker">{t("servicesTitleKicker")}</Editable>
+        </span>
+        <span className="services-title-main">
+          <Editable contentKey="servicesTitleMain">{t("servicesTitleMain")}</Editable>
+        </span>
       </h2>
       <div className="services-grid">
         {SERVICES.map(({ badgeIcon: BadgeIcon, titleKey, descKey }) => {
@@ -264,14 +271,23 @@ export default function Services() {
             <div ref={isPermanentMakeup ? permanentMakeupCardRef : undefined} className={cardClassName} key={titleKey}>
               {isPermanentMakeup && <PermanentMakeupSparkles />}
               <div className="service-image">
-                <ImageIcon size={32} />
-                <span>{t("servicesImageLabel")}</span>
+                <EditableImage
+                  imageKey="servicesCardImage"
+                  fallbackSrc="/images/permanent-eyebrow-card.png"
+                  alt={t(titleKey)}
+                  sizes="(max-width: 860px) 85vw, 420px"
+                  className="service-image-photo"
+                />
                 <div className="service-badge">
                   <BadgeIcon size={18} />
                 </div>
               </div>
-              <h3 className="service-card-title">{t(titleKey)}</h3>
-              <p className="service-card-desc">{t(descKey)}</p>
+              <h3 className="service-card-title">
+                <Editable contentKey={titleKey}>{t(titleKey)}</Editable>
+              </h3>
+              <p className="service-card-desc">
+                <Editable contentKey={descKey}>{t(descKey)}</Editable>
+              </p>
               <a className="service-card-link" href="#">
                 {t("detailsLink")}
               </a>

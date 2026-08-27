@@ -1,7 +1,8 @@
 "use client";
 
 import { useLanguage } from "@/context/LanguageContext";
-import { ImageIcon } from "@/components/icons";
+import Editable from "@/components/Editable";
+import EditableImage from "@/components/EditableImage";
 
 const PRIVATE_COURSES = [
   {
@@ -18,7 +19,9 @@ export default function PrivateCourses() {
 
   return (
     <section className="private-courses-section">
-      <p className="private-courses-intro">{t("privateCoursesIntro")}</p>
+      <p className="private-courses-intro">
+        <Editable contentKey="privateCoursesIntro">{t("privateCoursesIntro")}</Editable>
+      </p>
       <div className="pc-list">
         {PRIVATE_COURSES.map(({ titleKey, descKey, methodsLabelKey, methodKeys }, index) => (
           <div
@@ -26,18 +29,31 @@ export default function PrivateCourses() {
             key={titleKey}
           >
             <div className="pc-card-image">
-              <ImageIcon size={36} />
-              <span>{t("servicesImageLabel")}</span>
+              <EditableImage
+                imageKey="coursesCardImage"
+                fallbackSrc="/images/permanent-eyebrow-card.png"
+                alt={t(titleKey)}
+                sizes="(max-width: 700px) 235px, 370px"
+                className="pc-card-photo"
+              />
             </div>
             <div className="pc-card-content">
-              <h3 className="pc-card-title">{t(titleKey)}</h3>
-              <p className="pc-card-desc">{t(descKey)}</p>
+              <h3 className="pc-card-title">
+                <Editable contentKey={titleKey}>{t(titleKey)}</Editable>
+              </h3>
+              <p className="pc-card-desc">
+                <Editable contentKey={descKey}>{t(descKey)}</Editable>
+              </p>
               {methodKeys && (
                 <>
-                  <p className="pc-card-methods-label">{t(methodsLabelKey!)}</p>
+                  <p className="pc-card-methods-label">
+                    <Editable contentKey={methodsLabelKey!}>{t(methodsLabelKey!)}</Editable>
+                  </p>
                   <ol className="pc-card-methods">
                     {methodKeys.map((methodKey) => (
-                      <li key={methodKey}>{t(methodKey)}</li>
+                      <li key={methodKey}>
+                        <Editable contentKey={methodKey}>{t(methodKey)}</Editable>
+                      </li>
                     ))}
                   </ol>
                 </>

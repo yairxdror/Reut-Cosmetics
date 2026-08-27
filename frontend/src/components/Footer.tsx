@@ -1,8 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
+import Editable from "@/components/Editable";
+import EditableImage from "@/components/EditableImage";
 import logo from "@/assets/logo.png";
 import { WhatsAppIcon, PhoneIcon, InstagramIcon, FacebookIcon, LocationPinIcon } from "@/components/icons";
 import {
@@ -47,10 +48,12 @@ export default function Footer() {
 
         <a className="footer-col footer-location-link" href="#location">
           <h3 className="footer-col-title">
-            {t("locationTitle")}
+            <Editable contentKey="locationTitle">{t("locationTitle")}</Editable>
             <LocationPinIcon size={16} />
           </h3>
-          <p className="footer-hours-line">{t("locationAddress")}</p>
+          <p className="footer-hours-line">
+            <Editable contentKey="locationAddress">{t("locationAddress")}</Editable>
+          </p>
         </a>
 
         <div className="footer-col footer-socials">
@@ -81,7 +84,15 @@ export default function Footer() {
         </div>
 
         <div className="footer-col footer-col-brand">
-          <Image src={logo} alt="Reut Yakobi" className="footer-logo" />
+          <span className="footer-logo-frame">
+            <EditableImage
+              imageKey="logo"
+              fallbackSrc={logo}
+              alt="Reut Yakobi"
+              sizes="40px"
+              style={{ objectFit: "contain" }}
+            />
+          </span>
           <div className="footer-brand-text">
             <span className="footer-brand-main">Reut</span>
             <span className="footer-brand-sub">COSMETICS</span>
@@ -90,8 +101,10 @@ export default function Footer() {
       </div>
 
       <p className="footer-copyright">
-        {t("footerRights")}
-        <span className="footer-credit">{t("developedBy")}</span>
+        <Editable contentKey="footerRights">{t("footerRights")}</Editable>
+        <span className="footer-credit">
+          <Editable contentKey="developedBy">{t("developedBy")}</Editable>
+        </span>
       </p>
     </footer>
   );

@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import { cookies } from "next/headers";
 import "./globals.css";
 import { LanguageProvider } from "@/context/LanguageContext";
+import { AdminProvider } from "@/context/AdminContext";
 import { LANGUAGE_COOKIE_NAME, type Language } from "@/lib/language";
 import SiteChrome from "@/components/SiteChrome";
 
@@ -49,7 +50,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang={initialLanguage} dir={initialLanguage === "he" ? "rtl" : "ltr"}>
       <body className={gveretLevin.variable}>
         <LanguageProvider initialLanguage={initialLanguage}>
-          <SiteChrome>{children}</SiteChrome>
+          <AdminProvider>
+            <SiteChrome>{children}</SiteChrome>
+          </AdminProvider>
         </LanguageProvider>
       </body>
     </html>

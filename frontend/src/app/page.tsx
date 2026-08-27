@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
-import Image from "next/image";
+import { useLayoutEffect, useRef } from "react";
 import heroProduct from "@/assets/hero-product.jpg";
 import { useLanguage } from "@/context/LanguageContext";
+import { useAdmin } from "@/context/AdminContext";
 import { WHATSAPP_URL } from "@/lib/contact";
-import { isAdminLoggedIn, ADMIN_AUTH_EVENT } from "@/lib/adminAuth";
+import Editable from "@/components/Editable";
+import EditableImage from "@/components/EditableImage";
 import {
   CrownIcon,
   DiamondIcon,
@@ -31,114 +31,79 @@ const FEATURES = [
 
 export default function Home() {
   const { t } = useLanguage();
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const { isAdmin } = useAdmin();
   const ctaRef = useRef<HTMLAnchorElement>(null);
 
-  useEffect(() => {
-    setMounted(true);
-    function checkAdmin() {
-      setIsAdmin(isAdminLoggedIn());
-    }
-    checkAdmin();
-    window.addEventListener(ADMIN_AUTH_EVENT, checkAdmin);
-    return () => window.removeEventListener(ADMIN_AUTH_EVENT, checkAdmin);
-  }, []);
-
-  // For guests, this button is always position: fixed (portaled to
-  // document.body, see below) and its position/size are driven entirely by
-  // CSS custom properties so the shrink is one continuous, scroll-linked
-  // transform on a single persistent element — never a swap to a different
-  // node. --wa-progress (0 -> 1) tracks how far it's traveled from its
-  // natural spot in the hero toward the nav bar; .hero-whatsapp-cta's CSS
-  // interpolates position and size from that. It's portaled (rather than
-  // just fixed in place) because the nav bar's backdrop-filter blurs
-  // anything painted before it in the DOM regardless of z-index — being
-  // portaled keeps it after the nav bar in DOM order the whole time, so it
-  // never renders blurry.
-  useEffect(() => {
-    if (isAdmin || !mounted) return;
+  // The CTA remains in the hero's normal document flow until its center
+  // meets the nav bar's center. The very same element then becomes fixed at
+  // those identical viewport coordinates. This makes its travel native page
+  // movement instead of a JavaScript approximation of the scroll.
+  useLayoutEffect(() => {
+    if (isAdmin) return;
     const scrollEl = document.querySelector<HTMLElement>(".page-scroll");
     const navEl = document.querySelector<HTMLElement>(".nav-bar");
+    const anchorEl = document.querySelector<HTMLElement>(".hero-cta-row");
     const ctaEl = ctaRef.current;
-    if (!scrollEl || !navEl || !ctaEl) return;
+    if (!scrollEl || !navEl || !anchorEl || !ctaEl) return;
 
-    let startTop = 0;
-    let endTop = 0;
-    let distance = 1;
+    const scrollContainer = scrollEl;
+    const navBar = navEl;
+    const anchor = anchorEl;
+    const cta = ctaEl;
+
+    const SHRINK_START = 0.65;
+    let dockScrollTop = 1;
+
+    function update() {
+      const progress = Math.min(Math.max(scrollContainer.scrollTop / dockScrollTop, 0), 1);
+      const mobileShrink =
+        window.innerWidth <= 560
+          ? Math.min(Math.max((progress - SHRINK_START) / (1 - SHRINK_START), 0), 1)
+          : 0;
+
+      cta.classList.toggle("is-docked", scrollContainer.scrollTop >= dockScrollTop);
+      cta.style.setProperty("--wa-shrink", String(mobileShrink));
+    }
 
     function measure() {
-      const anchorEl = document.querySelector<HTMLElement>(".hero-cta-row");
-      const suffixEl = ctaEl?.querySelector<HTMLElement>(".hero-whatsapp-cta-label-suffix");
-      if (!anchorEl || !navEl || !scrollEl || !ctaEl) return;
-      const anchorRect = anchorEl.getBoundingClientRect();
-      const navRect = navEl.getBoundingClientRect();
-      startTop = anchorRect.top + scrollEl.scrollTop + anchorRect.height / 2;
-      endTop = navRect.top + navRect.height / 2;
-      distance = Math.max(startTop - endTop, 1);
-      const startLeft = anchorRect.left + anchorRect.width / 2;
-      // On desktop there's plenty of open space in the nav bar either way,
-      // so sliding sideways into a centered dock spot is just unnecessary
-      // motion — keep it docking straight up at its natural column
-      // position instead. Mobile still recenters into the (narrow) gap.
-      const isDesktopLayout = window.innerWidth > 860;
-      const endLeft = isDesktopLayout ? startLeft : navRect.left + navRect.width / 2;
-      ctaEl.style.setProperty("--wa-start-top", `${startTop}px`);
-      ctaEl.style.setProperty("--wa-end-top", `${endTop}px`);
-      ctaEl.style.setProperty("--wa-start-left", `${startLeft}px`);
-      ctaEl.style.setProperty("--wa-end-left", `${endLeft}px`);
-      if (suffixEl) ctaEl.style.setProperty("--wa-suffix-width", `${suffixEl.scrollWidth}px`);
+      const anchorRect = anchor.getBoundingClientRect();
+      const navRect = navBar.getBoundingClientRect();
+      const anchorDocumentCenter = anchorRect.top + scrollContainer.scrollTop + anchorRect.height / 2;
+      const dockTop = navRect.top + navRect.height / 2;
+      dockScrollTop = Math.max(anchorDocumentCenter - dockTop, 1);
+
+      cta.style.setProperty("--wa-dock-top", `${dockTop}px`);
+      cta.style.setProperty("--wa-dock-left", `${anchorRect.left + anchorRect.width / 2}px`);
+
+      const suffixEl = cta.querySelector<HTMLElement>(".hero-whatsapp-cta-label-suffix");
+      if (suffixEl) cta.style.setProperty("--wa-suffix-width", `${suffixEl.scrollWidth}px`);
+      update();
     }
 
-    let rafId: number | null = null;
-
-    // Position (top/left) tracks the full scroll range so the button rises
-    // continuously the whole way, but shrinking only starts once it's
-    // mostly there — SHRINK_START of the way through the journey — so it
-    // stays full-size for the first stretch of scrolling and only gets
-    // smaller once it's actually close to the nav bar.
-    const SHRINK_START = 0.65;
-
-    function updateProgress() {
-      rafId = null;
-      if (!scrollEl || !ctaEl) return;
-      const progress = Math.min(Math.max(scrollEl.scrollTop / distance, 0), 1);
-      const shrink = Math.min(Math.max((progress - SHRINK_START) / (1 - SHRINK_START), 0), 1);
-      ctaEl.style.setProperty("--wa-progress", String(progress));
-      ctaEl.style.setProperty("--wa-shrink", String(shrink));
-    }
-
-    function onScroll() {
-      if (rafId !== null) return;
-      rafId = requestAnimationFrame(updateProgress);
+    function handleResize() {
+      measure();
     }
 
     measure();
-    updateProgress();
-    scrollEl.addEventListener("scroll", onScroll);
-    window.addEventListener("resize", measure);
+    scrollContainer.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", handleResize);
+
+    const resizeObserver = new ResizeObserver(handleResize);
+    resizeObserver.observe(navBar);
+    resizeObserver.observe(anchor);
 
     return () => {
-      scrollEl.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", measure);
-      if (rafId !== null) cancelAnimationFrame(rafId);
+      scrollContainer.removeEventListener("scroll", update);
+      window.removeEventListener("resize", handleResize);
+      resizeObserver.disconnect();
+      cta.classList.remove("is-docked");
+      cta.style.removeProperty("--wa-shrink");
     };
-  }, [isAdmin, mounted]);
+  }, [isAdmin]);
 
-  // Admins get a plain, always-in-flow button (no dock effect at all — the
-  // .hero-whatsapp-cta class below, which carries the fixed positioning, is
-  // deliberately left off so it can never be affected by the guest effect).
-  const adminCta = (
-    <a className="btn-hero btn-hero-gold" href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
-      <WhatsAppIcon size={18} />
-      <span>{t("whatsappCta")}</span>
-    </a>
-  );
-
-  // The label is split so "core" ("Chat with us") always stays visible even
-  // once docked, while only "suffix" ("on WhatsApp") gradually collapses
-  // away on narrow screens where there isn't room for the full phrase.
-  const floatingCta = (
+  // On narrow screens only the suffix gradually collapses; the core label
+  // and WhatsApp icon remain visible after docking.
+  const whatsappCta = (
     <a
       ref={ctaRef}
       className="btn-hero btn-hero-gold hero-whatsapp-cta"
@@ -159,10 +124,10 @@ export default function Home() {
       <section className="hero-banner">
         <div className="hero-image-col">
           <div className="hero-image-placeholder-full">
-            <Image
-              src={heroProduct}
+            <EditableImage
+              imageKey="heroProduct"
+              fallbackSrc={heroProduct}
               alt={`${t("heroTitleMain")} ${t("heroTitleLine2Prefix")} ${t("heroTitleHighlight")}`}
-              fill
               sizes="(max-width: 860px) 100vw, 50vw"
               style={{ objectFit: "contain" }}
               priority
@@ -171,20 +136,25 @@ export default function Home() {
           <div className="hero-badge">
             <CrownIcon size={27} />
             <span>
-              {t("heroBadgeLine1")}
+              <Editable contentKey="heroBadgeLine1">{t("heroBadgeLine1")}</Editable>
               <br />
-              <strong>{t("heroBadgeLine2")}</strong>
+              <strong>
+                <Editable contentKey="heroBadgeLine2">{t("heroBadgeLine2")}</Editable>
+              </strong>
               <br />
-              {t("heroBadgeLine3")}
+              <Editable contentKey="heroBadgeLine3">{t("heroBadgeLine3")}</Editable>
             </span>
           </div>
         </div>
 
         <div className="hero-content">
           <h1>
-            {t("heroTitleMain")}
+            <Editable contentKey="heroTitleMain">{t("heroTitleMain")}</Editable>
             <br />
-            {t("heroTitleLine2Prefix")} <span className="text-gold">{t("heroTitleHighlight")}</span>
+            <Editable contentKey="heroTitleLine2Prefix">{t("heroTitleLine2Prefix")}</Editable>{" "}
+            <span className="text-gold">
+              <Editable contentKey="heroTitleHighlight">{t("heroTitleHighlight")}</Editable>
+            </span>
           </h1>
 
           <div className="hero-divider">
@@ -193,15 +163,19 @@ export default function Home() {
             <span className="hero-divider-line" />
           </div>
 
-          <p className="hero-description">{t("heroSubtitle")}</p>
+          <p className="hero-description">
+            <Editable contentKey="heroSubtitle">{t("heroSubtitle")}</Editable>
+          </p>
 
-          <div className="hero-cta-row">{(isAdmin || !mounted) && adminCta}</div>
+          <div className="hero-cta-row">{whatsappCta}</div>
 
           <div className="hero-features">
             {FEATURES.map(({ icon: FeatureIcon, key }) => (
               <div className="hero-feature" key={key}>
                 <FeatureIcon size={26} />
-                <span>{t(key)}</span>
+                <span>
+                  <Editable contentKey={key}>{t(key)}</Editable>
+                </span>
               </div>
             ))}
           </div>
@@ -215,8 +189,6 @@ export default function Home() {
       <Reviews />
       <Contact />
       <Footer />
-
-      {!isAdmin && mounted && createPortal(floatingCta, document.body)}
     </>
   );
 }

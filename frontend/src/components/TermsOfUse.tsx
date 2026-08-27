@@ -23,7 +23,7 @@ export default function TermsOfUse() {
       <section className="form-section">
         <h2 className="form-section-title text-gold">השירותים המוצעים</h2>
         <p>
-          Reut Cosmetics מציעה טיפולי איפור קבוע (מיקרובליידינג) והדרכת קורסים פרטניים בתחום. האתר מספק
+          Reut Cosmetics מציעה טיפולי איפור קבוע (מיקרובליידינג) והדרכת קורסים בתחום. האתר מספק
           מידע על השירותים, אפשרות ליצירת קשר ותיאום, ומרחב להצגת ביקורות לקוחות.
         </p>
       </section>
