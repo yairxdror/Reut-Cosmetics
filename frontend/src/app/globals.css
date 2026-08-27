@@ -1519,13 +1519,13 @@ html[dir="ltr"] .sidebar-panel-open {
 }
 
 .services-title-kicker {
-  font-size: clamp(1.5rem, 3.2vw, 2.5rem);
+  font-size: clamp(1.65rem, 3.4vw, 2.65rem);
   line-height: 1.15;
   letter-spacing: -0.02em;
 }
 
 .services-title-main {
-  font-size: clamp(3.25rem, 6.5vw, 5rem);
+  font-size: clamp(3.5rem, 6.8vw, 5.25rem);
   line-height: 0.95;
   letter-spacing: -0.045em;
 }
@@ -1552,11 +1552,11 @@ html[dir="ltr"] .sidebar-panel-open {
   }
 
   .services-title-kicker {
-    font-size: clamp(1.65rem, 3.4vw, 2.75rem);
+    font-size: clamp(1.8rem, 3.6vw, 2.9rem);
   }
 
   .services-title-main {
-    font-size: clamp(3.5rem, 6.9vw, 5.4rem);
+    font-size: clamp(3.75rem, 7.2vw, 5.7rem);
   }
 }
 
@@ -2268,8 +2268,9 @@ html.a11y-reduce-motion .service-sparkle-orbit {
 }
 
 .location-map-wrap {
-  width: 100%;
-  min-height: 425px;
+  width: calc(100% - 2rem);
+  min-height: 400px;
+  margin-inline: auto;
   border-radius: 1rem;
   overflow: hidden;
   border: 1px solid rgba(169, 127, 30, 0.35);
@@ -2279,7 +2280,7 @@ html.a11y-reduce-motion .service-sparkle-orbit {
   display: block;
   width: 100%;
   height: 100%;
-  min-height: 425px;
+  min-height: 400px;
   border: 0;
 }
 
@@ -2305,13 +2306,13 @@ html.a11y-reduce-motion .service-sparkle-orbit {
   }
 
   .location-map-wrap {
-    min-height: 410px;
-    width: calc(100% + 30px);
-    margin-inline: -15px;
+    min-height: 385px;
+    width: 100%;
+    margin-inline: 0;
   }
 
   .location-map {
-    min-height: 410px;
+    min-height: 385px;
   }
 }
 
