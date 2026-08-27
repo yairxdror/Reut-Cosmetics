@@ -1,5 +1,6 @@
 "use client";
 
+import eyebrowShaping from "@/assets/Eyebrow-shaping.png";
 import { useLanguage } from "@/context/LanguageContext";
 import Editable from "@/components/Editable";
 import EditableImage from "@/components/EditableImage";
@@ -31,7 +32,7 @@ export default function PrivateCourses() {
             <div className="pc-card-image">
               <EditableImage
                 imageKey="coursesCardImage"
-                fallbackSrc="/images/permanent-eyebrow-card.png"
+                fallbackSrc={eyebrowShaping}
                 alt={t(titleKey)}
                 sizes="(max-width: 700px) 235px, 370px"
                 className="pc-card-photo"

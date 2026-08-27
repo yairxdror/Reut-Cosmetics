@@ -37,9 +37,9 @@ export default function Home() {
   // The CTA remains in the hero's normal document flow until its center
   // meets the nav bar's center. The very same element then becomes fixed at
   // those identical viewport coordinates. This makes its travel native page
-  // movement instead of a JavaScript approximation of the scroll.
+  // movement instead of a JavaScript approximation of the scroll. Guests
+  // get the effect everywhere; signed-in admins get it on desktop only.
   useLayoutEffect(() => {
-    if (isAdmin) return;
     const scrollEl = document.querySelector<HTMLElement>(".page-scroll");
     const navEl = document.querySelector<HTMLElement>(".nav-bar");
     const anchorEl = document.querySelector<HTMLElement>(".hero-cta-row");
@@ -55,6 +55,13 @@ export default function Home() {
     let dockScrollTop = 1;
 
     function update() {
+      const effectEnabled = !isAdmin || window.innerWidth > 860;
+      if (!effectEnabled) {
+        cta.classList.remove("is-docked");
+        cta.style.setProperty("--wa-shrink", "0");
+        return;
+      }
+
       const progress = Math.min(Math.max(scrollContainer.scrollTop / dockScrollTop, 0), 1);
       const mobileShrink =
         window.innerWidth <= 560

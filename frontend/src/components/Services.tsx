@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import eyebrowShaping from "@/assets/Eyebrow-shaping.png";
 import { useLanguage } from "@/context/LanguageContext";
 import { FeatherIcon, GraduationCapIcon, LeafIcon, MakeupBrushIcon } from "@/components/icons";
 import Editable from "@/components/Editable";
@@ -273,7 +274,7 @@ export default function Services() {
               <div className="service-image">
                 <EditableImage
                   imageKey="servicesCardImage"
-                  fallbackSrc="/images/permanent-eyebrow-card.png"
+                  fallbackSrc={eyebrowShaping}
                   alt={t(titleKey)}
                   sizes="(max-width: 860px) 85vw, 420px"
                   className="service-image-photo"
