@@ -7,6 +7,7 @@ import { saveEditToken, getEditToken } from "@/lib/reviewEditTokens";
 import { containsProfanity } from "@/lib/profanityFilter";
 import { PencilIcon, QuoteIcon, StarIcon } from "@/components/icons";
 import Editable from "@/components/Editable";
+import TieredTitle from "@/components/TieredTitle";
 
 const MIN_TEXT_LENGTH = 3;
 const MAX_TEXT_LENGTH = 500;
@@ -214,11 +215,9 @@ export default function Reviews() {
   return (
     <section className="reviews-section">
       <div className="reviews-header-row">
-        <h2 className="reviews-title text-gold">
-          <Editable contentKey="reviewsTitle">{t("reviewsTitle")}</Editable>
-        </h2>
+        <TieredTitle contentKey="reviewsTitle" className="reviews-title" />
         <button type="button" className="btn btn-black" onClick={openCreateModal}>
-          {t("addReviewButton")}
+          <Editable contentKey="addReviewButton">{t("addReviewButton")}</Editable>
         </button>
       </div>
 
@@ -338,10 +337,10 @@ export default function Reviews() {
                   {editingReview
                     ? status === "submitting"
                       ? t("reviewUpdating")
-                      : t("reviewUpdate")
+                      : <Editable contentKey="reviewUpdate">{t("reviewUpdate")}</Editable>
                     : status === "submitting"
                       ? t("reviewSubmitting")
-                      : t("reviewSubmit")}
+                      : <Editable contentKey="reviewSubmit">{t("reviewSubmit")}</Editable>}
                 </button>
                 {errors.form && <span className="form-error">{errors.form}</span>}
               </div>

@@ -1322,7 +1322,7 @@ html[dir="ltr"] .sidebar-panel-open {
   margin-top: 0.2rem;
   width: 1.1rem;
   height: 1.1rem;
-  accent-color: var(--color-blue);
+  accent-color: var(--color-gold);
   cursor: pointer;
 }
 
@@ -1403,24 +1403,46 @@ html[dir="ltr"] .sidebar-panel-open {
 .editable-image-affordance {
   position: absolute;
   top: 0.6rem;
-  inset-inline-end: 0.6rem;
+  left: calc(50% - 4px);
+  transform: translateX(-50%);
   z-index: 5;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.25rem;
-  height: 2.25rem;
+  width: 2rem;
+  height: 2rem;
+  /* !important on padding/color/opacity: leftover card styles from the old
+     placeholder-icon design (e.g. ".pc-card-image span { padding: 0 1rem;
+     color: var(--color-black); opacity: 0.55; ... }") match this badge too,
+     since it's also a <span> — and that legacy selector's class+type
+     specificity beats this one regardless of source order. Left unfixed,
+     the icon rendered dark-on-dark at reduced opacity: barely visible
+     rather than just small. */
+  padding: 0 !important;
   border-radius: var(--radius-full);
   border: none;
   background: rgba(26, 23, 18, 0.55);
-  color: #fff;
+  color: #fff !important;
+  opacity: 1 !important;
   cursor: pointer;
   transition: background-color 0.2s ease, transform 0.15s ease;
 }
 
+/* Some cards (e.g. .pc-card-image) are themselves flex containers left over
+   from an earlier placeholder-icon layout. This badge is position:absolute
+   so it doesn't participate in that flex layout directly, but without an
+   explicit flex-shrink:0 the icon svg inside it can still get its
+   flex-basis miscomputed to near-zero in that context, rendering as a
+   sliver instead of a square icon. */
+.editable-image-affordance svg {
+  flex-shrink: 0;
+  width: 17px;
+  height: 17px;
+}
+
 .editable-image-affordance:hover {
   background: var(--color-gold);
-  transform: scale(1.08);
+  transform: translateX(-50%) scale(1.08);
 }
 
 .editable-image-preview {
@@ -1627,6 +1649,107 @@ html[dir="ltr"] .sidebar-panel-open {
   box-shadow: 0 18px 44px rgba(104, 67, 7, 0.12), 0 0 0 1px rgba(240, 207, 112, 0.12);
 }
 
+.service-bridal-brush {
+  display: none;
+}
+
+@media (min-width: 861px) {
+  .service-card-bridal {
+    --bridal-brush-angle: 0deg;
+    position: relative;
+    isolation: isolate;
+    overflow: visible;
+  }
+
+  .service-card-bridal .service-image {
+    border-radius: calc(1rem - 1px) calc(1rem - 1px) 0 0;
+  }
+
+  .service-card-bridal > .service-image,
+  .service-card-bridal > .service-card-title,
+  .service-card-bridal > .service-card-desc,
+  .service-card-bridal > .service-card-link {
+    position: relative;
+    z-index: 2;
+  }
+
+  .service-bridal-brush {
+    position: absolute;
+    inset-inline-end: calc(100% + clamp(9rem, 11vw, 13.5rem));
+    top: 50%;
+    z-index: 1;
+    display: block;
+    width: clamp(210px, 18vw, 310px);
+    aspect-ratio: 2 / 3;
+    pointer-events: none;
+    transform: translateY(-50%) rotate(var(--bridal-brush-angle));
+    transform-origin: 50% 50%;
+    will-change: transform;
+    filter: drop-shadow(0 18px 22px rgba(63, 39, 8, 0.2));
+  }
+
+  .service-bridal-brush img {
+    object-fit: contain;
+  }
+}
+
+.service-card-wax {
+  --face-shine-position: 66%;
+  position: relative;
+  isolation: isolate;
+  overflow: visible;
+}
+
+.service-card-wax .service-image {
+  border-radius: calc(1rem - 1px) calc(1rem - 1px) 0 0;
+}
+
+.service-golden-face {
+  position: absolute;
+  inset-inline-start: calc(100% - 2.65rem);
+  top: 7.5%;
+  z-index: 1;
+  width: clamp(205px, 18vw, 275px);
+  aspect-ratio: 2 / 3;
+  pointer-events: none;
+  filter: drop-shadow(0 10px 16px rgba(104, 67, 7, 0.13));
+}
+
+.service-golden-face-image {
+  object-fit: contain;
+}
+
+.service-golden-face-image-shimmer {
+  opacity: 0.92;
+  filter: brightness(1.7) saturate(0.72) drop-shadow(0 0 5px rgba(255, 230, 139, 0.65));
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    transparent 46%,
+    rgba(0, 0, 0, 0.5) 48.5%,
+    #000 50%,
+    rgba(0, 0, 0, 0.5) 51.5%,
+    transparent 54%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    transparent 46%,
+    rgba(0, 0, 0, 0.5) 48.5%,
+    #000 50%,
+    rgba(0, 0, 0, 0.5) 51.5%,
+    transparent 54%,
+    transparent 100%
+  );
+  -webkit-mask-size: 100% 400%;
+  mask-size: 100% 400%;
+  -webkit-mask-position: 50% var(--face-shine-position);
+  mask-position: 50% var(--face-shine-position);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
 /* A translucent surface above the rear half of the orbit makes those
    particles read as being behind the card. The front half is stacked over
    this surface below, creating one continuous ring with real depth. */
@@ -1697,13 +1820,13 @@ html[dir="ltr"] .sidebar-panel-open {
 
 .service-sparkle-glow-wide {
   stroke: rgba(223, 173, 53, 0.16);
-  stroke-width: 56;
+  stroke-width: 64;
   filter: blur(15px);
 }
 
 .service-sparkle-glow-core {
   stroke: rgba(240, 207, 112, 0.15);
-  stroke-width: 19;
+  stroke-width: 22;
   filter: blur(6.5px);
 }
 
@@ -1898,6 +2021,11 @@ html.a11y-reduce-motion .service-sparkle-orbit {
   align-self: center;
   margin: 0 1.25rem;
   padding: 0.5rem 1.5rem;
+  /* background/font: three of these four cards render this as a <button>
+     (it opens an in-page detail modal, not a real link), which — unlike
+     <a> — has its own UA-default background/font unless reset here. */
+  background: none;
+  font-family: inherit;
   border: 1.5px solid var(--color-gold);
   border-radius: var(--radius-full);
   color: var(--color-gold);
@@ -1916,6 +2044,13 @@ html.a11y-reduce-motion .service-sparkle-orbit {
 
 .service-card-link:active {
   transform: scale(0.97);
+}
+
+.service-detail-text {
+  margin: 0;
+  line-height: 1.7;
+  opacity: 0.85;
+  text-align: center;
 }
 
 @media (max-width: 860px) {
@@ -1956,16 +2091,28 @@ html.a11y-reduce-motion .service-sparkle-orbit {
     margin-inline: auto;
   }
 
+  .service-golden-face {
+    inset-inline-start: auto;
+    left: calc(50% - 50vw + 0.75rem);
+    top: auto;
+    bottom: calc(100% - 0.15rem);
+    width: 122px;
+    opacity: 0.96;
+    transform: none;
+    filter: drop-shadow(0 8px 12px rgba(104, 67, 7, 0.16));
+  }
+
   .service-sparkle-halo {
     inset: var(--sparkle-halo-inset);
   }
 
-  /* Mobile uses the exact desktop composition, masks and particle counts.
-     Only the complete decorative stack is scaled uniformly, preserving
-     the same proportions while fitting the smaller viewport. */
+  /* The halo already scales with the responsive card. Avoid shrinking it a
+     second time on mobile, which pulled most particles behind the card and
+     made the orbit look sparse. The slightly shorter Y axis keeps the upper
+     arc rounded rather than pointed. */
   .service-card-permanent {
-    --sparkle-effect-scale: 0.94;
-    --sparkle-effect-y-scale: 0.91;
+    --sparkle-effect-scale: 1;
+    --sparkle-effect-y-scale: 0.96;
   }
 
   .service-sparkle-halo {
@@ -1987,7 +2134,7 @@ html.a11y-reduce-motion .service-sparkle-orbit {
   .service-sparkle-base-glow-mobile-front {
     display: block;
     z-index: 3;
-    opacity: 0.82;
+    opacity: 0.9;
     -webkit-mask-image: linear-gradient(
       to bottom,
       #000 0%,
@@ -2009,21 +2156,52 @@ html.a11y-reduce-motion .service-sparkle-orbit {
   }
 
   .service-sparkle-glow-wide {
-    stroke-width: 62;
+    stroke-width: 72;
     filter: blur(16px);
   }
 
   .service-sparkle-glow-core {
-    stroke-width: 21;
+    stroke-width: 25;
     filter: blur(7px);
   }
 
   .service-sparkle-halo-front {
-    opacity: 0.97;
+    opacity: 1;
+    filter: saturate(1.12) drop-shadow(0 6px 6px rgba(111, 72, 7, 0.2));
   }
 
   .service-sparkle-halo-back {
-    opacity: 0.58;
+    opacity: 0.64;
+    filter: blur(0.35px) saturate(0.96);
+  }
+
+  .service-sparkle-orbit-inner {
+    opacity: 0.88;
+  }
+
+  .service-sparkle-orbit-flares {
+    filter: drop-shadow(0 0 4px rgba(223, 173, 53, 0.62));
+  }
+
+  /* Preserve the desktop particle count while compensating for the smaller
+     physical pixels. Non-scaling outlines keep dust, shards and flares
+     crisp and visible without turning the composition into a solid ring. */
+  .service-sparkle-layer circle {
+    stroke: rgba(223, 173, 53, 0.28);
+    stroke-width: 0.75px;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .service-sparkle-layer rect {
+    stroke: rgba(159, 106, 11, 0.24);
+    stroke-width: 0.65px;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .service-sparkle-layer-flares path {
+    stroke: rgba(240, 207, 112, 0.38);
+    stroke-width: 0.85px;
+    vector-effect: non-scaling-stroke;
   }
 
   /* More breathing room above the first card and below the last one. */
@@ -2033,20 +2211,6 @@ html.a11y-reduce-motion .service-sparkle-orbit {
 
   .services-section {
     padding-bottom: 5.5rem;
-  }
-}
-
-@media (max-width: 560px) {
-  .service-card-permanent {
-    --sparkle-effect-scale: 0.88;
-    --sparkle-effect-y-scale: 0.84;
-  }
-}
-
-@media (max-width: 380px) {
-  .service-card-permanent {
-    --sparkle-effect-scale: 0.84;
-    --sparkle-effect-y-scale: 0.8;
   }
 }
 
@@ -2249,8 +2413,13 @@ html.a11y-reduce-motion .service-sparkle-orbit {
 }
 
 .location-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
   text-align: center;
-  font-size: 1.75rem;
+  color: #573724;
+  line-height: 1;
   margin-bottom: 2rem;
 }
 
@@ -2330,9 +2499,14 @@ html.a11y-reduce-motion .service-sparkle-orbit {
 }
 
 .reviews-title {
-  font-size: 1.75rem;
-  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
   text-align: center;
+  color: #573724;
+  line-height: 1;
+  margin: 0;
 }
 
 .reviews-header-row > .btn {
@@ -2652,10 +2826,12 @@ html[dir="rtl"] .reviews-grid-scroll {
   border-radius: 1.25rem;
   padding: 2.5rem 1.5rem;
   text-align: center;
+  margin-top: 2rem;
 }
 
 .contact-title {
-  font-size: 1.75rem;
+  text-align: center;
+  color: #573724;
   margin-bottom: 1.5rem;
 }
 
@@ -2664,10 +2840,6 @@ html[dir="rtl"] .reviews-grid-scroll {
   flex-wrap: wrap;
   justify-content: center;
   gap: 1rem;
-}
-
-.contact-card .consultation-bar {
-  margin-top: 2rem;
 }
 
 /* ---------- Site footer ---------- */
@@ -3024,6 +3196,47 @@ html[dir="rtl"] input.consultation-input[type="tel"] {
   opacity: 0.85;
 }
 
+.faq-question-text {
+  flex: 1;
+}
+
+.faq-admin-toolbar {
+  text-align: center;
+  margin: 1.5rem 0 0;
+}
+
+.faq-admin-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.faq-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: var(--radius-full);
+  background: rgba(169, 127, 30, 0.12);
+  color: var(--color-gold);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.faq-action-btn:hover {
+  background: rgba(169, 127, 30, 0.25);
+  transform: scale(1.08);
+}
+
+.faq-form-section-label {
+  margin: 0 0 0.75rem;
+  font-weight: 600;
+  color: var(--color-gold);
+}
+
 /* ---------- Care instructions page ---------- */
 
 .care-instructions {
@@ -3054,15 +3267,29 @@ html[dir="rtl"] input.consultation-input[type="tel"] {
 
 .care-list {
   margin: 0;
-  padding-inline-start: 1.25rem;
+  padding-inline-start: 0;
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
   line-height: 1.6;
+  list-style: none;
 }
 
-.care-list li::marker {
-  color: var(--color-gold);
+.care-list li {
+  position: relative;
+  padding-inline-start: 1.25rem;
+}
+
+.care-list li::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  top: 0.8em;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: var(--color-gold);
+  transform: translateY(-50%);
 }
 
 .care-contact {
@@ -3099,16 +3326,16 @@ html[dir="rtl"] input.consultation-input[type="tel"] {
 }
 
 .care-timeline-image {
+  position: relative;
+  /* Matches healing-timeline.png's real intrinsic size, so the fill image
+     below sizes exactly like the plain <img width:100%; height:auto;> this
+     replaced, instead of needing a fixed height that would stop it being
+     responsive. */
+  aspect-ratio: 1672 / 941;
   border: 1px solid rgba(169, 127, 30, 0.35);
   border-radius: 1rem;
   overflow: hidden;
   padding: 1.25rem 0;
-}
-
-.care-timeline-image img {
-  display: block;
-  width: 100%;
-  height: auto;
 }
 
 .password-field-wrap {

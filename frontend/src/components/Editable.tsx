@@ -9,7 +9,24 @@ import type { EditableTextKey } from "@/lib/editableContent";
 import { PencilIcon } from "@/components/icons";
 import EditPopover from "@/components/EditPopover";
 
-export default function Editable({ contentKey, children }: { contentKey: EditableTextKey; children: ReactNode }) {
+export default function Editable({
+  contentKey,
+  children,
+  editable = true,
+  interceptAncestorClick = true,
+}: {
+  contentKey: EditableTextKey;
+  children: ReactNode;
+  editable?: boolean;
+  // Some call sites nest this inside a real interactive ancestor whose own
+  // click matters (e.g. a "more details" button that opens a modal) rather
+  // than a plain link/anchor being suppressed as a byproduct of editing —
+  // there, forwarding every click on the whole text to the ancestor would
+  // make the ancestor's actual action unreachable while in edit mode.
+  // false restricts the intercept to just the pencil badge, letting a
+  // click anywhere else in the text fall through to the ancestor.
+  interceptAncestorClick?: boolean;
+}) {
   const { isAdmin, isEditMode } = useAdmin();
   const { t, getTextPair, applyTextOverride } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
@@ -18,9 +35,10 @@ export default function Editable({ contentKey, children }: { contentKey: Editabl
   const [status, setStatus] = useState<"idle" | "submitting">("idle");
   const [error, setError] = useState("");
 
-  // True no-op outside edit mode — zero DOM/CSS difference for the vast
-  // majority of page loads that aren't an actively-editing admin.
-  if (!isAdmin || !isEditMode) {
+  // True no-op outside edit mode (or when this specific instance opts out
+  // via editable={false}) — zero DOM/CSS difference for the vast majority
+  // of page loads that aren't an actively-editing admin.
+  if (!editable || !isAdmin || !isEditMode) {
     return <>{children}</>;
   }
 
@@ -84,7 +102,12 @@ export default function Editable({ contentKey, children }: { contentKey: Editabl
         className="editable-trigger"
         role="button"
         tabIndex={0}
-        onClick={handleTriggerActivate}
+        onClick={(event) => {
+          if (!interceptAncestorClick && !(event.target as HTMLElement).closest(".editable-affordance")) {
+            return;
+          }
+          handleTriggerActivate(event);
+        }}
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") handleTriggerActivate(e);
         }}

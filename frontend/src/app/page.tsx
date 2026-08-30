@@ -120,8 +120,12 @@ export default function Home() {
     >
       <WhatsAppIcon size={18} />
       <span className="hero-whatsapp-cta-label">
-        <span className="hero-whatsapp-cta-label-core">{t("whatsappCtaCore")}</span>{" "}
-        <span className="hero-whatsapp-cta-label-suffix">{t("whatsappCtaSuffix")}</span>
+        <span className="hero-whatsapp-cta-label-core">
+          <Editable contentKey="whatsappCtaCore">{t("whatsappCtaCore")}</Editable>
+        </span>{" "}
+        <span className="hero-whatsapp-cta-label-suffix">
+          <Editable contentKey="whatsappCtaSuffix">{t("whatsappCtaSuffix")}</Editable>
+        </span>
       </span>
     </a>
   );

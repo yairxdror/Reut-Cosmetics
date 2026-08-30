@@ -7,6 +7,7 @@ import { isAdminLoggedIn, getAdminToken } from "@/lib/adminAuth";
 import { fetchHealthDeclarations, UnauthorizedError, type HealthDeclarationSubmission } from "@/lib/api";
 import { QUESTIONS } from "@/components/HealthDeclarationForm";
 import Spinner from "@/components/Spinner";
+import Editable from "@/components/Editable";
 
 const PAGE_SIZE = 20;
 const SEARCH_DEBOUNCE_MS = 300;
@@ -159,7 +160,7 @@ export default function AdminDashboard() {
                     const detail = submission.details?.[question.id];
                     return (
                       <li className="admin-answer-item" key={question.id}>
-                        <span className="admin-answer-question">{question.text}</span>
+                        <span className="admin-answer-question">{t(question.textKey)}</span>
                         <span className={`admin-answer-value ${answer === "yes" ? "admin-answer-yes" : "admin-answer-no"}`}>
                           {answer === "yes" ? t("adminAnswerYes") : t("adminAnswerNo")}
                         </span>
@@ -181,7 +182,7 @@ export default function AdminDashboard() {
       {hasMore && (loadState === "loaded" || loadState === "loadingMore") && (
         <div className="admin-load-more-row">
           <button type="button" className="btn btn-black" onClick={handleLoadMore} disabled={loadState === "loadingMore"}>
-            {loadState === "loadingMore" ? t("adminLoadingMore") : t("adminLoadMore")}
+            {loadState === "loadingMore" ? t("adminLoadingMore") : <Editable contentKey="adminLoadMore">{t("adminLoadMore")}</Editable>}
           </button>
         </div>
       )}

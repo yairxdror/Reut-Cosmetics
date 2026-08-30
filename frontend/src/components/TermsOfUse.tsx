@@ -1,108 +1,133 @@
-import { PHONE_TEL_URL, PHONE_DISPLAY_NUMBER, whatsappUrl } from "@/lib/contact";
+"use client";
 
-const PAYMENT_TERMS = [
-  'התמורה הכספית (להלן: "שכר טרחה") מזכה בשני טיפולים בלבד. כל טיפול נוסף מעבר לכך יהיה בתשלום.',
-  "יש לשלם מראש את מלוא המחיר עבור שני הטיפולים.",
-  "לא תתאפשר החזרת כספים לאחר תחילת הטיפול הראשון, גם אם בוצע רק חלקית.",
-  'הצבע המתקבל תלוי בפיגמנט העור ומשתנה מאדם לאדם. במקרים בהם הצבע נדחה על ידי העור, ייתכן צורך בטיפול נוסף בתשלום (להלן: "טיפול שלישי").',
-  "יש להגיע לטיפול השני במועד שייקבע. אי הגעה בטווח של עד חודשיים עלולה לפגוע בתוצאה הסופית, והאחריות לכך לא תחול על המטפלת.",
-  "המטפלת אינה מחויבת לקבל לקוחה לטיפול מעבר למועד המיועד והנכון לכך.",
+import { PHONE_TEL_URL, whatsappUrl } from "@/lib/contact";
+import { useLanguage } from "@/context/LanguageContext";
+import Editable from "@/components/Editable";
+import type { EditableTextKey } from "@/lib/editableContent";
+
+const PAYMENT_TERM_KEYS: EditableTextKey[] = [
+  "touPayment1",
+  "touPayment2",
+  "touPayment3",
+  "touPayment4",
+  "touPayment5",
+  "touPayment6",
 ];
 
 export default function TermsOfUse() {
+  const { t } = useLanguage();
+
   return (
     <div className="care-instructions">
       <section className="form-section">
-        <h2 className="form-section-title text-gold">כללי</h2>
+        <h2 className="form-section-title text-gold">
+          <Editable contentKey="touGeneralTitle">{t("touGeneralTitle")}</Editable>
+        </h2>
         <p>
-          תנאי שימוש אלו חלים על כל שימוש באתר Reut Cosmetics ובשירותים המוצעים בו. גלישה באתר, שימוש
-          בטפסים או הזמנת שירות מהווים הסכמה לתנאים אלו במלואם.
+          <Editable contentKey="touGeneralText">{t("touGeneralText")}</Editable>
         </p>
       </section>
 
       <section className="form-section">
-        <h2 className="form-section-title text-gold">השירותים המוצעים</h2>
+        <h2 className="form-section-title text-gold">
+          <Editable contentKey="touServicesTitle">{t("touServicesTitle")}</Editable>
+        </h2>
         <p>
-          Reut Cosmetics מציעה טיפולי איפור קבוע (מיקרובליידינג) והדרכת קורסים בתחום. האתר מספק
-          מידע על השירותים, אפשרות ליצירת קשר ותיאום, ומרחב להצגת ביקורות לקוחות.
+          <Editable contentKey="touServicesText">{t("touServicesText")}</Editable>
         </p>
       </section>
 
       <section className="form-section">
-        <h2 className="form-section-title text-gold">הצהרת בריאות</h2>
+        <h2 className="form-section-title text-gold">
+          <Editable contentKey="touHealthTitle">{t("touHealthTitle")}</Editable>
+        </h2>
         <p>
-          לפני קבלת טיפול נדרשת מילוי הצהרת בריאות מלאה ואמיתית. מסירת מידע חלקי או לא מדויק עלולה לפגוע
-          בתוצאה הסופית ואף לסכן את בריאות הלקוחה, והאחריות לכך תחול על הלקוחה בלבד.
+          <Editable contentKey="touHealthText">{t("touHealthText")}</Editable>
         </p>
       </section>
 
       <section className="form-section">
-        <h2 className="form-section-title text-gold">תנאי תשלום, ביטולים והחזרים</h2>
+        <h2 className="form-section-title text-gold">
+          <Editable contentKey="touPaymentTitle">{t("touPaymentTitle")}</Editable>
+        </h2>
         <ul className="care-list">
-          {PAYMENT_TERMS.map((term, index) => (
-            <li key={index}>{term}</li>
+          {PAYMENT_TERM_KEYS.map((key) => (
+            <li key={key}>
+              <Editable contentKey={key}>{t(key)}</Editable>
+            </li>
           ))}
         </ul>
       </section>
 
       <section className="form-section">
-        <h2 className="form-section-title text-gold">ביקורות לקוחות</h2>
+        <h2 className="form-section-title text-gold">
+          <Editable contentKey="touReviewsTitle">{t("touReviewsTitle")}</Editable>
+        </h2>
         <p>
-          ביקורות המתפרסמות באתר משקפות את דעתן האישית של הלקוחות ואינן מבוטאות את עמדת Reut Cosmetics.
-          לקוחה רשאית לערוך ביקורת שפרסמה בתוך 15 דקות ממועד הפרסום. אנו שומרות לעצמנו את הזכות להסיר
-          ביקורות הכוללות תוכן פוגעני, מטעה או שאינו הולם.
+          <Editable contentKey="touReviewsText">{t("touReviewsText")}</Editable>
         </p>
       </section>
 
       <section className="form-section">
-        <h2 className="form-section-title text-gold">קניין רוחני</h2>
+        <h2 className="form-section-title text-gold">
+          <Editable contentKey="touIpTitle">{t("touIpTitle")}</Editable>
+        </h2>
         <p>
-          כל הזכויות בתכני האתר, לרבות טקסטים, תמונות, עיצוב ולוגו, שייכות ל-Reut Cosmetics. אין להעתיק,
-          להפיץ או לעשות שימוש בתכני האתר ללא אישור מראש ובכתב.
+          <Editable contentKey="touIpText">{t("touIpText")}</Editable>
         </p>
       </section>
 
       <section className="form-section">
-        <h2 className="form-section-title text-gold">הגבלת אחריות</h2>
+        <h2 className="form-section-title text-gold">
+          <Editable contentKey="touLiabilityTitle">{t("touLiabilityTitle")}</Editable>
+        </h2>
         <p>
-          הטיפולים המוצעים הינם אינדיבידואליים ותוצאותיהם משתנות מאדם לאדם בהתאם לסוג העור ולגורמים
-          נוספים; אין באתר או בתיאום טיפול משום התחייבות לתוצאה מסוימת. Reut Cosmetics אינה אחראית לתכנים
-          חיצוניים המוטמעים באתר (כגון מפת Google Maps) ואינה נושאת באחריות לנזק עקיף שייגרם כתוצאה משימוש
-          באתר.
+          <Editable contentKey="touLiabilityText">{t("touLiabilityText")}</Editable>
         </p>
       </section>
 
       <section className="form-section">
-        <h2 className="form-section-title text-gold">שינויים בתנאים</h2>
+        <h2 className="form-section-title text-gold">
+          <Editable contentKey="touChangesTitle">{t("touChangesTitle")}</Editable>
+        </h2>
         <p>
-          Reut Cosmetics רשאית לעדכן תנאים אלו מעת לעת. המשך השימוש באתר לאחר פרסום עדכון מהווה הסכמה
-          לתנאים המעודכנים.
+          <Editable contentKey="touChangesText">{t("touChangesText")}</Editable>
         </p>
       </section>
 
       <section className="form-section">
-        <h2 className="form-section-title text-gold">דין וסמכות שיפוט</h2>
+        <h2 className="form-section-title text-gold">
+          <Editable contentKey="touJurisdictionTitle">{t("touJurisdictionTitle")}</Editable>
+        </h2>
         <p>
-          על תנאים אלו יחולו דיני מדינת ישראל בלבד, וסמכות השיפוט הבלעדית בכל עניין הנוגע להם תהא נתונה
-          לבתי המשפט המוסמכים בירושלים.
+          <Editable contentKey="touJurisdictionText">{t("touJurisdictionText")}</Editable>
         </p>
       </section>
 
       <section className="form-section">
-        <h2 className="form-section-title text-gold">יצירת קשר</h2>
-        <p>לכל שאלה בנוגע לתנאי השימוש ניתן לפנות אלינו:</p>
+        <h2 className="form-section-title text-gold">
+          <Editable contentKey="touContactTitle">{t("touContactTitle")}</Editable>
+        </h2>
+        <p>
+          <Editable contentKey="touContactIntro">{t("touContactIntro")}</Editable>
+        </p>
         <p className="legal-contact-line">
-          טלפון: <a href={PHONE_TEL_URL}>{PHONE_DISPLAY_NUMBER}</a>
+          <Editable contentKey="legalPhoneLabel">{t("legalPhoneLabel")}</Editable>{" "}
+          <a href={PHONE_TEL_URL}>
+            <Editable contentKey="phoneDisplayNumber">{t("phoneDisplayNumber")}</Editable>
+          </a>
         </p>
         <p className="legal-contact-line">
-          WhatsApp:{" "}
+          <Editable contentKey="legalWhatsappLabel">{t("legalWhatsappLabel")}</Editable>{" "}
           <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer">
-            {PHONE_DISPLAY_NUMBER}
+            <Editable contentKey="phoneDisplayNumber">{t("phoneDisplayNumber")}</Editable>
           </a>
         </p>
       </section>
 
-      <p className="accessibility-updated">תנאי שימוש אלו עודכנו לאחרונה בתאריך 25.08.2026.</p>
+      <p className="accessibility-updated">
+        <Editable contentKey="touLastUpdated">{t("touLastUpdated")}</Editable>
+      </p>
     </div>
   );
 }

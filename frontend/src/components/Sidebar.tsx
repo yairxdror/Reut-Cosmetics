@@ -49,7 +49,11 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
           </button>
         </div>
         <nav className="sidebar-nav">
-          {NAV_ITEMS.filter((item) => item.href !== "/login" || !isAdmin).map((item) => (
+          {NAV_ITEMS.filter(
+            (item) =>
+              (item.href !== "/login" || !isAdmin) &&
+              (item.href !== "/health-declaration" || isAdmin)
+          ).map((item) => (
             <Link key={item.href} href={item.href} className="sidebar-link" onClick={onClose}>
               {t(item.key)}
             </Link>

@@ -8,6 +8,7 @@ import Sidebar from "./Sidebar";
 import AccessibilityWidget from "./AccessibilityWidget";
 import ServiceWorkerRegistration from "./ServiceWorkerRegistration";
 import EditableImage from "@/components/EditableImage";
+import Editable from "@/components/Editable";
 import logo from "@/assets/logo.png";
 import { clearAdminToken } from "@/lib/adminAuth";
 import { useLanguage } from "@/context/LanguageContext";
@@ -24,6 +25,10 @@ export default function SiteChrome({ children }: { children: ReactNode }) {
   const router = useRouter();
   const { t } = useLanguage();
   const isHome = pathname === "/";
+  // The FAQ page's add/edit/delete controls work for any logged-in admin
+  // regardless of edit mode, so the toggle has nothing to do there —
+  // hiding it avoids implying it's needed on that specific page.
+  const isFaqPage = pathname === "/faq";
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [thumb, setThumb] = useState<{ top: number; height: number } | null>(null);
   const { isAdmin, isEditMode, toggleEditMode } = useAdmin();
@@ -126,8 +131,12 @@ export default function SiteChrome({ children }: { children: ReactNode }) {
             aria-label="Go to home page"
           >
             <span className="nav-bar-brand">
-              <span className="nav-bar-brand-main">Reut</span>
-              <span className="nav-bar-brand-sub">Cosmetics</span>
+              <span className="nav-bar-brand-main">
+                <Editable contentKey="brandNameMain">{t("brandNameMain")}</Editable>
+              </span>
+              <span className="nav-bar-brand-sub">
+                <Editable contentKey="brandNameSub">{t("brandNameSub")}</Editable>
+              </span>
             </span>
             <span className="nav-bar-logo-frame">
               <EditableImage
@@ -145,7 +154,7 @@ export default function SiteChrome({ children }: { children: ReactNode }) {
           <HamburgerButton isOpen={isMenuOpen} onClick={() => setIsMenuOpen((prev) => !prev)} />
           <LanguageButton />
           {!isHome && <HomeButton />}
-          {isAdmin && (
+          {isAdmin && !isFaqPage && (
             <button
               type="button"
               className="btn-glass-thin btn-icon-only"

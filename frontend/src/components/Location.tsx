@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { WazeIcon } from "@/components/icons";
 import Editable from "@/components/Editable";
+import TieredTitle from "@/components/TieredTitle";
 
 export default function Location() {
   const { t } = useLanguage();
@@ -24,9 +25,7 @@ export default function Location() {
 
   return (
     <section className="location-section" id="location">
-      <h2 className="location-title text-gold">
-        <Editable contentKey="locationTitle">{t("locationTitle")}</Editable>
-      </h2>
+      <TieredTitle contentKey="locationTitle" className="location-title" />
       <div className="location-content">
         <div className="location-map-wrap">
           <iframe
@@ -43,7 +42,7 @@ export default function Location() {
           </p>
           <a className="btn btn-blue" href={wazeUrl} target="_blank" rel="noopener noreferrer">
             <WazeIcon size={18} />
-            {t("wazeCta")}
+            <Editable contentKey="wazeCta">{t("wazeCta")}</Editable>
           </a>
         </div>
       </div>

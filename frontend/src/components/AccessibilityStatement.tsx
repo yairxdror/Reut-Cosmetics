@@ -1,69 +1,93 @@
-const MEASURES = [
-  "מבנה סמנטי של הדף (כותרות, אזורי ניווט ותוכן) לתמיכה בקוראי מסך.",
-  "טקסט חלופי (alt) לתמונות משמעותיות באתר.",
-  "אפשרות ניווט וסגירת תפריטים באמצעות מקלדת (כולל מקש Escape בתפריט הצד).",
-  "ניגודיות צבעים נבדקת בין טקסט לרקע בהתאם לעיצוב האתר.",
-  "תפריט נגישות צף המאפשר הגדלת טקסט, ניגודיות גבוהה, עצירת אנימציות, הדגשת קישורים, גופן קריא וגווני אפור.",
-];
+"use client";
+
+import { useLanguage } from "@/context/LanguageContext";
+import Editable from "@/components/Editable";
+import type { EditableTextKey } from "@/lib/editableContent";
+
+const MEASURE_KEYS: EditableTextKey[] = ["asMeasure1", "asMeasure2", "asMeasure3", "asMeasure4", "asMeasure5"];
 
 export default function AccessibilityStatement() {
+  const { t } = useLanguage();
+
   return (
     <div className="care-instructions">
       <section className="form-section">
-        <h2 className="form-section-title text-gold">מחויבות לנגישות</h2>
+        <h2 className="form-section-title text-gold">
+          <Editable contentKey="asCommitmentTitle">{t("asCommitmentTitle")}</Editable>
+        </h2>
         <p>
-          אנו ב-Reut Cosmetics רואות חשיבות רבה במתן שירות שוויוני ונגיש לכלל הלקוחות, לרבות אנשים עם
-          מוגבלות. אנו פועלות להנגשת האתר בהתאם לחוק שוויון זכויות לאנשים עם מוגבלות, התשנ&quot;ח-1998,
-          ולתקנות שוויון זכויות לאנשים עם מוגבלות (התאמות נגישות לשירות), התשע&quot;ג-2013.
+          <Editable contentKey="asCommitmentText">{t("asCommitmentText")}</Editable>
         </p>
       </section>
 
       <section className="form-section">
-        <h2 className="form-section-title text-gold">התאמות הנגישות באתר</h2>
+        <h2 className="form-section-title text-gold">
+          <Editable contentKey="asMeasuresTitle">{t("asMeasuresTitle")}</Editable>
+        </h2>
         <ul className="care-list">
-          {MEASURES.map((measure, index) => (
-            <li key={index}>{measure}</li>
+          {MEASURE_KEYS.map((key) => (
+            <li key={key}>
+              <Editable contentKey={key}>{t(key)}</Editable>
+            </li>
           ))}
         </ul>
       </section>
 
       <section className="form-section">
-        <h2 className="form-section-title text-gold">רמת הנגישות</h2>
+        <h2 className="form-section-title text-gold">
+          <Editable contentKey="asLevelTitle">{t("asLevelTitle")}</Editable>
+        </h2>
         <p>
-          האתר נבנה מתוך כוונה לעמוד בדרישות תקן ישראלי 5568, בהתאם להנחיות הנגישות לתכנים באינטרנט
-          WCAG 2.0 ברמה AA. ההצהרה מבוססת על בדיקה עצמית ואינה מהווה אישור ממבדק נגישות מוסמך.
+          <Editable contentKey="asLevelText">{t("asLevelText")}</Editable>
         </p>
       </section>
 
       <section className="form-section">
-        <h2 className="form-section-title text-gold">מגבלות ידועות</h2>
+        <h2 className="form-section-title text-gold">
+          <Editable contentKey="asLimitationsTitle">{t("asLimitationsTitle")}</Editable>
+        </h2>
         <p>
-          ייתכן שחלקים מסוימים באתר טרם הונגשו במלואם, ובכלל זה תכנים חיצוניים המוטמעים באתר (כגון מפת
-          Google Maps) שאינם בשליטתנו המלאה. אנו ממשיכות לפעול לשיפור מתמיד של הנגישות באתר.
+          <Editable contentKey="asLimitationsText">{t("asLimitationsText")}</Editable>
         </p>
       </section>
 
       <section className="form-section">
-        <h2 className="form-section-title text-gold">פנייה בנושא נגישות</h2>
-        <p>נתקלת בבעיית נגישות באתר? נשמח שתפני אלינו ונטפל בפנייתך בהקדם:</p>
+        <h2 className="form-section-title text-gold">
+          <Editable contentKey="asContactTitle">{t("asContactTitle")}</Editable>
+        </h2>
         <p>
-          רכזת הנגישות: <strong>Codedly</strong>
+          <Editable contentKey="asContactIntro">{t("asContactIntro")}</Editable>
+        </p>
+        <p>
+          <Editable contentKey="asCoordinatorLabel">{t("asCoordinatorLabel")}</Editable>{" "}
+          <strong>
+            <Editable contentKey="asCoordinatorName">{t("asCoordinatorName")}</Editable>
+          </strong>
           <br />
-          טלפון: <a href="tel:+972522225834">052-222-5834</a>
+          <Editable contentKey="legalPhoneLabel">{t("legalPhoneLabel")}</Editable>{" "}
+          <a href="tel:+972522225834">
+            <Editable contentKey="asCoordinatorPhone">{t("asCoordinatorPhone")}</Editable>
+          </a>
           <br />
-          אימייל: <a href="mailto:codedly.il@gmail.com">codedly.il@gmail.com</a>
+          <Editable contentKey="asEmailLabel">{t("asEmailLabel")}</Editable>{" "}
+          <a href="mailto:codedly.il@gmail.com">
+            <Editable contentKey="asCoordinatorEmail">{t("asCoordinatorEmail")}</Editable>
+          </a>
         </p>
       </section>
 
       <section className="form-section">
-        <h2 className="form-section-title text-gold">פנייה לנציבות שוויון זכויות</h2>
+        <h2 className="form-section-title text-gold">
+          <Editable contentKey="asComplaintsTitle">{t("asComplaintsTitle")}</Editable>
+        </h2>
         <p>
-          במידה שלא קיבלת מענה מספק לפנייתך, ניתן לפנות לנציבות שוויון זכויות לאנשים עם מוגבלות במשרד
-          המשפטים.
+          <Editable contentKey="asComplaintsText">{t("asComplaintsText")}</Editable>
         </p>
       </section>
 
-      <p className="accessibility-updated">הצהרת נגישות זו עודכנה לאחרונה בתאריך 25.08.2026.</p>
+      <p className="accessibility-updated">
+        <Editable contentKey="asLastUpdated">{t("asLastUpdated")}</Editable>
+      </p>
     </div>
   );
 }

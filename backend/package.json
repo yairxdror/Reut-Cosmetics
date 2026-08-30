@@ -6,7 +6,8 @@
   "main": "src/index.js",
   "scripts": {
     "dev": "nodemon --legacy-watch --ignore src/data/ src/index.js",
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "migrate:firebase": "node src/scripts/migrate-to-firebase.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
@@ -14,8 +15,10 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "express-rate-limit": "^8.6.2",
+    "firebase-admin": "^14.3.0",
     "jsonwebtoken": "^9.0.3",
-    "multer": "^2.0.1"
+    "multer": "^2.0.1",
+    "sharp": "^0.35.4"
   },
   "devDependencies": {
     "nodemon": "^3.1.7"

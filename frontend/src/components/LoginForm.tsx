@@ -6,6 +6,7 @@ import { loginAdmin, InvalidCredentialsError } from "@/lib/api";
 import { useLanguage } from "@/context/LanguageContext";
 import { setAdminToken } from "@/lib/adminAuth";
 import { EyeIcon, EyeOffIcon } from "@/components/icons";
+import Editable from "@/components/Editable";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MIN_PASSWORD_LENGTH = 6;
@@ -103,7 +104,7 @@ export default function LoginForm() {
 
         <div className="form-submit-row">
           <button className="btn btn-black" type="submit" disabled={status === "submitting"}>
-            {status === "submitting" ? t("loginSubmitting") : t("loginSubmit")}
+            {status === "submitting" ? t("loginSubmitting") : <Editable contentKey="loginSubmit">{t("loginSubmit")}</Editable>}
           </button>
           {errors.form && <span className="form-error">{errors.form}</span>}
         </div>

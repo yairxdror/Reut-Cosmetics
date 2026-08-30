@@ -5,6 +5,7 @@ import { useLanguage, type TranslationKey } from "@/context/LanguageContext";
 import { WhatsAppIcon, InstagramIcon, PhoneIcon } from "@/components/icons";
 import { WHATSAPP_URL, PHONE_TEL_URL, INSTAGRAM_URL, whatsappUrl } from "@/lib/contact";
 import { isValidIsraeliPhone } from "@/lib/israeliValidation";
+import Editable from "@/components/Editable";
 
 const SERVICE_OPTIONS: TranslationKey[] = ["service1Title", "service2Title", "service3Title", "service4Title"];
 
@@ -42,23 +43,25 @@ export default function Contact() {
 
   return (
     <section className="contact-section">
-      <div className="contact-card">
-        <h2 className="contact-title text-gold">{t("contactSectionTitle")}</h2>
-        <div className="contact-buttons">
-          <a className="btn-hero btn-hero-gold" href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
-            <WhatsAppIcon size={18} />
-            {t("whatsappCta")}
-          </a>
-          <a className="btn-hero btn-hero-gold" href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer">
-            <InstagramIcon size={18} />
-            {t("instagramCta")}
-          </a>
-          <a className="btn-hero btn-hero-gold" href={PHONE_TEL_URL}>
-            <PhoneIcon size={18} />
-            {t("phoneCta")}
-          </a>
-        </div>
+      <h2 className="contact-title services-title-kicker">
+        <Editable contentKey="contactSectionTitle">{t("contactSectionTitle")}</Editable>
+      </h2>
+      <div className="contact-buttons">
+        <a className="btn-hero btn-hero-gold" href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
+          <WhatsAppIcon size={18} />
+          <Editable contentKey="whatsappCta">{t("whatsappCta")}</Editable>
+        </a>
+        <a className="btn-hero btn-hero-gold" href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer">
+          <InstagramIcon size={18} />
+          <Editable contentKey="instagramCta">{t("instagramCta")}</Editable>
+        </a>
+        <a className="btn-hero btn-hero-gold" href={PHONE_TEL_URL}>
+          <PhoneIcon size={18} />
+          <Editable contentKey="phoneCta">{t("phoneCta")}</Editable>
+        </a>
+      </div>
 
+      <div className="contact-card">
         <form className="consultation-bar" onSubmit={handleSubmit}>
           <div className="consultation-fields">
             <input
@@ -95,7 +98,7 @@ export default function Contact() {
               inputMode="tel"
             />
             <button type="submit" className="btn btn-black consultation-submit">
-              {t("consultationSubmit")}
+              <Editable contentKey="consultationSubmit">{t("consultationSubmit")}</Editable>
             </button>
           </div>
           {error && <p className="form-error consultation-error">{error}</p>}

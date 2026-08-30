@@ -3,41 +3,41 @@
 import { useState, type FormEvent } from "react";
 import { submitHealthDeclaration } from "@/lib/api";
 import { isValidIsraeliId, isValidIsraeliPhone } from "@/lib/israeliValidation";
+import { useLanguage } from "@/context/LanguageContext";
+import Editable from "@/components/Editable";
+import type { EditableTextKey } from "@/lib/editableContent";
 
 type YesNo = "yes" | "no";
 
 interface Question {
   id: string;
-  text: string;
+  textKey: EditableTextKey;
 }
 
 export const QUESTIONS: Question[] = [
-  { id: "allergies", text: "האם הינך רגישה לתכשירים קוסמטיים (אלרגיות למשחות/תרופות/חומרים כלשהם)?" },
-  { id: "skinConditionAtSite", text: "האם הינך סובלת ממחלת עור/גירוי פצע באזור המיועד לטיפול?" },
-  { id: "slowHealing", text: "האם הינך סובלת מריפוי איטי של פצעים/הצטלקותם?" },
-  { id: "pregnant", text: "האם הינך בהריון?" },
-  { id: "regularMedication", text: "האם הינך נוטלת תרופות באופן קבוע ו/או כדורים לדילול דם?" },
-  { id: "underInfluence", text: "האם הינך כעת תחת השפעת אלכוהול/סמים/סמים עם מרשם רופא?" },
-  { id: "g6pdDeficiency", text: "האם קיים אצלך חוסר באנזים (G6PD)?" },
-  {
-    id: "seborrheaPsoriasis",
-    text: "האם הינך סובלת ממחלת עור מסוג סבוריאה/אקזמה/פסוריאזיס במקום המיועד לטיפול?",
-  },
-  { id: "roaccutane", text: "האם הינך נוטלת כדורים מסוג רקוטאן?" },
-  { id: "hormoneTherapy", text: "האם הינך לוקחת הורמונים באופן קבוע או בזמן טיפול פוריות IVF?" },
+  { id: "allergies", textKey: "hdQ1" },
+  { id: "skinConditionAtSite", textKey: "hdQ2" },
+  { id: "slowHealing", textKey: "hdQ3" },
+  { id: "pregnant", textKey: "hdQ4" },
+  { id: "regularMedication", textKey: "hdQ5" },
+  { id: "underInfluence", textKey: "hdQ6" },
+  { id: "g6pdDeficiency", textKey: "hdQ7" },
+  { id: "seborrheaPsoriasis", textKey: "hdQ8" },
+  { id: "roaccutane", textKey: "hdQ9" },
+  { id: "hormoneTherapy", textKey: "hdQ10" },
 ];
 
-const AGREEMENT_PARAGRAPHS: string[] = [
-  'ידוע לי כי חובת המטפלת להראות לי את הצורה המתאימה לי בהתאם לתווי הפנים שלי על ידי שימוש בשבלונה/סרגל או כל כלי עזר שברשותה. רק לאחר שראיתי והסכמתי, המטפלת תחל בעבודתה. כמו כן מובן לי שלא יהיה ניתן לעשות כל שינוי בצורה לאחר תחילת העבודה.',
-  'ידוע לי כי הצבע המתקבל תלוי בפיגמנט העור שלי ולכן זה שונה מאדם לאדם. לפיכך ידועה לי העובדה כי במקרים מסוימים הצבע עלול להידחות על ידי העור שלי ואתבקש להגיע לטיפול נוסף בתשלום (להלן: "טיפול שלישי").',
-  'ידוע לי כי בעבור התמורה הכספית (להלן: "שכר טרחה") אקבל שני טיפולים בלבד. כל טיפול מעבר לכך יהיה בתשלום.',
-  "ידוע לי כי אין אחריות על קליטת הפיגמנט בעור והליך המיקרובליידינג הינו אינדיבידואלי ומשתנה מאדם לאדם (סוגי העור שונים וכיוצא בזה).",
-  "ידוע לי כי לא תתאפשר החזרת כספים לאחר תחילת הטיפול הראשון, גם אם בוצע רק חלקית.",
-  "אני מבינה את חשיבות מסירת כל המידע הנוגע לי לפני תחילת העבודה וברור לי שהסתרת כל מידע רלוונטי הנוגע אלי עלול לפגוע בתוצאה הסופית ואף לסכן את בריאותי.",
-  'אני מבינה את חשיבות "דף ההוראות לטיפול בעור לאחר איפור קבוע" שאקבל בסיום הטיפול ואי התייחסותי אליו ואי ביצוע ההוראות שרשומות עלול לפגוע בתהליך הכולל של האיפור הקבוע.',
-  "ידוע לי כי עליי להגיע לטיפול השני במועד שייקבע לי, וכי אי הגעה לטיפול בטווח של עד חודשיים עלולה לפגוע בתוצאה הסופית הרצויה, כאשר האחריות לכך לא תחול על המטפלת.",
-  "כמו כן ידוע לי כי המטפלת לא תהיה חייבת לקבל אותי לטיפול מעבר למועד המיועד והנכון לכך.",
-  "על הלקוחה לשלם מראש את מלוא המחיר עבור שני הטיפולים.",
+const AGREEMENT_PARAGRAPH_KEYS: EditableTextKey[] = [
+  "hdAgreement1",
+  "hdAgreement2",
+  "hdAgreement3",
+  "hdAgreement4",
+  "hdAgreement5",
+  "hdAgreement6",
+  "hdAgreement7",
+  "hdAgreement8",
+  "hdAgreement9",
+  "hdAgreement10",
 ];
 
 interface FormState {
@@ -46,6 +46,7 @@ interface FormState {
   phone: string;
   answers: Record<string, YesNo | undefined>;
   details: Record<string, string>;
+  healthDeclarationConfirmed: boolean;
   agreementAccepted: boolean;
 }
 
@@ -55,13 +56,22 @@ const initialState: FormState = {
   phone: "",
   answers: {},
   details: {},
+  healthDeclarationConfirmed: false,
   agreementAccepted: false,
 };
 
 export default function HealthDeclarationForm() {
+  const { t } = useLanguage();
   const [form, setForm] = useState<FormState>(initialState);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const isFormComplete =
+    form.fullName.trim().length > 0 &&
+    isValidIsraeliId(form.idNumber) &&
+    isValidIsraeliPhone(form.phone) &&
+    QUESTIONS.every((question) => Boolean(form.answers[question.id])) &&
+    form.healthDeclarationConfirmed &&
+    form.agreementAccepted;
 
   function setAnswer(questionId: string, value: YesNo) {
     setForm((prev) => ({
@@ -85,6 +95,9 @@ export default function HealthDeclarationForm() {
     for (const q of QUESTIONS) {
       if (!form.answers[q.id]) next[q.id] = "יש לבחור תשובה";
     }
+    if (!form.healthDeclarationConfirmed) {
+      next.healthDeclarationConfirmation = "יש לאשר את ההסכם כדי להמשיך";
+    }
     if (!form.agreementAccepted) next.agreement = "יש לאשר את ההסכם כדי להמשיך";
     return next;
   }
@@ -105,6 +118,7 @@ export default function HealthDeclarationForm() {
         phone: form.phone.trim(),
         answers: form.answers as Record<string, YesNo>,
         details: form.details,
+        healthDeclarationConfirmed: form.healthDeclarationConfirmed,
         agreementAccepted: form.agreementAccepted,
       });
       setStatus("success");
@@ -118,8 +132,12 @@ export default function HealthDeclarationForm() {
   if (status === "success") {
     return (
       <div className="form-success-banner">
-        <h3 className="text-gold">הטופס נשלח בהצלחה</h3>
-        <p>תודה שמילאת את הצהרת הבריאות. הפרטים התקבלו אצלנו.</p>
+        <h3 className="text-gold">
+          <Editable contentKey="hdSuccessTitle">{t("hdSuccessTitle")}</Editable>
+        </h3>
+        <p>
+          <Editable contentKey="hdSuccessText">{t("hdSuccessText")}</Editable>
+        </p>
       </div>
     );
   }
@@ -127,11 +145,14 @@ export default function HealthDeclarationForm() {
   return (
     <form className="health-form" onSubmit={handleSubmit} noValidate>
       <section className="form-section">
-        <h2 className="form-section-title text-gold">פרטים אישיים</h2>
+        <h2 className="form-section-title text-gold">
+          <Editable contentKey="hdPersonalTitle">{t("hdPersonalTitle")}</Editable>
+        </h2>
 
         <div className="form-field">
           <label className="form-label" htmlFor="fullName">
-            שם מלא <span className="form-required">*</span>
+            <Editable contentKey="hdFullNameLabel">{t("hdFullNameLabel")}</Editable>{" "}
+            <span className="form-required">*</span>
           </label>
           <input
             id="fullName"
@@ -145,7 +166,8 @@ export default function HealthDeclarationForm() {
 
         <div className="form-field">
           <label className="form-label" htmlFor="idNumber">
-            מספר תעודת זהות <span className="form-required">*</span>
+            <Editable contentKey="hdIdNumberLabel">{t("hdIdNumberLabel")}</Editable>{" "}
+            <span className="form-required">*</span>
           </label>
           <input
             id="idNumber"
@@ -160,7 +182,8 @@ export default function HealthDeclarationForm() {
 
         <div className="form-field">
           <label className="form-label" htmlFor="phone">
-            מספר טלפון <span className="form-required">*</span>
+            <Editable contentKey="hdPhoneLabel">{t("hdPhoneLabel")}</Editable>{" "}
+            <span className="form-required">*</span>
           </label>
           <input
             id="phone"
@@ -174,12 +197,14 @@ export default function HealthDeclarationForm() {
       </section>
 
       <section className="form-section">
-        <h2 className="form-section-title text-gold">שאלון בריאות</h2>
+        <h2 className="form-section-title text-gold">
+          <Editable contentKey="hdQuestionnaireTitle">{t("hdQuestionnaireTitle")}</Editable>
+        </h2>
 
         {QUESTIONS.map((q) => (
           <div className="form-question" key={q.id}>
             <p className="form-question-text">
-              {q.text} <span className="form-required">*</span>
+              <Editable contentKey={q.textKey}>{t(q.textKey)}</Editable> <span className="form-required">*</span>
             </p>
             <div className="form-radio-group">
               <button
@@ -188,7 +213,7 @@ export default function HealthDeclarationForm() {
                 onClick={() => setAnswer(q.id, "no")}
                 aria-pressed={form.answers[q.id] === "no"}
               >
-                לא
+                <Editable contentKey="healthFormNo">{t("healthFormNo")}</Editable>
               </button>
               <button
                 type="button"
@@ -196,7 +221,7 @@ export default function HealthDeclarationForm() {
                 onClick={() => setAnswer(q.id, "yes")}
                 aria-pressed={form.answers[q.id] === "yes"}
               >
-                כן
+                <Editable contentKey="healthFormYes">{t("healthFormYes")}</Editable>
               </button>
             </div>
             {errors[q.id] && <span className="form-error">{errors[q.id]}</span>}
@@ -204,7 +229,7 @@ export default function HealthDeclarationForm() {
             {form.answers[q.id] === "yes" && (
               <div className="form-detail-field">
                 <label className="form-label" htmlFor={`detail-${q.id}`}>
-                  אנא פרטי
+                  <Editable contentKey="hdDetailLabel">{t("hdDetailLabel")}</Editable>
                 </label>
                 <input
                   id={`detail-${q.id}`}
@@ -217,14 +242,32 @@ export default function HealthDeclarationForm() {
             )}
           </div>
         ))}
+
+        <label className="form-checkbox-row">
+          <input
+            type="checkbox"
+            checked={form.healthDeclarationConfirmed}
+            onChange={(e) => setForm((prev) => ({ ...prev, healthDeclarationConfirmed: e.target.checked }))}
+          />
+          <span>
+            <Editable contentKey="hdConfirmationText">{t("hdConfirmationText")}</Editable>{" "}
+            <span className="form-required">*</span>
+          </span>
+        </label>
+        {errors.healthDeclarationConfirmation && (
+          <span className="form-error">{errors.healthDeclarationConfirmation}</span>
+        )}
       </section>
 
       <section className="form-section">
-        <h2 className="form-section-title text-gold">הסכם</h2>
-        <p className="form-agreement-intro">ידוע לי כי:</p>
+        <h2 className="form-section-title text-gold">
+          <Editable contentKey="hdAgreementTitle">{t("hdAgreementTitle")}</Editable>
+        </h2>
         <ol className="form-agreement-box">
-          {AGREEMENT_PARAGRAPHS.map((paragraph, index) => (
-            <li key={index}>{paragraph}</li>
+          {AGREEMENT_PARAGRAPH_KEYS.map((key) => (
+            <li key={key}>
+              <Editable contentKey={key}>{t(key)}</Editable>
+            </li>
           ))}
         </ol>
 
@@ -235,15 +278,16 @@ export default function HealthDeclarationForm() {
             onChange={(e) => setForm((prev) => ({ ...prev, agreementAccepted: e.target.checked }))}
           />
           <span>
-            אני מאשרת שקראתי ומסכימה להסכם זה <span className="form-required">*</span>
+            <Editable contentKey="hdAgreementCheckboxText">{t("hdAgreementCheckboxText")}</Editable>{" "}
+            <span className="form-required">*</span>
           </span>
         </label>
         {errors.agreement && <span className="form-error">{errors.agreement}</span>}
       </section>
 
       <div className="form-submit-row">
-        <button className="btn btn-blue" type="submit" disabled={status === "submitting"}>
-          {status === "submitting" ? "שולח..." : "שליחת הטופס"}
+        <button className="btn btn-blue" type="submit" disabled={!isFormComplete || status === "submitting"}>
+          {status === "submitting" ? "שולח..." : <Editable contentKey="hdSubmit">{t("hdSubmit")}</Editable>}
         </button>
         {status === "error" && (
           <span className="form-error">אירעה שגיאה בשליחת הטופס. נסי שוב או צרי קשר טלפוני.</span>

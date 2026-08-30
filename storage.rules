@@ -1,0 +1,11 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Uploads and deletion are performed only by the authenticated backend.
+    // Public site images are served through non-expiring download URLs.
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

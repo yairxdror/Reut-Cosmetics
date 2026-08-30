@@ -1,82 +1,130 @@
-import Image from "next/image";
-import healingTimeline from "@/assets/healing-timeline.png";
+"use client";
 
-const RULES = [
-  "לא לגרד ו/או לשפשף את הגבות – שפשוף המקום עלול לגרום לנזק! ולגרום לצבע להימרח מתחת לעור.",
-  "אין להשתמש בתכשירים קוסמטיים כגון – קרמים המכילים חומצות, קרמים הגורמים לקילוף העור, קרמים להבהרה, קרמים לאקנה, פילינג, סבון פנים פעיל באזור הגבות והמצח עד תום התהליך של 2 הטיפולים.",
-  "קרם פנים טבעי ללא חומצות – אסור למרוח באזור הגבות מיום הטיפול ועד עשרה הימים הראשונים של ההחלמה (ניתן למרוח מאזור העיניים ומטה). לאחר עשרה ימים מותר.",
-  "טיפול פנים ניתן לעשות רק חודש לאחר הטיפול השני.",
-  "אסור לאפר את אזור הגבות כולל המצח למשך 7 ימים, רק לאחר 7 ימים מותר לאפר!",
-  "אין לבצע כל פעילות ספורטיבית למשך שבוע שלם! כן, אסור גם אם לא מזיעים בה.",
-  "אסור ים / בריכה / סאונה / ג'קוזי שבעה ימים הראשונים.",
-  "מומלץ לא להיחשף לשמש באזור הגבות! יש לשמור עליהן על מנת שלא ידהה הצבע במהירות. כמו כן שימוש בקרם הגנה מותר רק עשרה ימים לאחר הטיפול, על מנת שלא יימרח קרם הגנה על עור פתוח!",
+import healingTimeline from "@/assets/healing-timeline.png";
+import { useLanguage } from "@/context/LanguageContext";
+import Editable from "@/components/Editable";
+import EditableImage from "@/components/EditableImage";
+import type { EditableTextKey } from "@/lib/editableContent";
+
+const RULE_KEYS: EditableTextKey[] = [
+  "careRule1",
+  "careRule2",
+  "careRule3",
+  "careRule4",
+  "careRule5",
+  "careRule6",
+  "careRule7",
+  "careRule8",
 ];
 
 export default function CareInstructions() {
+  const { t } = useLanguage();
+
   return (
     <div className="care-instructions">
       <section className="form-section care-intro">
-        <p>לקוחה יקרה,</p>
-        <p>אם את קוראת דף זה כנראה שאת כבר לאחר הטיפול והגבות שלך נראות מושלמות מתמיד.</p>
-        <p>בימים הקרובים תצטרכי להקפיד על הוראות חשובות שיעזרו לגבות שלך להחלים בצורה הטובה ביותר.</p>
+        <p>
+          <Editable contentKey="careIntroGreeting">{t("careIntroGreeting")}</Editable>
+        </p>
+        <p>
+          <Editable contentKey="careIntroLine1">{t("careIntroLine1")}</Editable>
+        </p>
+        <p>
+          <Editable contentKey="careIntroLine2">{t("careIntroLine2")}</Editable>
+        </p>
       </section>
 
       <section className="form-section care-warning">
         <p>
-          <strong>מהיום אסור להרטיב/לשטוף את הגבות למשך חמישה ימים שלמים!</strong>
+          <strong>
+            <Editable contentKey="careWarningBold">{t("careWarningBold")}</Editable>
+          </strong>
         </p>
-        <p>(איך חופפים? עם ראש אחורנית כמו במספרה, שטיפת פנים מהעיניים ומטה).</p>
-      </section>
-
-      <section className="form-section">
-        <h2 className="form-section-title text-gold">טיפול יומי בגבות</h2>
         <p>
-          ממחר עליך לקחת צמר גפן עם מעט מים פושרים ולסחוט אותו שיהיה רק לח! ולעשות טפיחות עדינות על
-          הגבות.
+          <Editable contentKey="careWarningNote">{t("careWarningNote")}</Editable>
         </p>
-        <p>(הרי אסור לשטוף את הגבות למשך חמישה ימים אך עדיין עלינו לנקות את הרקמה).</p>
-        <p>מיד לאחר פעולה זו יש למרוח ממש מעט משחת &quot;בפנטן פלוס&quot; (ממש בקמצנות עם המשחה).</p>
-        <p>את הפעולה עם המשחה יש לבצע פעם 1 ביום למשך 5 ימים בלבד! (עדיפות בערב שהפנים נקיות).</p>
-        <p>(מדגישה שעושים זאת יום אחרי הטיפול, ביום הטיפול לא עושים כלום בגבות).</p>
       </section>
 
       <section className="form-section">
-        <h2 className="form-section-title text-gold">חשוב לדעת</h2>
+        <h2 className="form-section-title text-gold">
+          <Editable contentKey="careDailyTitle">{t("careDailyTitle")}</Editable>
+        </h2>
+        <p>
+          <Editable contentKey="careDaily1">{t("careDaily1")}</Editable>
+        </p>
+        <p>
+          <Editable contentKey="careDaily2">{t("careDaily2")}</Editable>
+        </p>
+        <p>
+          <Editable contentKey="careDaily3">{t("careDaily3")}</Editable>
+        </p>
+        <p>
+          <Editable contentKey="careDaily4">{t("careDaily4")}</Editable>
+        </p>
+        <p>
+          <Editable contentKey="careDaily5">{t("careDaily5")}</Editable>
+        </p>
+      </section>
+
+      <section className="form-section">
+        <h2 className="form-section-title text-gold">
+          <Editable contentKey="careImportantTitle">{t("careImportantTitle")}</Editable>
+        </h2>
         <ul className="care-list">
-          {RULES.map((rule, index) => (
-            <li key={index}>{rule}</li>
+          {RULE_KEYS.map((key) => (
+            <li key={key}>
+              <Editable contentKey={key}>{t(key)}</Editable>
+            </li>
           ))}
         </ul>
       </section>
 
       <section className="form-section">
-        <h2 className="form-section-title text-gold">תהליך ההחלמה</h2>
-        <p>יקרה שלי,</p>
-        <p>היום הגבה נראית מושלמת!</p>
-        <p>ממחר הגבה מתחילה להתכהות מאוד! לא להיבהל, זהו תהליך נורמלי של הגלדה!</p>
-        <p>בין חמישה ימים לשבועיים הגבה מתחילה להתקלף!</p>
+        <h2 className="form-section-title text-gold">
+          <Editable contentKey="careHealingTitle">{t("careHealingTitle")}</Editable>
+        </h2>
         <p>
-          מה קורה אחרי הקילוף? בקושי יישאר משהו מהטיפול הראשון! 90 אחוז מהצבע פשוט יורד ונדחה מהעור!
-          לא תישאר הצורה / הסימטריה / הפיגמנט שנעשה עבורך במעמד הטיפול הראשון, אין תוצאה מושלמת אחרי
-          טיפול אחד בלבד, וזו הסיבה שכל התהליך מורכב משני טיפולים!
+          <Editable contentKey="careHealing1">{t("careHealing1")}</Editable>
+        </p>
+        <p>
+          <Editable contentKey="careHealing2">{t("careHealing2")}</Editable>
+        </p>
+        <p>
+          <Editable contentKey="careHealing3">{t("careHealing3")}</Editable>
+        </p>
+        <p>
+          <Editable contentKey="careHealing4">{t("careHealing4")}</Editable>
+        </p>
+        <p>
+          <Editable contentKey="careHealing5">{t("careHealing5")}</Editable>
         </p>
       </section>
 
       <div className="care-timeline-image">
-        <Image src={healingTimeline} alt="תהליך ההחלמה של הגבות לפי ימים" sizes="(max-width: 720px) 100vw, 720px" />
+        <EditableImage
+          imageKey="careTimelineImage"
+          fallbackSrc={healingTimeline}
+          alt={t("careHealingImageAlt")}
+          sizes="(max-width: 720px) 100vw, 720px"
+          style={{ objectFit: "contain" }}
+        />
       </div>
 
       <section className="form-section care-contact">
-        <p>לכל שאלה אני כאן בשבילך בטלפון:</p>
+        <p>
+          <Editable contentKey="careContactIntro">{t("careContactIntro")}</Editable>
+        </p>
         <a href="tel:0509988848" className="care-phone">
-          050-9988848
+          <Editable contentKey="carePhoneNumber">{t("carePhoneNumber")}</Editable>
         </a>
       </section>
 
       <p className="care-signoff">
-        באהבה,
+        <Editable contentKey="careSignoff">{t("careSignoff")}</Editable>
         <br />
-        <strong className="text-gold">רעות יעקובי ♥</strong>
+        <strong className="text-gold">
+          <Editable contentKey="careSignoffName">{t("careSignoffName")}</Editable>
+        </strong>
       </p>
     </div>
   );

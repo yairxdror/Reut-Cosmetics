@@ -1,35 +1,16 @@
 import { Router } from "express";
 import rateLimit from "express-rate-limit";
 import crypto from "node:crypto";
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
 import { containsProfanity } from "../utils/profanityFilter.js";
+import { createReview, getReview, listReviews, replaceReview } from "../repositories/reviewsRepository.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 const router = Router();
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const DATA_FILE = path.join(__dirname, "..", "data", "reviews.json");
 
 const MAX_NAME_LENGTH = 60;
 const MIN_TEXT_LENGTH = 3;
 const MAX_TEXT_LENGTH = 500;
 const EDIT_WINDOW_MS = 15 * 60 * 1000;
-
-function loadReviews() {
-  try {
-    return JSON.parse(fs.readFileSync(DATA_FILE, "utf-8"));
-  } catch {
-    return [];
-  }
-}
-
-function saveReviews(reviews) {
-  fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true });
-  fs.writeFileSync(DATA_FILE, JSON.stringify(reviews, null, 2));
-}
-
-let reviews = loadReviews();
 
 function toPublicReview(review) {
   const { editToken, ...publicFields } = review;
@@ -73,12 +54,12 @@ const editReviewLimiter = rateLimit({
   message: { error: "Too many edit attempts. Please try again later." },
 });
 
-router.get("/", (req, res) => {
-  const sorted = [...reviews].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+router.get("/", asyncHandler(async (req, res) => {
+  const sorted = (await listReviews()).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   res.json(sorted.map(toPublicReview));
-});
+}));
 
-router.post("/", createReviewLimiter, (req, res) => {
+router.post("/", createReviewLimiter, asyncHandler(async (req, res) => {
   // Honeypot: a field real users never see or fill in. A bot that blindly
   // fills every input in the form trips it, and gets the same generic
   // validation error as any other bad submission — no distinct signal.
@@ -100,17 +81,16 @@ router.post("/", createReviewLimiter, (req, res) => {
     editToken: crypto.randomUUID(),
   };
 
-  reviews.push(review);
-  saveReviews(reviews);
+  await createReview(review);
 
   res.status(201).json({ ...toPublicReview(review), editToken: review.editToken });
-});
+}));
 
-router.put("/:id", editReviewLimiter, (req, res) => {
+router.put("/:id", editReviewLimiter, asyncHandler(async (req, res) => {
   const id = Number(req.params.id);
   const { editToken } = req.body || {};
 
-  const review = reviews.find((r) => r.id === id);
+  const review = await getReview(id);
   if (!review) {
     return res.status(404).json({ error: "Review not found" });
   }
@@ -131,9 +111,9 @@ router.put("/:id", editReviewLimiter, (req, res) => {
   review.text = fields.text;
   review.updatedAt = new Date().toISOString();
 
-  saveReviews(reviews);
+  await replaceReview(review);
 
   res.json(toPublicReview(review));
-});
+}));
 
 export default router;

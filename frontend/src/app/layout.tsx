@@ -36,7 +36,8 @@ export const viewport: Viewport = {
 // cookies() at all — dynamic APIs make a route fail to prerender. Only read
 // the saved-language cookie on real (server-backed) deployments; the static
 // export just always starts in Hebrew, same as before this feature existed.
-const isStaticExport = process.env.GITHUB_PAGES === "true";
+const isStaticExport =
+  process.env.GITHUB_PAGES === "true" || process.env.FIREBASE_HOSTING === "true";
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   let initialLanguage: Language = "he";

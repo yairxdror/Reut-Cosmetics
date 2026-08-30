@@ -1,11 +1,14 @@
 import { Router } from "express";
 import rateLimit from "express-rate-limit";
 import crypto from "crypto";
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
 import { requireAdmin } from "../middleware/requireAdmin.js";
+import {
+  addHealthDeclaration,
+  listHealthDeclarations,
+  purgeHealthDeclarationsBefore,
+} from "../repositories/healthDeclarationsRepository.js";
 import { isValidIsraeliId, isValidIsraeliPhone } from "../utils/israeliValidation.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 const router = Router();
 
@@ -16,9 +19,6 @@ const submitLimiter = rateLimit({
   legacyHeaders: false,
   message: { error: "Too many submissions. Please try again later." },
 });
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const DATA_FILE = path.join(__dirname, "..", "data", "health-declarations.json");
 
 const ENCRYPTION_KEY_HEX = process.env.HEALTH_DATA_ENCRYPTION_KEY;
 if (!ENCRYPTION_KEY_HEX || Buffer.from(ENCRYPTION_KEY_HEX, "hex").length !== 32) {
@@ -63,44 +63,25 @@ export function decryptSubmission(record) {
   return { id: record.id, submittedAt: record.submittedAt, ...JSON.parse(plaintext) };
 }
 
-function loadSubmissions() {
-  try {
-    return JSON.parse(fs.readFileSync(DATA_FILE, "utf-8"));
-  } catch {
-    return [];
-  }
-}
-
-function saveSubmissions(submissions) {
-  fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true });
-  fs.writeFileSync(DATA_FILE, JSON.stringify(submissions, null, 2));
-}
-
 const RETENTION_YEARS = 7;
 
 // Health declarations are kept for RETENTION_YEARS from submission and then
 // deleted automatically — no manual cleanup step needed. Swept on every
 // request rather than on a timer, since this route only runs inside a
 // long-lived Node process and a per-request check is cheap at this scale.
-function purgeExpiredSubmissions() {
+async function purgeExpiredSubmissions() {
   const cutoff = new Date();
   cutoff.setFullYear(cutoff.getFullYear() - RETENTION_YEARS);
-  const before = submissions.length;
-  submissions = submissions.filter((record) => new Date(record.submittedAt) > cutoff);
-  if (submissions.length !== before) {
-    saveSubmissions(submissions);
-  }
+  await purgeHealthDeclarationsBefore(cutoff.toISOString());
 }
-
-let submissions = loadSubmissions();
-purgeExpiredSubmissions();
 
 const DEFAULT_PAGE_SIZE = 20;
 const MAX_PAGE_SIZE = 100;
 
-router.get("/", requireAdmin, (req, res) => {
-  purgeExpiredSubmissions();
+router.get("/", requireAdmin, asyncHandler(async (req, res) => {
+  await purgeExpiredSubmissions();
 
+  const submissions = await listHealthDeclarations();
   const sorted = [...submissions].sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
   const decrypted = sorted.map(decryptSubmission);
 
@@ -119,11 +100,19 @@ router.get("/", requireAdmin, (req, res) => {
     total: filtered.length,
     hasMore: offset + page.length < filtered.length,
   });
-});
+}));
 
-router.post("/", submitLimiter, (req, res) => {
-  purgeExpiredSubmissions();
-  const { fullName, idNumber, phone, answers, details, agreementAccepted } = req.body || {};
+router.post("/", submitLimiter, asyncHandler(async (req, res) => {
+  await purgeExpiredSubmissions();
+  const {
+    fullName,
+    idNumber,
+    phone,
+    answers,
+    details,
+    healthDeclarationConfirmed,
+    agreementAccepted,
+  } = req.body || {};
 
   if (!fullName || !idNumber || !phone) {
     return res.status(400).json({ error: "fullName, idNumber and phone are required" });
@@ -141,6 +130,10 @@ router.post("/", submitLimiter, (req, res) => {
     return res.status(400).json({ error: "All health questions must be answered" });
   }
 
+  if (healthDeclarationConfirmed !== true) {
+    return res.status(400).json({ error: "Health declaration must be confirmed" });
+  }
+
   if (agreementAccepted !== true) {
     return res.status(400).json({ error: "Agreement must be accepted" });
   }
@@ -152,6 +145,7 @@ router.post("/", submitLimiter, (req, res) => {
     phone,
     answers,
     details: details || {},
+    healthDeclarationConfirmed,
     agreementAccepted,
   });
 
@@ -161,10 +155,9 @@ router.post("/", submitLimiter, (req, res) => {
     ...encrypted,
   };
 
-  submissions.push(record);
-  saveSubmissions(submissions);
+  await addHealthDeclaration(record);
 
   res.status(201).json({ id: record.id, submittedAt });
-});
+}));
 
 export default router;

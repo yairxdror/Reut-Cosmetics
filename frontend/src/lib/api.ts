@@ -1,4 +1,8 @@
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:4001";
+export const API_BASE_URL =
+  process.env.NEXT_PUBLIC_DEPLOY_TARGET === "firebase"
+    ? ""
+    : process.env.NEXT_PUBLIC_API_BASE_URL ||
+      (process.env.NODE_ENV === "production" ? "" : "http://localhost:4001");
 
 export interface HealthDeclarationPayload {
   fullName: string;
@@ -6,6 +10,7 @@ export interface HealthDeclarationPayload {
   phone: string;
   answers: Record<string, "yes" | "no">;
   details: Record<string, string>;
+  healthDeclarationConfirmed: boolean;
   agreementAccepted: boolean;
 }
 
@@ -175,6 +180,67 @@ export async function uploadContentImage(
     throw new Error(body?.error || `Failed to upload image: ${res.status}`);
   }
   return res.json();
+}
+
+export interface FaqItem {
+  id: number;
+  heQuestion: string;
+  enQuestion: string;
+  heAnswer: string;
+  enAnswer: string;
+}
+
+export type FaqFields = Omit<FaqItem, "id">;
+
+export async function fetchFaqs(): Promise<FaqItem[]> {
+  const res = await fetch(`${API_BASE_URL}/api/faq`);
+  if (!res.ok) {
+    throw new Error(`Failed to load FAQ: ${res.status}`);
+  }
+  return res.json();
+}
+
+export async function createFaq(token: string, fields: FaqFields): Promise<FaqItem> {
+  const res = await fetch(`${API_BASE_URL}/api/faq`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+    body: JSON.stringify(fields),
+  });
+  if (res.status === 401 || res.status === 403) {
+    throw new UnauthorizedError("Not authorized");
+  }
+  if (!res.ok) {
+    throw new Error(`Failed to add question: ${res.status}`);
+  }
+  return res.json();
+}
+
+export async function updateFaq(token: string, id: number, fields: FaqFields): Promise<FaqItem> {
+  const res = await fetch(`${API_BASE_URL}/api/faq/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+    body: JSON.stringify(fields),
+  });
+  if (res.status === 401 || res.status === 403) {
+    throw new UnauthorizedError("Not authorized");
+  }
+  if (!res.ok) {
+    throw new Error(`Failed to update question: ${res.status}`);
+  }
+  return res.json();
+}
+
+export async function deleteFaq(token: string, id: number): Promise<void> {
+  const res = await fetch(`${API_BASE_URL}/api/faq/${id}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (res.status === 401 || res.status === 403) {
+    throw new UnauthorizedError("Not authorized");
+  }
+  if (!res.ok) {
+    throw new Error(`Failed to delete question: ${res.status}`);
+  }
 }
 
 export class InvalidCredentialsError extends Error {}

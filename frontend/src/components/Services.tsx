@@ -1,11 +1,25 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
 import eyebrowShaping from "@/assets/Eyebrow-shaping.png";
+import goldenFaceLineArt from "@/assets/golden-face-line-art.png";
+import luxuryMakeupBrush from "@/assets/luxury-makeup-brush.png";
 import { useLanguage } from "@/context/LanguageContext";
 import { FeatherIcon, GraduationCapIcon, LeafIcon, MakeupBrushIcon } from "@/components/icons";
 import Editable from "@/components/Editable";
 import EditableImage from "@/components/EditableImage";
+import EditPopover from "@/components/EditPopover";
+import type { EditableTextKey } from "@/lib/editableContent";
+
+// service3 (courses) links straight to /courses instead — only these three
+// open the in-page detail modal.
+const SERVICE_DETAIL_KEYS: Partial<Record<EditableTextKey, EditableTextKey>> = {
+  service1Title: "service1Detail",
+  service2Title: "service2Detail",
+  service4Title: "service4Detail",
+};
 
 const GOLD_TONES = ["#9f6a0b", "#c58a16", "#dfad35", "#f0cf70", "#fff0ad"] as const;
 
@@ -197,6 +211,27 @@ function PermanentMakeupSparkles() {
   );
 }
 
+function GoldenFaceOutline() {
+  return (
+    <span className="service-golden-face" aria-hidden="true">
+      <Image
+        className="service-golden-face-image"
+        src={goldenFaceLineArt}
+        alt=""
+        fill
+        sizes="(max-width: 860px) 150px, 285px"
+      />
+      <Image
+        className="service-golden-face-image service-golden-face-image-shimmer"
+        src={goldenFaceLineArt}
+        alt=""
+        fill
+        sizes="(max-width: 860px) 150px, 285px"
+      />
+    </span>
+  );
+}
+
 const SERVICES = [
   { badgeIcon: GraduationCapIcon, titleKey: "service3Title" as const, descKey: "service3Desc" as const },
   { badgeIcon: FeatherIcon, titleKey: "service1Title" as const, descKey: "service1Desc" as const },
@@ -207,11 +242,16 @@ const SERVICES = [
 export default function Services() {
   const { t } = useLanguage();
   const permanentMakeupCardRef = useRef<HTMLDivElement>(null);
+  const bridalMakeupCardRef = useRef<HTMLDivElement>(null);
+  const facialWaxCardRef = useRef<HTMLDivElement>(null);
+  const [openDetailTitleKey, setOpenDetailTitleKey] = useState<EditableTextKey | null>(null);
 
   useEffect(() => {
     const card = permanentMakeupCardRef.current;
+    const bridalCard = bridalMakeupCardRef.current;
+    const facialWaxCard = facialWaxCardRef.current;
     const scrollElement = card?.closest(".page-scroll") as HTMLElement | null;
-    if (!card || !scrollElement) return;
+    if (!card || !bridalCard || !facialWaxCard || !scrollElement) return;
 
     const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     let animationFrameId: number | null = null;
@@ -225,6 +265,9 @@ export default function Services() {
       card!.style.setProperty("--sparkle-outer-angle", `${scrollTop * 0.055}deg`);
       card!.style.setProperty("--sparkle-inner-angle", `${scrollTop * -0.034}deg`);
       card!.style.setProperty("--sparkle-flare-angle", `${scrollTop * 0.082}deg`);
+      bridalCard!.style.setProperty("--bridal-brush-angle", `${scrollTop * 0.02}deg`);
+      const faceShinePosition = reduceMotion ? 50 : 66 - ((scrollTop * 0.0066) % 33);
+      facialWaxCard!.style.setProperty("--face-shine-position", `${faceShinePosition}%`);
     }
 
     function queueRotationUpdate() {
@@ -260,17 +303,40 @@ export default function Services() {
       <div className="services-grid">
         {SERVICES.map(({ badgeIcon: BadgeIcon, titleKey, descKey }) => {
           const isPermanentMakeup = titleKey === "service1Title";
+          const isBridalMakeup = titleKey === "service2Title";
+          const isCourses = titleKey === "service3Title";
+          const isFacialWax = titleKey === "service4Title";
           const cardClassName = [
             "service-card",
-            titleKey === "service3Title" ? "service-card-courses" : "",
+            isCourses ? "service-card-courses" : "",
             isPermanentMakeup ? "service-card-permanent" : "",
+            isBridalMakeup ? "service-card-bridal" : "",
+            isFacialWax ? "service-card-wax" : "",
           ]
             .filter(Boolean)
             .join(" ");
 
           return (
-            <div ref={isPermanentMakeup ? permanentMakeupCardRef : undefined} className={cardClassName} key={titleKey}>
+            <div
+              ref={
+                isPermanentMakeup
+                  ? permanentMakeupCardRef
+                  : isBridalMakeup
+                    ? bridalMakeupCardRef
+                    : isFacialWax
+                      ? facialWaxCardRef
+                      : undefined
+              }
+              className={cardClassName}
+              key={titleKey}
+            >
               {isPermanentMakeup && <PermanentMakeupSparkles />}
+              {isFacialWax && <GoldenFaceOutline />}
+              {isBridalMakeup && (
+                <span className="service-bridal-brush" aria-hidden="true">
+                  <Image src={luxuryMakeupBrush} alt="" fill sizes="310px" />
+                </span>
+              )}
               <div className="service-image">
                 <EditableImage
                   imageKey="servicesCardImage"
@@ -289,13 +355,36 @@ export default function Services() {
               <p className="service-card-desc">
                 <Editable contentKey={descKey}>{t(descKey)}</Editable>
               </p>
-              <a className="service-card-link" href="#">
-                {t("detailsLink")}
-              </a>
+              {isCourses ? (
+                <Link className="service-card-link" href="/courses">
+                  <Editable contentKey="detailsLink" interceptAncestorClick={false}>
+                    {t("detailsLink")}
+                  </Editable>
+                </Link>
+              ) : (
+                <button type="button" className="service-card-link" onClick={() => setOpenDetailTitleKey(titleKey)}>
+                  <Editable contentKey="detailsLink" interceptAncestorClick={false}>
+                    {t("detailsLink")}
+                  </Editable>
+                </button>
+              )}
             </div>
           );
         })}
       </div>
+
+      {openDetailTitleKey &&
+        (() => {
+          const detailKey = SERVICE_DETAIL_KEYS[openDetailTitleKey];
+          if (!detailKey) return null;
+          return (
+            <EditPopover title={t(openDetailTitleKey)} onClose={() => setOpenDetailTitleKey(null)}>
+              <p className="service-detail-text">
+                <Editable contentKey={detailKey}>{t(detailKey)}</Editable>
+              </p>
+            </EditPopover>
+          );
+        })()}
     </section>
   );
 }

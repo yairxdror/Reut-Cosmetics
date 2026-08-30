@@ -11,7 +11,7 @@ import { ImageIcon } from "@/components/icons";
 import EditPopover from "@/components/EditPopover";
 
 const ACCEPTED_TYPES = ["image/jpeg", "image/png", "image/webp"];
-const MAX_SIZE_BYTES = 5 * 1024 * 1024;
+const MAX_SIZE_BYTES = 15 * 1024 * 1024;
 
 // Renders in place of a plain <Image>, inside whatever position:relative
 // wrapper the call site already uses for its `fill` image — it does not
@@ -26,6 +26,7 @@ export default function EditableImage({
   className,
   style,
   priority,
+  editable = true,
 }: {
   imageKey: EditableImageKey;
   fallbackSrc: StaticImageData | string;
@@ -34,6 +35,7 @@ export default function EditableImage({
   className?: string;
   style?: CSSProperties;
   priority?: boolean;
+  editable?: boolean;
 }) {
   const { isAdmin, isEditMode } = useAdmin();
   const { t, getImageUrl, applyImageOverride } = useLanguage();
@@ -109,7 +111,7 @@ export default function EditableImage({
         priority={priority}
       />
 
-      {isAdmin && isEditMode && (
+      {editable && isAdmin && isEditMode && (
         // <span role="button">, not a real <button> — the logo call site
         // sits inside the nav bar's own <button>, and nesting interactive
         // elements is both invalid HTML and a click-handling conflict.
