@@ -15,10 +15,16 @@ export default function EditPopover({
   title,
   onClose,
   children,
+  centerTitle = false,
 }: {
   title: string;
   onClose: () => void;
   children: ReactNode;
+  // Every other popover (FAQ, text/image editors, reviews) keeps the
+  // title hugging the start with the ✕ pushed to the far side — this
+  // only centers the title within its own row for call sites that ask
+  // for it, without touching the shared default.
+  centerTitle?: boolean;
 }) {
   useEffect(() => {
     openStack.push(onClose);
@@ -60,7 +66,7 @@ export default function EditPopover({
   return createPortal(
     <div className="review-modal-overlay" onClick={handleOverlayClick}>
       <div className="review-modal-panel" role="dialog" aria-modal="true" aria-label={title} onClick={stop}>
-        <div className="sidebar-header">
+        <div className={`sidebar-header${centerTitle ? " sidebar-header-centered" : ""}`}>
           <h2 className="text-gold" style={{ margin: 0 }}>
             {title}
           </h2>

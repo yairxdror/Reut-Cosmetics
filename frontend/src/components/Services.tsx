@@ -292,6 +292,7 @@ export default function Services() {
 
   return (
     <section className="services-section">
+      <span className="services-wave-fade-lines" aria-hidden="true" />
       <h2 className="services-title" aria-label={`${t("servicesTitleKicker")} ${t("servicesTitleMain")}`}>
         <span className="services-title-kicker">
           <Editable contentKey="servicesTitleKicker">{t("servicesTitleKicker")}</Editable>
@@ -378,7 +379,7 @@ export default function Services() {
           const detailKey = SERVICE_DETAIL_KEYS[openDetailTitleKey];
           if (!detailKey) return null;
           return (
-            <EditPopover title={t(openDetailTitleKey)} onClose={() => setOpenDetailTitleKey(null)}>
+            <EditPopover title={t(openDetailTitleKey)} onClose={() => setOpenDetailTitleKey(null)} centerTitle>
               <p className="service-detail-text">
                 <Editable contentKey={detailKey}>{t(detailKey)}</Editable>
               </p>

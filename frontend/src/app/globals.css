@@ -482,13 +482,35 @@ a {
    instead of letting it soften into the page behind it. */
 .hero-wave {
   position: absolute;
-  left: 0;
-  right: 0;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
   bottom: 0;
   height: 50px;
   background: #ffffff;
   -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 100' preserveAspectRatio='none'%3E%3Cpath d='M0,50 C240,5 480,5 720,50 C960,95 1200,95 1440,50 L1440,100 L0,100 Z' fill='white'/%3E%3C/svg%3E");
   mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 100' preserveAspectRatio='none'%3E%3Cpath d='M0,50 C240,5 480,5 720,50 C960,95 1200,95 1440,50 L1440,100 L0,100 Z' fill='white'/%3E%3C/svg%3E");
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  pointer-events: none;
+}
+
+/* A matching white ribbon directly below the fixed nav. It belongs to the
+   hero so it scrolls naturally with the page, while its inverted mask keeps
+   the upper edge hidden behind the bar and exposes only the wavy lower edge. */
+.hero-wave-top {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  height: 50px;
+  background: #ffffff;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 100' preserveAspectRatio='none'%3E%3Cpath d='M0,50 C240,5 480,5 720,50 C960,95 1200,95 1440,50 L1440,0 L0,0 Z' fill='white'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 100' preserveAspectRatio='none'%3E%3Cpath d='M0,50 C240,5 480,5 720,50 C960,95 1200,95 1440,50 L1440,0 L0,0 Z' fill='white'/%3E%3C/svg%3E");
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
   -webkit-mask-repeat: no-repeat;
@@ -754,6 +776,7 @@ html[dir="ltr"] .hero-image-placeholder-full {
 @media (max-width: 860px) {
   .hero-banner {
     grid-template-columns: 1fr;
+    margin-bottom: 1.75rem;
   }
 
   .hero-image-col {
@@ -802,8 +825,14 @@ html[dir="ltr"] .hero-image-placeholder-full {
      version here instead. */
   .hero-wave {
     height: 35px;
-    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 100' preserveAspectRatio='none'%3E%3Cpath d='M0,45 C240,25 480,25 720,45 C960,65 1200,65 1440,45 L1440,100 L0,100 Z' fill='white'/%3E%3C/svg%3E");
-    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 100' preserveAspectRatio='none'%3E%3Cpath d='M0,45 C240,25 480,25 720,45 C960,65 1200,65 1440,45 L1440,100 L0,100 Z' fill='white'/%3E%3C/svg%3E");
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 100' preserveAspectRatio='none'%3E%3Cpath d='M0,45 C240,22 480,22 720,45 C960,68 1200,68 1440,45 L1440,100 L0,100 Z' fill='white'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 100' preserveAspectRatio='none'%3E%3Cpath d='M0,45 C240,22 480,22 720,45 C960,68 1200,68 1440,45 L1440,100 L0,100 Z' fill='white'/%3E%3C/svg%3E");
+  }
+
+  .hero-wave-top {
+    height: 35px;
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 100' preserveAspectRatio='none'%3E%3Cpath d='M0,45 C240,22 480,22 720,45 C960,68 1200,68 1440,45 L1440,0 L0,0 Z' fill='white'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 100' preserveAspectRatio='none'%3E%3Cpath d='M0,45 C240,22 480,22 720,45 C960,68 1200,68 1440,45 L1440,0 L0,0 Z' fill='white'/%3E%3C/svg%3E");
   }
 }
 
@@ -1119,6 +1148,11 @@ html[dir="ltr"] .sidebar-panel-open {
   justify-content: space-between;
   margin-bottom: 1.5rem;
   flex-shrink: 0;
+}
+
+.sidebar-header-centered h2 {
+  flex: 1;
+  text-align: center;
 }
 
 .sidebar-nav {
@@ -1521,6 +1555,36 @@ html[dir="ltr"] .sidebar-panel-open {
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
   pointer-events: none;
+}
+
+/* Two adjoining strips continue the opaque cream wave into the page. They
+   use that exact background color with progressively lower opacity, creating
+   a continuous three-step fade without gaps or contrasting line colors. */
+.services-wave-fade-lines {
+  position: absolute;
+  z-index: 1;
+  top: 50px;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.services-wave-fade-lines::before,
+.services-wave-fade-lines::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 30px;
+  background: var(--color-cream-soft);
+}
+
+.services-wave-fade-lines::before {
+  opacity: 0.8;
+}
+
+.services-wave-fade-lines::after {
+  opacity: 0.42;
 }
 
 .services-title {
@@ -2054,33 +2118,36 @@ html.a11y-reduce-motion .service-sparkle-orbit {
 }
 
 @media (max-width: 860px) {
-  /* Clip only at the mobile viewport boundary. Descendant decorations may
-     remain visible inside it, but cannot enlarge the RTL scroll range. */
+  /* Use the full-width main element as the only mobile paint boundary.
+     Descendant decorations can reach the screen edges, but cannot enlarge
+     the RTL horizontal scroll range. */
   .page-scroll > main {
     overflow-x: clip;
   }
 
-  /* Rotating sparkle SVGs change their horizontal ink bounds as the page
-     scrolls. Keep that changing overflow inside a fixed, viewport-sized
-     paint envelope so it cannot create an RTL horizontal scroll range.
-     The clip margin spans the main + section gutters, keeping the complete
-     mobile halo visible all the way to the screen edge. */
+  /* The outer main boundary above already contains the rotating SVGs. Keep
+     the grid itself open so the halo is not cut at an inner gutter before
+     it reaches that viewport boundary. */
   .services-grid {
-    overflow: clip;
-    overflow-clip-margin: 3rem;
+    overflow: visible;
   }
 
   /* Matches .hero-wave's mobile override — a calmer, lower-amplitude
      curve than the desktop double-hump, and shorter to match .hero-wave's
      own mobile height reduction. */
   .services-section::before {
-    height: 75px;
+    top: -1.75rem;
+    height: calc(1.75rem + 35px);
   }
 
   .services-section::after {
     height: 35px;
-    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 100' preserveAspectRatio='none'%3E%3Cpath d='M0,45 C240,25 480,25 720,45 C960,65 1200,65 1440,45 L1440,100 L0,100 Z' fill='white'/%3E%3C/svg%3E");
-    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 100' preserveAspectRatio='none'%3E%3Cpath d='M0,45 C240,25 480,25 720,45 C960,65 1200,65 1440,45 L1440,100 L0,100 Z' fill='white'/%3E%3C/svg%3E");
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 100' preserveAspectRatio='none'%3E%3Cpath d='M0,45 C240,22 480,22 720,45 C960,68 1200,68 1440,45 L1440,100 L0,100 Z' fill='white'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 100' preserveAspectRatio='none'%3E%3Cpath d='M0,45 C240,22 480,22 720,45 C960,68 1200,68 1440,45 L1440,100 L0,100 Z' fill='white'/%3E%3C/svg%3E");
+  }
+
+  .services-wave-fade-lines {
+    top: 35px;
   }
 
   /* Straight, centered stacking on mobile — no left/right alternation
@@ -2833,6 +2900,20 @@ html[dir="rtl"] .reviews-grid-scroll {
   text-align: center;
   color: #573724;
   margin-bottom: 1.5rem;
+}
+
+/* Same font/weight/letter-spacing as .services-title-kicker (shared class,
+   e.g. "לקוחות"), but sized up a bit further just for this title — the
+   compound selector overrides only here, leaving every other element that
+   uses the plain .services-title-kicker class untouched. */
+.contact-title.services-title-kicker {
+  font-size: clamp(1.85rem, 3.8vw, 2.9rem);
+}
+
+@media (min-width: 861px) {
+  .contact-title.services-title-kicker {
+    font-size: clamp(2.05rem, 4vw, 3.25rem);
+  }
 }
 
 .contact-buttons {

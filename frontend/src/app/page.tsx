@@ -133,6 +133,8 @@ export default function Home() {
   return (
     <>
       <section className="hero-banner">
+        <div className="hero-wave-top" aria-hidden="true" />
+
         <div className="hero-image-col">
           <div className="hero-image-placeholder-full">
             <EditableImage
