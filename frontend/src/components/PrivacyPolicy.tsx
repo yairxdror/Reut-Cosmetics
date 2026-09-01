@@ -1,6 +1,6 @@
 "use client";
 
-import { PHONE_TEL_URL, whatsappUrl } from "@/lib/contact";
+import { PHONE_TEL_URL } from "@/lib/contact";
 import { useLanguage } from "@/context/LanguageContext";
 import Editable from "@/components/Editable";
 import type { EditableTextKey } from "@/lib/editableContent";
@@ -103,31 +103,24 @@ export default function PrivacyPolicy() {
 
       <section className="form-section">
         <h2 className="form-section-title text-gold">
-          <Editable contentKey="ppContactTitle">{t("ppContactTitle")}</Editable>
+          <Editable contentKey="ppUpdatesTitle">{t("ppUpdatesTitle")}</Editable>
         </h2>
         <p>
-          <Editable contentKey="ppContactIntro">{t("ppContactIntro")}</Editable>
-        </p>
-        <p className="legal-contact-line">
-          <Editable contentKey="legalPhoneLabel">{t("legalPhoneLabel")}</Editable>{" "}
-          <a href={PHONE_TEL_URL}>
-            <Editable contentKey="phoneDisplayNumber">{t("phoneDisplayNumber")}</Editable>
-          </a>
-        </p>
-        <p className="legal-contact-line">
-          <Editable contentKey="legalWhatsappLabel">{t("legalWhatsappLabel")}</Editable>{" "}
-          <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer">
-            <Editable contentKey="phoneDisplayNumber">{t("phoneDisplayNumber")}</Editable>
-          </a>
+          <Editable contentKey="ppUpdatesText">{t("ppUpdatesText")}</Editable>
         </p>
       </section>
 
       <section className="form-section">
         <h2 className="form-section-title text-gold">
-          <Editable contentKey="ppUpdatesTitle">{t("ppUpdatesTitle")}</Editable>
+          <Editable contentKey="ppContactTitle">{t("ppContactTitle")}</Editable>
         </h2>
-        <p>
-          <Editable contentKey="ppUpdatesText">{t("ppUpdatesText")}</Editable>
+        <p className="legal-contact-line">
+          <Editable contentKey="ppContactIntro">{t("ppContactIntro")}</Editable>{" "}
+          <Editable contentKey="legalContactLabel">{t("legalContactLabel")}</Editable>
+          <br />
+          <a href={PHONE_TEL_URL}>
+            <Editable contentKey="phoneDisplayNumber">{t("phoneDisplayNumber")}</Editable>
+          </a>
         </p>
       </section>
 

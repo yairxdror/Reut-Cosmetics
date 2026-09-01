@@ -87,18 +87,18 @@ export default function HealthDeclarationForm() {
 
   function validate(): Record<string, string> {
     const next: Record<string, string> = {};
-    if (!form.fullName.trim()) next.fullName = "יש למלא שם מלא";
-    if (!form.idNumber.trim()) next.idNumber = "יש למלא מספר תעודת זהות";
-    else if (!isValidIsraeliId(form.idNumber)) next.idNumber = "מספר תעודת הזהות אינו תקין";
-    if (!form.phone.trim()) next.phone = "יש למלא מספר טלפון";
-    else if (!isValidIsraeliPhone(form.phone)) next.phone = "מספר הטלפון אינו תקין";
+    if (!form.fullName.trim()) next.fullName = t("hdNameRequired");
+    if (!form.idNumber.trim()) next.idNumber = t("hdIdNumberRequired");
+    else if (!isValidIsraeliId(form.idNumber)) next.idNumber = t("hdIdNumberInvalid");
+    if (!form.phone.trim()) next.phone = t("hdPhoneRequired");
+    else if (!isValidIsraeliPhone(form.phone)) next.phone = t("hdPhoneInvalid");
     for (const q of QUESTIONS) {
-      if (!form.answers[q.id]) next[q.id] = "יש לבחור תשובה";
+      if (!form.answers[q.id]) next[q.id] = t("hdAnswerRequired");
     }
     if (!form.healthDeclarationConfirmed) {
-      next.healthDeclarationConfirmation = "יש לאשר את ההסכם כדי להמשיך";
+      next.healthDeclarationConfirmation = t("hdAgreementRequired");
     }
-    if (!form.agreementAccepted) next.agreement = "יש לאשר את ההסכם כדי להמשיך";
+    if (!form.agreementAccepted) next.agreement = t("hdAgreementRequired");
     return next;
   }
 
@@ -287,11 +287,9 @@ export default function HealthDeclarationForm() {
 
       <div className="form-submit-row">
         <button className="btn btn-blue" type="submit" disabled={!isFormComplete || status === "submitting"}>
-          {status === "submitting" ? "שולח..." : <Editable contentKey="hdSubmit">{t("hdSubmit")}</Editable>}
+          {status === "submitting" ? t("hdSubmitting") : <Editable contentKey="hdSubmit">{t("hdSubmit")}</Editable>}
         </button>
-        {status === "error" && (
-          <span className="form-error">אירעה שגיאה בשליחת הטופס. נסי שוב או צרי קשר טלפוני.</span>
-        )}
+        {status === "error" && <span className="form-error">{t("hdSubmitError")}</span>}
       </div>
     </form>
   );

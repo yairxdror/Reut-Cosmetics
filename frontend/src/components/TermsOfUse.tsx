@@ -1,6 +1,6 @@
 "use client";
 
-import { PHONE_TEL_URL, whatsappUrl } from "@/lib/contact";
+import { PHONE_TEL_URL } from "@/lib/contact";
 import { useLanguage } from "@/context/LanguageContext";
 import Editable from "@/components/Editable";
 import type { EditableTextKey } from "@/lib/editableContent";
@@ -108,18 +108,11 @@ export default function TermsOfUse() {
         <h2 className="form-section-title text-gold">
           <Editable contentKey="touContactTitle">{t("touContactTitle")}</Editable>
         </h2>
-        <p>
-          <Editable contentKey="touContactIntro">{t("touContactIntro")}</Editable>
-        </p>
         <p className="legal-contact-line">
-          <Editable contentKey="legalPhoneLabel">{t("legalPhoneLabel")}</Editable>{" "}
+          <Editable contentKey="touContactIntro">{t("touContactIntro")}</Editable>{" "}
+          <Editable contentKey="legalContactLabel">{t("legalContactLabel")}</Editable>
+          <br />
           <a href={PHONE_TEL_URL}>
-            <Editable contentKey="phoneDisplayNumber">{t("phoneDisplayNumber")}</Editable>
-          </a>
-        </p>
-        <p className="legal-contact-line">
-          <Editable contentKey="legalWhatsappLabel">{t("legalWhatsappLabel")}</Editable>{" "}
-          <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer">
             <Editable contentKey="phoneDisplayNumber">{t("phoneDisplayNumber")}</Editable>
           </a>
         </p>

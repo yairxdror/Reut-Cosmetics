@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import heroProduct from "@/assets/hero-product.jpg";
 import { useLanguage } from "@/context/LanguageContext";
 import { useAdmin } from "@/context/AdminContext";
@@ -33,6 +33,7 @@ export default function Home() {
   const { t } = useLanguage();
   const { isAdmin } = useAdmin();
   const ctaRef = useRef<HTMLAnchorElement>(null);
+  const heroBadgeGlintRef = useRef<HTMLSpanElement>(null);
 
   // The CTA remains in the hero's normal document flow until its center
   // meets the nav bar's center. The very same element then becomes fixed at
@@ -108,6 +109,52 @@ export default function Home() {
     };
   }, [isAdmin]);
 
+  useEffect(() => {
+    const glint = heroBadgeGlintRef.current!;
+    if (!glint) return;
+
+    const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let timerId: number | null = null;
+
+    function prefersReducedMotion() {
+      return reducedMotionQuery.matches || document.documentElement.classList.contains("a11y-reduce-motion");
+    }
+
+    function scheduleGlint(isInitial = false) {
+      const minimumDelay = isInitial ? 900 : 2200;
+      const randomRange = isInitial ? 1800 : 4000;
+
+      timerId = window.setTimeout(() => {
+        if (prefersReducedMotion()) return;
+
+        glint.classList.add("is-sun-glinting");
+        timerId = window.setTimeout(() => {
+          glint.classList.remove("is-sun-glinting");
+          scheduleGlint();
+        }, 1450);
+      }, minimumDelay + Math.random() * randomRange);
+    }
+
+    function resetGlint() {
+      if (timerId !== null) window.clearTimeout(timerId);
+      timerId = null;
+      glint.classList.remove("is-sun-glinting");
+      if (!prefersReducedMotion()) scheduleGlint(true);
+    }
+
+    const classObserver = new MutationObserver(resetGlint);
+    classObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    reducedMotionQuery.addEventListener("change", resetGlint);
+    scheduleGlint(true);
+
+    return () => {
+      if (timerId !== null) window.clearTimeout(timerId);
+      reducedMotionQuery.removeEventListener("change", resetGlint);
+      classObserver.disconnect();
+      glint.classList.remove("is-sun-glinting");
+    };
+  }, []);
+
   // On narrow screens only the suffix gradually collapses; the core label
   // and WhatsApp icon remain visible after docking.
   const whatsappCta = (
@@ -147,6 +194,7 @@ export default function Home() {
             />
           </div>
           <div className="hero-badge">
+            <span ref={heroBadgeGlintRef} className="hero-badge-glint" aria-hidden="true" />
             <CrownIcon size={27} />
             <span>
               <Editable contentKey="heroBadgeLine1">{t("heroBadgeLine1")}</Editable>

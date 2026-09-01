@@ -3,6 +3,7 @@
 import { useLanguage } from "@/context/LanguageContext";
 import Editable from "@/components/Editable";
 import type { EditableTextKey } from "@/lib/editableContent";
+import { PHONE_TEL_URL } from "@/lib/contact";
 
 const MEASURE_KEYS: EditableTextKey[] = ["asMeasure1", "asMeasure2", "asMeasure3", "asMeasure4", "asMeasure5"];
 
@@ -59,14 +60,9 @@ export default function AccessibilityStatement() {
           <Editable contentKey="asContactIntro">{t("asContactIntro")}</Editable>
         </p>
         <p>
-          <Editable contentKey="asCoordinatorLabel">{t("asCoordinatorLabel")}</Editable>{" "}
-          <strong>
-            <Editable contentKey="asCoordinatorName">{t("asCoordinatorName")}</Editable>
-          </strong>
-          <br />
           <Editable contentKey="legalPhoneLabel">{t("legalPhoneLabel")}</Editable>{" "}
-          <a href="tel:+972522225834">
-            <Editable contentKey="asCoordinatorPhone">{t("asCoordinatorPhone")}</Editable>
+          <a href={PHONE_TEL_URL}>
+            <Editable contentKey="phoneDisplayNumber">{t("phoneDisplayNumber")}</Editable>
           </a>
           <br />
           <Editable contentKey="asEmailLabel">{t("asEmailLabel")}</Editable>{" "}

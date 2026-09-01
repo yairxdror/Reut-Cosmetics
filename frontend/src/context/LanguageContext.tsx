@@ -190,101 +190,114 @@ const dictionary: Dictionary = {
   reviewsLoadError: { he: "לא ניתן לטעון ביקורות כרגע.", en: "Unable to load reviews right now." },
 
   // ---------- Care instructions page ----------
+  carePageTitle: {
+    he: "הוראות לטיפול בעור לאחר איפור קבוע",
+    en: "Permanent Makeup Aftercare Instructions",
+  },
   careIntroGreeting: { he: "לקוחה יקרה,", en: "Dear client," },
   careIntroLine1: {
-    he: "אם את קוראת דף זה כנראה שאת כבר לאחר הטיפול והגבות שלך נראות מושלמות מתמיד.",
-    en: "If you're reading this page, you've likely already had your treatment and your brows are looking more perfect than ever.",
+    he: "אם את קוראת את הדף הזה, כנראה שכבר סיימת את הטיפול והגבות שלך נראות נפלא.",
+    en: "If you're reading this page, you've likely completed your treatment and your brows look beautiful.",
   },
   careIntroLine2: {
-    he: "בימים הקרובים תצטרכי להקפיד על הוראות חשובות שיעזרו לגבות שלך להחלים בצורה הטובה ביותר.",
-    en: "Over the coming days, please follow these important instructions to help your brows heal in the best possible way.",
+    he: "בימים הקרובים חשוב להקפיד על ההנחיות הבאות, כדי לסייע לגבות להחלים באופן מיטבי.",
+    en: "Over the coming days, please follow these instructions carefully to support the best possible healing of your brows.",
   },
   careWarningBold: {
-    he: "מהיום אסור להרטיב/לשטוף את הגבות למשך חמישה ימים שלמים!",
-    en: "As of today, do not wet or wash your brows for five full days!",
+    he: "החל מהיום, אין להרטיב או לשטוף את הגבות במשך חמישה ימים מלאים.",
+    en: "Starting today, do not wet or wash your brows for five full days.",
   },
   careWarningNote: {
-    he: "(איך חופפים? עם ראש אחורנית כמו במספרה, שטיפת פנים מהעיניים ומטה).",
-    en: "(How to wash your hair: tilt your head back like at a salon, and wash your face from the eyes down.)",
+    he: "כיצד לחפוף? הטי את הראש לאחור, כמו במספרה. את הפנים יש לשטוף מאזור העיניים ומטה.",
+    en: "When washing your hair, tilt your head back as you would at a salon. Wash your face only from the eye area downward.",
   },
   careDailyTitle: { he: "טיפול יומי בגבות", en: "Daily Brow Care" },
   careDaily1: {
-    he: "ממחר עליך לקחת צמר גפן עם מעט מים פושרים ולסחוט אותו שיהיה רק לח! ולעשות טפיחות עדינות על הגבות.",
-    en: "Starting tomorrow, take a cotton pad with a little lukewarm water, wring it out so it's just damp, and gently pat your brows with it.",
+    he: "החל ממחר, הרטיבי פד כותנה במעט מים פושרים, סחטי אותו היטב עד שיהיה לח בלבד וטפחי בעדינות על הגבות.",
+    en: "Starting tomorrow, moisten a cotton pad with a small amount of lukewarm water, squeeze it thoroughly until it is only damp, and gently pat your brows.",
   },
   careDaily2: {
-    he: "(הרי אסור לשטוף את הגבות למשך חמישה ימים אך עדיין עלינו לנקות את הרקמה).",
-    en: "(Since you can't wash your brows for five days, we still need to gently clean the area this way.)",
+    he: "אף שאין לשטוף את הגבות במשך חמישה ימים, חשוב לנקות בעדינות את האזור בדרך זו.",
+    en: "Although the brows must not be washed for five days, it is important to gently clean the area in this way.",
   },
   careDaily3: {
-    he: 'מיד לאחר פעולה זו יש למרוח ממש מעט משחת "בפנטן פלוס" (ממש בקמצנות עם המשחה).',
-    en: 'Right after this, apply a very small amount of "Bepanthen Plus" ointment (use it very sparingly).',
+    he: 'מיד לאחר מכן, מרחי שכבה דקה מאוד של משחת "בפנטן פלוס".',
+    en: 'Immediately afterward, apply a very thin layer of "Bepanthen Plus" ointment.',
   },
   careDaily4: {
-    he: "את הפעולה עם המשחה יש לבצע פעם 1 ביום למשך 5 ימים בלבד! (עדיפות בערב שהפנים נקיות).",
-    en: "Apply the ointment once a day for 5 days only! (Preferably in the evening, once your face is clean.)",
+    he: "את המשחה יש למרוח פעם ביום, במשך חמישה ימים בלבד. רצוי לעשות זאת בערב, לאחר ניקוי הפנים.",
+    en: "Apply the ointment once a day for five days only, preferably in the evening after cleansing your face.",
   },
   careDaily5: {
-    he: "(מדגישה שעושים זאת יום אחרי הטיפול, ביום הטיפול לא עושים כלום בגבות).",
-    en: "(Note: start this the day after your treatment — do not do anything to your brows on the day of the treatment itself.)",
+    he: "חשוב: יש להתחיל את הטיפול הביתי ביום שלאחר הטיפול. ביום הטיפול עצמו אין לעשות דבר בגבות.",
+    en: "Important: begin this home-care routine on the day after your treatment. Do not do anything to your brows on the day of the treatment itself.",
   },
   careImportantTitle: { he: "חשוב לדעת", en: "Important to Know" },
   careRule1: {
-    he: "לא לגרד ו/או לשפשף את הגבות – שפשוף המקום עלול לגרום לנזק! ולגרום לצבע להימרח מתחת לעור.",
-    en: "Do not scratch and/or rub your brows — rubbing the area can cause damage and smear the pigment beneath the skin.",
+    he: "אין לגרד או לשפשף את הגבות. פעולות אלה עלולות לפגוע באזור ולגרום להתפשטות הפיגמנט מתחת לעור.",
+    en: "Do not scratch or rub your brows. Doing so may damage the area and cause the pigment to spread beneath the skin.",
   },
   careRule2: {
-    he: "אין להשתמש בתכשירים קוסמטיים כגון – קרמים המכילים חומצות, קרמים הגורמים לקילוף העור, קרמים להבהרה, קרמים לאקנה, פילינג, סבון פנים פעיל באזור הגבות והמצח עד תום התהליך של 2 הטיפולים.",
-    en: "Do not use cosmetic products such as acid-based creams, exfoliating creams, skin-lightening creams, acne creams, peels, or active facial soap on the brow and forehead area until both treatments are complete.",
+    he: "אין להשתמש באזור הגבות והמצח בתכשירים קוסמטיים פעילים, ובהם קרמים המכילים חומצות, תכשירי קילוף, קרמי הבהרה, תכשירים לטיפול באקנה, פילינג או סבון פנים פעיל, עד להשלמת שני הטיפולים.",
+    en: "Do not use active cosmetic products on the brow or forehead area, including acid-based creams, exfoliating products, skin-lightening creams, acne treatments, peels, or active facial cleansers, until both treatments are complete.",
   },
   careRule3: {
-    he: "קרם פנים טבעי ללא חומצות – אסור למרוח באזור הגבות מיום הטיפול ועד עשרה הימים הראשונים של ההחלמה (ניתן למרוח מאזור העיניים ומטה). לאחר עשרה ימים מותר.",
-    en: "Natural, acid-free face cream — do not apply to the brow area from the day of treatment through the first ten days of healing (you may apply it from the eye area down). After ten days it's permitted.",
+    he: "גם קרם פנים טבעי שאינו מכיל חומצות אין למרוח באזור הגבות במהלך עשרת הימים הראשונים להחלמה. ניתן למרוח אותו מאזור העיניים ומטה, ולאחר עשרה ימים גם באזור הגבות.",
+    en: "Do not apply even a natural, acid-free face cream to the brow area during the first ten days of healing. It may be applied from the eye area downward, and after ten days it may also be applied to the brow area.",
   },
   careRule4: {
-    he: "טיפול פנים ניתן לעשות רק חודש לאחר הטיפול השני.",
-    en: "A facial treatment may only be done one month after the second session.",
+    he: "ניתן לעבור טיפול פנים רק בחלוף חודש מהטיפול השני.",
+    en: "A facial treatment may be performed only after one month has passed since the second session.",
   },
   careRule5: {
-    he: "אסור לאפר את אזור הגבות כולל המצח למשך 7 ימים, רק לאחר 7 ימים מותר לאפר!",
-    en: "Do not apply makeup to the brow area, including the forehead, for 7 days — makeup is only permitted after 7 days!",
+    he: "אין להתאפר באזור הגבות והמצח במשך שבעה ימים. לאחר מכן ניתן להתאפר באזור.",
+    en: "Do not apply makeup to the brow or forehead area for seven days. Makeup may be applied to the area afterward.",
   },
   careRule6: {
-    he: "אין לבצע כל פעילות ספורטיבית למשך שבוע שלם! כן, אסור גם אם לא מזיעים בה.",
-    en: "Do not do any physical exercise for a full week! Yes, this applies even to activities that don't make you sweat.",
+    he: "אין לבצע פעילות גופנית במשך שבוע מלא, גם אם אינה גורמת להזעה.",
+    en: "Do not engage in physical activity for one full week, even if it does not cause sweating.",
   },
   careRule7: {
-    he: "אסור ים / בריכה / סאונה / ג'קוזי שבעה ימים הראשונים.",
-    en: "No sea, pool, sauna, or jacuzzi for the first seven days.",
+    he: "אין להיכנס לים, לבריכה, לסאונה או לג'קוזי במהלך שבעת הימים הראשונים.",
+    en: "Do not enter the sea, a swimming pool, a sauna, or a jacuzzi during the first seven days.",
   },
   careRule8: {
-    he: "מומלץ לא להיחשף לשמש באזור הגבות! יש לשמור עליהן על מנת שלא ידהה הצבע במהירות. כמו כן שימוש בקרם הגנה מותר רק עשרה ימים לאחר הטיפול, על מנת שלא יימרח קרם הגנה על עור פתוח!",
-    en: "It's recommended to avoid sun exposure on the brow area — protect them so the color doesn't fade quickly. Sunscreen may only be used starting ten days after treatment, so it isn't applied to open skin.",
+    he: "מומלץ להימנע מחשיפת אזור הגבות לשמש, כדי למנוע דהייה מהירה של הצבע. ניתן למרוח קרם הגנה באזור רק החל מהיום העשירי לאחר הטיפול, כדי להימנע ממריחתו על עור שטרם החלים.",
+    en: "Avoid exposing the brow area to the sun to prevent the color from fading quickly. Sunscreen may be applied to the area only from the tenth day after treatment, to avoid applying it to skin that has not yet healed.",
   },
   careHealingTitle: { he: "תהליך ההחלמה", en: "The Healing Process" },
-  careHealing1: { he: "יקרה שלי,", en: "My dear," },
-  careHealing2: { he: "היום הגבה נראית מושלמת!", en: "Today your brow looks perfect!" },
+  careHealing1: { he: "חשוב שתדעי:", en: "Important to know:" },
+  careHealing2: {
+    he: "ביום הטיפול הגבות נראות מודגשות ומדויקות.",
+    en: "On the day of treatment, the brows look defined and precise.",
+  },
   careHealing3: {
-    he: "ממחר הגבה מתחילה להתכהות מאוד! לא להיבהל, זהו תהליך נורמלי של הגלדה!",
-    en: "Starting tomorrow, the brow will begin to darken significantly! Don't worry — this is a normal part of the scabbing process!",
+    he: "החל ממחר, הגבות עשויות להתכהות באופן משמעותי. אין להיבהל — זהו חלק טבעי מתהליך ההחלמה והיווצרות הגלד.",
+    en: "Starting tomorrow, the brows may darken significantly. Do not be alarmed — this is a natural part of the healing and scab-forming process.",
   },
   careHealing4: {
-    he: "בין חמישה ימים לשבועיים הגבה מתחילה להתקלף!",
-    en: "Between five days and two weeks, the brow will start to flake!",
+    he: "בין היום החמישי ליום הארבעה־עשר עשוי להתחיל קילוף באזור הגבות.",
+    en: "Flaking in the brow area may begin between the fifth and fourteenth day.",
   },
   careHealing5: {
-    he: "מה קורה אחרי הקילוף? בקושי יישאר משהו מהטיפול הראשון! 90 אחוז מהצבע פשוט יורד ונדחה מהעור! לא תישאר הצורה / הסימטריה / הפיגמנט שנעשה עבורך במעמד הטיפול הראשון, אין תוצאה מושלמת אחרי טיפול אחד בלבד, וזו הסיבה שכל התהליך מורכב משני טיפולים!",
-    en: "What happens after the flaking? Barely anything will remain from the first treatment! About 90% of the pigment simply fades and is shed by the skin! The shape, symmetry, and pigment created in the first session won't fully remain — there's no perfect result after just one treatment alone, which is exactly why the full process consists of two sessions!",
+    he: "לאחר הקילוף, הצבע עשוי להיראות בהיר מאוד וחלק מהפיגמנט עשוי להיעלם. הצורה, הסימטריה והגוון בשלב זה עדיין אינם התוצאה הסופית. תהליך האיפור הקבוע כולל שני טיפולים, והתוצאה מתייצבת לאחר טיפול ההשלמה וסיום ההחלמה.",
+    en: "After flaking, the color may appear very light and some of the pigment may seem to disappear. At this stage, the shape, symmetry, and shade are not yet the final result. The permanent makeup process includes two sessions, and the result settles after the follow-up treatment and the completion of healing.",
   },
-  careHealingImageAlt: { he: "תהליך ההחלמה של הגבות לפי ימים", en: "The eyebrow healing process by day" },
-  careContactIntro: { he: "לכל שאלה אני כאן בשבילך בטלפון:", en: "For any question, I'm here for you by phone:" },
+  careHealingImageAlt: { he: "שלבי החלמת הגבות לפי ימים", en: "Stages of eyebrow healing by day" },
+  careContactIntro: {
+    he: "לכל שאלה, אני כאן בשבילך. ניתן ליצור איתי קשר בטלפון:",
+    en: "If you have any questions, I'm here for you. You can contact me by phone:",
+  },
   carePhoneNumber: { he: "050-9988848", en: "050-9988848" },
   careSignoff: { he: "באהבה,", en: "With love," },
   careSignoffName: { he: "רעות יעקובי ♥", en: "Reut Yakobi ♥" },
 
   // ---------- Shared legal-page contact line labels ----------
+  // legalPhoneLabel: still used standalone by AccessibilityStatement.tsx.
+  // legalContactLabel: the combined phone+WhatsApp line used by
+  // PrivacyPolicy.tsx/TermsOfUse.tsx (previously two separate lines).
   legalPhoneLabel: { he: "טלפון:", en: "Phone:" },
-  legalWhatsappLabel: { he: "WhatsApp:", en: "WhatsApp:" },
+  legalContactLabel: { he: "בטלפון ובישומון וואטסאפ:", en: "By phone and WhatsApp:" },
 
   // ---------- Privacy policy page ----------
   ppGeneralTitle: { he: "כללי", en: "General" },
@@ -361,7 +374,7 @@ const dictionary: Dictionary = {
   },
   ppContactTitle: { he: "יצירת קשר בנושא פרטיות", en: "Contact Us About Privacy" },
   ppContactIntro: {
-    he: "לכל שאלה או בקשה הנוגעת למדיניות זו ולמידע האישי שלך, ניתן לפנות אלינו:",
+    he: "לכל שאלה או בקשה הנוגעת למדיניות זו ולמידע האישי שלך, ניתן לפנות אלינו",
     en: "For any question or request regarding this policy or your personal information, you can reach us at:",
   },
   ppUpdatesTitle: { he: "עדכוני מדיניות", en: "Policy Updates" },
@@ -442,7 +455,7 @@ const dictionary: Dictionary = {
   },
   touContactTitle: { he: "יצירת קשר", en: "Contact Us" },
   touContactIntro: {
-    he: "לכל שאלה בנוגע לתנאי השימוש ניתן לפנות אלינו:",
+    he: "לכל שאלה בנוגע לתנאי השימוש ניתן לפנות אלינו",
     en: "For any question regarding these terms of use, you can reach us at:",
   },
   touLastUpdated: {
@@ -492,9 +505,6 @@ const dictionary: Dictionary = {
     he: "נתקלת בבעיית נגישות באתר? נשמח שתפני אלינו ונטפל בפנייתך בהקדם:",
     en: "Encountered an accessibility issue on the site? We'd be glad for you to reach out, and we'll handle your inquiry promptly:",
   },
-  asCoordinatorLabel: { he: "רכזת הנגישות:", en: "Accessibility Coordinator:" },
-  asCoordinatorName: { he: "Codedly", en: "Codedly" },
-  asCoordinatorPhone: { he: "052-222-5834", en: "052-222-5834" },
   asEmailLabel: { he: "אימייל:", en: "Email:" },
   asCoordinatorEmail: { he: "codedly.il@gmail.com", en: "codedly.il@gmail.com" },
   asComplaintsTitle: { he: "פנייה לנציבות שוויון זכויות", en: "Contacting the Commission for Equal Rights" },
@@ -605,6 +615,23 @@ const dictionary: Dictionary = {
     he: "תודה שמילאת את הצהרת הבריאות. הפרטים התקבלו אצלנו.",
     en: "Thank you for completing the health declaration. Your details have been received.",
   },
+  hdRequiredNote: {
+    he: "שאלות המסומנות בכוכבית אדומה הן שאלות חובה.",
+    en: "Questions marked with a red asterisk are required.",
+  },
+  hdNameRequired: { he: "יש למלא שם מלא", en: "Full name is required" },
+  hdIdNumberRequired: { he: "יש למלא מספר תעודת זהות", en: "ID number is required" },
+  hdIdNumberInvalid: { he: "מספר תעודת הזהות אינו תקין", en: "ID number is invalid" },
+  hdPhoneRequired: { he: "יש למלא מספר טלפון", en: "Phone number is required" },
+  hdPhoneInvalid: { he: "מספר הטלפון אינו תקין", en: "Phone number is invalid" },
+  hdAnswerRequired: { he: "יש לבחור תשובה", en: "Please select an answer" },
+  hdAgreementRequired: { he: "יש לאשר את ההסכם כדי להמשיך", en: "You must accept the agreement to continue" },
+  hdSubmitting: { he: "שולח...", en: "Sending..." },
+  hdSubmitError: {
+    he: "אירעה שגיאה בשליחת הטופס. נסי שוב או צרי קשר טלפוני.",
+    en: "An error occurred while submitting the form. Please try again or contact us by phone.",
+  },
+  spinnerLoading: { he: "טוען", en: "Loading" },
 
   // ---------- Site brand name (nav bar + footer, shared) ----------
   // Same value in both languages — a brand name doesn't translate. Stored
@@ -641,6 +668,20 @@ const dictionary: Dictionary = {
     he: "שעווה בפנים היא שיטה עדינה ומדויקת להסרת שיער עודף באזור הפנים, המשאירה את העור חלק ונקי לאורך זמן ממושך יותר בהשוואה לשיטות אחרות. הטיפול מתאים לגבות, שפה עליונה, סנטר ולחיים, ומבוצע תוך הקפדה על נוחות ועדינות כלפי העור הרגיש של הפנים.",
     en: "Facial waxing is a gentle, precise method for removing unwanted hair from the face, leaving skin smooth and clear for longer than many other methods. The treatment suits brows, upper lip, chin, and cheeks, and is performed with careful attention to comfort and to the delicate skin of the face.",
   },
+
+  // ---------- Accessibility widget (floating panel — intentionally not
+  // admin-editable, per explicit earlier request) ----------
+  a11yToggleLabel: { he: "תפריט נגישות (ניתן לגרירה)", en: "Accessibility menu (draggable)" },
+  a11yPanelLabel: { he: "אפשרויות נגישות", en: "Accessibility options" },
+  a11yPanelTitle: { he: "נגישות", en: "Accessibility" },
+  a11yFontSize: { he: "גודל טקסט", en: "Text size" },
+  a11yHighContrast: { he: "ניגודיות גבוהה", en: "High contrast" },
+  a11yReduceMotion: { he: "עצירת אנימציות", en: "Stop animations" },
+  a11yUnderlineLinks: { he: "הדגשת קישורים", en: "Underline links" },
+  a11yReadableFont: { he: "גופן קריא", en: "Readable font" },
+  a11yGrayscale: { he: "גווני אפור", en: "Grayscale" },
+  a11yResetSettings: { he: "איפוס הגדרות", en: "Reset settings" },
+  a11yResetPosition: { he: "איפוס מיקום", en: "Reset position" },
 };
 
 export type TranslationKey = keyof typeof dictionary;

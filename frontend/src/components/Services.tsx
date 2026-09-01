@@ -241,6 +241,7 @@ const SERVICES = [
 
 export default function Services() {
   const { t } = useLanguage();
+  const servicesSectionRef = useRef<HTMLElement>(null);
   const permanentMakeupCardRef = useRef<HTMLDivElement>(null);
   const bridalMakeupCardRef = useRef<HTMLDivElement>(null);
   const facialWaxCardRef = useRef<HTMLDivElement>(null);
@@ -290,9 +291,91 @@ export default function Services() {
     };
   }, []);
 
+  useEffect(() => {
+    const section = servicesSectionRef.current;
+    if (!section) return;
+
+    const detailButtons = Array.from(section.querySelectorAll<HTMLElement>(".service-card-link"));
+    if (detailButtons.length === 0) return;
+
+    const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let timerId: number | null = null;
+    let shuffledButtons: HTMLElement[] = [];
+
+    function prefersReducedMotion() {
+      return reducedMotionQuery.matches || document.documentElement.classList.contains("a11y-reduce-motion");
+    }
+
+    function clearGlints() {
+      detailButtons.forEach((button) => button.classList.remove("is-sun-glinting"));
+    }
+
+    function nextButton() {
+      if (shuffledButtons.length === 0) {
+        shuffledButtons = [...detailButtons];
+        for (let index = shuffledButtons.length - 1; index > 0; index -= 1) {
+          const randomIndex = Math.floor(Math.random() * (index + 1));
+          [shuffledButtons[index], shuffledButtons[randomIndex]] = [
+            shuffledButtons[randomIndex],
+            shuffledButtons[index],
+          ];
+        }
+      }
+
+      return shuffledButtons.pop();
+    }
+
+    function nextVisibleButton() {
+      const visibleButtons = detailButtons.filter((button) => {
+        const bounds = button.getBoundingClientRect();
+        return bounds.bottom > 0 && bounds.top < window.innerHeight;
+      });
+
+      if (visibleButtons.length === 0) return nextButton();
+      return visibleButtons[Math.floor(Math.random() * visibleButtons.length)];
+    }
+
+    function scheduleGlint(isInitial = false) {
+      const minimumDelay = isInitial ? 900 : 2200;
+      const randomRange = isInitial ? 1800 : 4000;
+      const delay = minimumDelay + Math.random() * randomRange;
+
+      timerId = window.setTimeout(() => {
+        if (prefersReducedMotion()) return;
+
+        const button = nextVisibleButton();
+        if (!button) return;
+
+        button.classList.add("is-sun-glinting");
+        timerId = window.setTimeout(() => {
+          button.classList.remove("is-sun-glinting");
+          scheduleGlint();
+        }, 1450);
+      }, delay);
+    }
+
+    function resetGlints() {
+      if (timerId !== null) window.clearTimeout(timerId);
+      timerId = null;
+      clearGlints();
+      if (!prefersReducedMotion()) scheduleGlint(true);
+    }
+
+    const classObserver = new MutationObserver(resetGlints);
+    classObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    reducedMotionQuery.addEventListener("change", resetGlints);
+    scheduleGlint(true);
+
+    return () => {
+      if (timerId !== null) window.clearTimeout(timerId);
+      reducedMotionQuery.removeEventListener("change", resetGlints);
+      classObserver.disconnect();
+      clearGlints();
+    };
+  }, []);
+
   return (
-    <section className="services-section">
-      <span className="services-wave-fade-lines" aria-hidden="true" />
+    <section className="services-section" ref={servicesSectionRef}>
       <h2 className="services-title" aria-label={`${t("servicesTitleKicker")} ${t("servicesTitleMain")}`}>
         <span className="services-title-kicker">
           <Editable contentKey="servicesTitleKicker">{t("servicesTitleKicker")}</Editable>

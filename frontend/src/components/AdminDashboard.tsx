@@ -149,10 +149,10 @@ export default function AdminDashboard() {
               </summary>
               <div className="admin-submission-body">
                 <p className="admin-submission-field">
-                  <strong>מספר תעודת זהות:</strong> {submission.idNumber}
+                  <strong>{t("hdIdNumberLabel")}:</strong> {submission.idNumber}
                 </p>
                 <p className="admin-submission-field">
-                  <strong>טלפון:</strong> {submission.phone}
+                  <strong>{t("hdPhoneLabel")}:</strong> {submission.phone}
                 </p>
                 <ul className="admin-answer-list">
                   {QUESTIONS.map((question) => {

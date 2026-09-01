@@ -125,7 +125,7 @@ function pixelToRail(x: number, y: number, bounds: Bounds): RailPosition {
 }
 
 export default function AccessibilityWidget() {
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [prefs, setPrefs] = useState<A11yPrefs>(DEFAULT_PREFS);
   const [rail, setRail] = useState<RailPosition | null>(null);
@@ -325,20 +325,20 @@ export default function AccessibilityWidget() {
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
-        aria-label="תפריט נגישות (ניתן לגרירה)"
+        aria-label={t("a11yToggleLabel")}
         aria-expanded={isOpen}
       >
         <AccessibilityIcon size={24} />
       </button>
 
       {isOpen && (
-        <div className="a11y-panel" ref={panelRef} style={getPanelStyle()} role="dialog" aria-label="אפשרויות נגישות">
-          <h2 className="a11y-panel-title">נגישות</h2>
+        <div className="a11y-panel" ref={panelRef} style={getPanelStyle()} role="dialog" aria-label={t("a11yPanelLabel")}>
+          <h2 className="a11y-panel-title">{t("a11yPanelTitle")}</h2>
 
           <div className="a11y-options-grid">
             <button type="button" className="a11y-option" onClick={cycleFontScale} aria-pressed={prefs.fontScale !== "normal"}>
               <TextSizeIcon size={22} />
-              <span>גודל טקסט</span>
+              <span>{t("a11yFontSize")}</span>
             </button>
 
             <button
@@ -348,7 +348,7 @@ export default function AccessibilityWidget() {
               aria-pressed={prefs.highContrast}
             >
               <ContrastIcon size={22} />
-              <span>ניגודיות גבוהה</span>
+              <span>{t("a11yHighContrast")}</span>
             </button>
 
             <button
@@ -358,7 +358,7 @@ export default function AccessibilityWidget() {
               aria-pressed={prefs.reduceMotion}
             >
               <PauseIcon size={22} />
-              <span>עצירת אנימציות</span>
+              <span>{t("a11yReduceMotion")}</span>
             </button>
 
             <button
@@ -368,7 +368,7 @@ export default function AccessibilityWidget() {
               aria-pressed={prefs.underlineLinks}
             >
               <UnderlineIcon size={22} />
-              <span>הדגשת קישורים</span>
+              <span>{t("a11yUnderlineLinks")}</span>
             </button>
 
             <button
@@ -378,7 +378,7 @@ export default function AccessibilityWidget() {
               aria-pressed={prefs.readableFont}
             >
               <BookOpenIcon size={22} />
-              <span>גופן קריא</span>
+              <span>{t("a11yReadableFont")}</span>
             </button>
 
             <button
@@ -388,22 +388,22 @@ export default function AccessibilityWidget() {
               aria-pressed={prefs.grayscale}
             >
               <DropletIcon size={22} />
-              <span>גווני אפור</span>
+              <span>{t("a11yGrayscale")}</span>
             </button>
           </div>
 
           <div className="a11y-reset-row">
             <button type="button" className="a11y-reset" onClick={reset} disabled={isDefaultPrefs}>
-              איפוס הגדרות
+              {t("a11yResetSettings")}
             </button>
 
             <button type="button" className="a11y-reset" onClick={resetPosition} disabled={isDefaultPosition}>
-              איפוס מיקום
+              {t("a11yResetPosition")}
             </button>
           </div>
 
           <Link href="/accessibility" className="a11y-statement-link" onClick={() => setIsOpen(false)}>
-            הצהרת נגישות
+            {t("accessibility")}
           </Link>
         </div>
       )}

@@ -377,6 +377,11 @@ a {
   margin: 0;
   cursor: pointer;
   font: inherit;
+  /* Pinned rather than inherited from <html dir>, so the logo/brand-text
+     arrangement never mirrors when switching to English — a plain flex row
+     with no explicit direction otherwise flips its child order with the
+     page's overall direction. */
+  direction: rtl;
 }
 
 .nav-bar-logo {
@@ -417,6 +422,9 @@ a {
   display: flex;
   align-items: center;
   gap: 0.6rem;
+  /* Pinned for the same reason as .nav-bar-logo-link above — without this,
+     the whole button cluster mirrors order when switching to English. */
+  direction: rtl;
 }
 
 .nav-bar-admin-badge {
@@ -756,6 +764,18 @@ html[dir="ltr"] .hero-image-placeholder-full {
   padding-top: 13px;
 }
 
+/* A dedicated clipped layer lets the same two-stripe sun glint used by the
+   service buttons cross the circular badge without clipping its editable
+   content or controls. */
+.hero-badge-glint {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
 @media (min-width: 861px) {
   .hero-badge {
     bottom: 4rem;
@@ -777,6 +797,29 @@ html[dir="ltr"] .hero-image-placeholder-full {
   .hero-banner {
     grid-template-columns: 1fr;
     margin-bottom: 1.75rem;
+  }
+
+  /* The diagnostics feature, including its admin-edit control, is a
+     desktop-only item. Hiding the complete feature keeps no empty slot. */
+  .hero-features .hero-feature:first-child {
+    display: none;
+  }
+
+  .hero-features {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+    width: 100%;
+    max-width: 24rem;
+  }
+
+  .hero-feature {
+    width: auto;
+    min-width: 0;
+  }
+
+  .hero-feature span {
+    font-size: 0.78rem;
   }
 
   .hero-image-col {
@@ -1129,19 +1172,6 @@ html.a11y-grayscale {
   transform: translateX(0);
 }
 
-html[dir="ltr"] .sidebar-panel {
-  right: auto;
-  left: 0;
-  border-left: none;
-  border-right: 1px solid rgba(169, 127, 30, 0.35);
-  box-shadow: 12px 0 36px rgba(26, 23, 18, 0.18);
-  transform: translateX(-100%);
-}
-
-html[dir="ltr"] .sidebar-panel-open {
-  transform: translateX(0);
-}
-
 .sidebar-header {
   display: flex;
   align-items: center;
@@ -1153,6 +1183,14 @@ html[dir="ltr"] .sidebar-panel-open {
 .sidebar-header-centered h2 {
   flex: 1;
   text-align: center;
+}
+
+/* Scoped to the nav sidebar specifically (not every .sidebar-header — the
+   FAQ/edit/review popovers reuse that same class): pinned so the title
+   stays on the right and the close button on the left regardless of
+   language, matching the fix already applied to .nav-bar's own layout. */
+.sidebar-panel .sidebar-header {
+  direction: rtl;
 }
 
 .sidebar-nav {
@@ -1169,6 +1207,10 @@ html[dir="ltr"] .sidebar-panel-open {
   color: var(--color-black);
   text-decoration: none;
   font-weight: 500;
+  /* Pinned for the same reason as the sidebar header above — a block
+     element's text otherwise aligns to the reading-start side, which
+     flips from right to left when switching to English. */
+  text-align: right;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
@@ -1515,14 +1557,9 @@ html[dir="ltr"] .sidebar-panel-open {
   padding: 4.5rem 1.5rem 4rem;
 }
 
-/* Rather than a second, separate wave accent (which just left a visible
-   cream gap between it and the hero's own wave), this extends solid
-   white up through that gap — .hero-banner's margin-bottom is 40px — so
-   the two white areas read as one continuous ribbon. ::after then closes
-   that ribbon off with a wave shape at the bottom, revealing the normal
-   page background again in the same curve used above, instead of a flat
-   cutoff. Both are full-bleed (left: 50% + translateX(-50%) + 100vw) so
-   they span edge to edge like the hero's wave does. */
+/* A single full-bleed white bridge joins the hero wave to this section.
+   Its lower edge owns the wave shape, so the page background begins
+   immediately beneath it without extra cream or translucent bands. */
 .services-section::before {
   content: "";
   position: absolute;
@@ -1532,59 +1569,13 @@ html[dir="ltr"] .sidebar-panel-open {
   transform: translateX(-50%);
   height: 90px;
   background: #ffffff;
-  pointer-events: none;
-}
-
-/* Same height as .hero-wave (50px) — a wave's curve reads as wavy in
-   proportion to how much vertical room it has to curve within; shrinking
-   this well below the hero-wave's height (as earlier "thinner" passes
-   did) flattened it out into barely a diagonal, unlike the top curve. */
-.services-section::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 100vw;
-  transform: translateX(-50%);
-  height: 50px;
-  background: var(--color-cream-soft);
-  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 100' preserveAspectRatio='none'%3E%3Cpath d='M0,50 C240,5 480,5 720,50 C960,95 1200,95 1440,50 L1440,100 L0,100 Z' fill='white'/%3E%3C/svg%3E");
-  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 100' preserveAspectRatio='none'%3E%3Cpath d='M0,50 C240,5 480,5 720,50 C960,95 1200,95 1440,50 L1440,100 L0,100 Z' fill='white'/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 90' preserveAspectRatio='none'%3E%3Cpath d='M0,65 C240,42.5 480,42.5 720,65 C960,87.5 1200,87.5 1440,65 L1440,0 L0,0 Z' fill='white'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 90' preserveAspectRatio='none'%3E%3Cpath d='M0,65 C240,42.5 480,42.5 720,65 C960,87.5 1200,87.5 1440,65 L1440,0 L0,0 Z' fill='white'/%3E%3C/svg%3E");
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
   pointer-events: none;
-}
-
-/* Two adjoining strips continue the opaque cream wave into the page. They
-   use that exact background color with progressively lower opacity, creating
-   a continuous three-step fade without gaps or contrasting line colors. */
-.services-wave-fade-lines {
-  position: absolute;
-  z-index: 1;
-  top: 50px;
-  left: 50%;
-  width: 100vw;
-  transform: translateX(-50%);
-  pointer-events: none;
-}
-
-.services-wave-fade-lines::before,
-.services-wave-fade-lines::after {
-  content: "";
-  display: block;
-  width: 100%;
-  height: 30px;
-  background: var(--color-cream-soft);
-}
-
-.services-wave-fade-lines::before {
-  opacity: 0.8;
-}
-
-.services-wave-fade-lines::after {
-  opacity: 0.42;
 }
 
 .services-title {
@@ -2079,6 +2070,9 @@ html.a11y-reduce-motion .service-sparkle-orbit {
 }
 
 .service-card-link {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -2098,6 +2092,102 @@ html.a11y-reduce-motion .service-sparkle-orbit {
   text-decoration: none;
   cursor: pointer;
   transition: background-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+
+.service-card-link::after,
+.hero-badge-glint::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: -75%;
+  left: 120%;
+  width: 40%;
+  height: 260%;
+  opacity: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(212, 175, 55, 0.2) 26%,
+      rgba(255, 255, 255, 0.96) 50%,
+      rgba(244, 195, 54, 0.34) 74%,
+      transparent 100%
+    ),
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(212, 175, 55, 0.1) 22%,
+      rgba(255, 249, 221, 0.62) 50%,
+      rgba(244, 195, 54, 0.2) 78%,
+      transparent 100%
+    );
+  background-position: 40% 0, 60% 0;
+  background-size: 19% 100%, 31% 100%;
+  background-repeat: no-repeat;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    transparent 26%,
+    rgba(0, 0, 0, 0.55) 31%,
+    #000 37%,
+    #000 61%,
+    rgba(0, 0, 0, 0.55) 67%,
+    transparent 72%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    transparent 26%,
+    rgba(0, 0, 0, 0.55) 31%,
+    #000 37%,
+    #000 61%,
+    rgba(0, 0, 0, 0.55) 67%,
+    transparent 72%,
+    transparent 100%
+  );
+  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.34))
+    drop-shadow(0 0 5px rgba(212, 175, 55, 0.24)) blur(0.25px);
+  transform: translate3d(0, 0, 0) skewX(-18deg);
+  will-change: transform, opacity;
+}
+
+.service-card-link.is-sun-glinting::after,
+.hero-badge-glint.is-sun-glinting::after {
+  animation: service-link-sun-glint 1.4s linear;
+}
+
+@keyframes service-link-sun-glint {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) skewX(-18deg);
+  }
+
+  18% {
+    opacity: 0.34;
+  }
+
+  44% {
+    opacity: 0.74;
+  }
+
+  52% {
+    opacity: 1;
+  }
+
+  61% {
+    opacity: 0.76;
+  }
+
+  82% {
+    opacity: 0.3;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(-450%, 0, 0) skewX(-18deg);
+  }
 }
 
 .service-card-link:hover {
@@ -2132,22 +2222,12 @@ html.a11y-reduce-motion .service-sparkle-orbit {
     overflow: visible;
   }
 
-  /* Matches .hero-wave's mobile override — a calmer, lower-amplitude
-     curve than the desktop double-hump, and shorter to match .hero-wave's
-     own mobile height reduction. */
+  /* Matches the calmer, shorter mobile curve used by the hero wave. */
   .services-section::before {
     top: -1.75rem;
     height: calc(1.75rem + 35px);
-  }
-
-  .services-section::after {
-    height: 35px;
-    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 100' preserveAspectRatio='none'%3E%3Cpath d='M0,45 C240,22 480,22 720,45 C960,68 1200,68 1440,45 L1440,100 L0,100 Z' fill='white'/%3E%3C/svg%3E");
-    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 100' preserveAspectRatio='none'%3E%3Cpath d='M0,45 C240,22 480,22 720,45 C960,68 1200,68 1440,45 L1440,100 L0,100 Z' fill='white'/%3E%3C/svg%3E");
-  }
-
-  .services-wave-fade-lines {
-    top: 35px;
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 63' preserveAspectRatio='none'%3E%3Cpath d='M0,43.75 C240,35.7 480,35.7 720,43.75 C960,51.8 1200,51.8 1440,43.75 L1440,0 L0,0 Z' fill='white'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 63' preserveAspectRatio='none'%3E%3Cpath d='M0,43.75 C240,35.7 480,35.7 720,43.75 C960,51.8 1200,51.8 1440,43.75 L1440,0 L0,0 Z' fill='white'/%3E%3C/svg%3E");
   }
 
   /* Straight, centered stacking on mobile — no left/right alternation

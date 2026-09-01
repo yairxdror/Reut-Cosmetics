@@ -5,9 +5,11 @@ import { useRouter } from "next/navigation";
 import HealthDeclarationForm from "@/components/HealthDeclarationForm";
 import Spinner from "@/components/Spinner";
 import { ADMIN_AUTH_EVENT, isAdminLoggedIn } from "@/lib/adminAuth";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function HealthDeclarationPage() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [isAuthorized, setIsAuthorized] = useState(false);
 
   useEffect(() => {
@@ -42,10 +44,10 @@ export default function HealthDeclarationPage() {
   return (
     <section>
       <h1 className="text-gold" style={{ textAlign: "center" }}>
-        הצהרת בריאות
+        {t("healthDeclaration")}
       </h1>
       <p style={{ textAlign: "center" }}>
-        <span className="form-required">*</span> שאלות המסומנות בכוכבית אדומה הן שאלות חובה.
+        <span className="form-required">*</span> {t("hdRequiredNote")}
       </p>
       <HealthDeclarationForm />
     </section>
