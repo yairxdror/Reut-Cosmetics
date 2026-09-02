@@ -20,9 +20,11 @@ const dictionary: Dictionary = {
     en: "Advanced cosmetic treatments, permanent makeup, evening makeup, bridal makeup, eyebrow shaping, facial waxing, professional training courses.\nEverything you need to feel perfect.",
   },
   whatsappCta: { he: "דברו איתנו בוואטסאפ", en: "Chat with us on WhatsApp" },
+  facebookCta: { he: "עקבו בפייסבוק", en: "Follow us on Facebook" },
+  facebookCtaMobile: { he: "פייסבוק", en: "Facebook" },
   whatsappCtaCore: { he: "דברו איתנו", en: "Chat with us" },
   whatsappCtaSuffix: { he: "בוואטסאפ", en: "on WhatsApp" },
-  featureDiagnostics: { he: "בדיקות מדויקות\nלהתאמה מושלמת", en: "Precise diagnostics\nfor a perfect fit" },
+  featureDiagnostics: { he: "טיפול שמותאם\nבדיוק בשבילך", en: "A treatment tailored\njust for you" },
   featurePersonalService: { he: "שירות אישי\nוליווי צמוד", en: "Personal service\nand close guidance" },
   featureEquipped: { he: "מכון מאובזר\nבסטנדרטים גבוהים", en: "Facility equipped\nto high standards" },
   featureMaterials: { he: "חומרים איכותיים\nלמראה מושלם", en: "Quality materials\nfor a flawless look" },
@@ -125,7 +127,9 @@ const dictionary: Dictionary = {
 
   contactSectionTitle: { he: "צרי קשר", en: "Contact Us" },
   instagramCta: { he: "עקבו באינסטגרם", en: "Follow on Instagram" },
+  instagramCtaMobile: { he: "אינסטגרם", en: "Instagram" },
   phoneCta: { he: "התקשרו אלינו", en: "Call Us" },
+  phoneCtaMobile: { he: "טלפון", en: "Call" },
   // Same value in both languages, like wazeCta above — a handle/name/phone
   // number doesn't translate. The link targets (contact.ts's INSTAGRAM_URL
   // / FACEBOOK_URL / PHONE_TEL_URL / whatsappUrl) are separate hardcoded
@@ -140,16 +144,21 @@ const dictionary: Dictionary = {
   consultationNamePlaceholder: { he: "שם מלא", en: "Full Name" },
   consultationPhonePlaceholder: { he: "טלפון", en: "Phone" },
   consultationServicePlaceholder: { he: "תחום שירות", en: "Service Area" },
-  consultationSubmit: { he: "שלחי פרטים", en: "Send Details" },
+  consultationSubmit: { he: "שלחי בוואטסאפ", en: "Send Details" },
   consultationNameRequired: { he: "יש למלא שם", en: "Name is required" },
+  consultationNameTooShort: { he: "השם חייב לכלול לפחות 2 אותיות", en: "Name must be at least 2 letters" },
   consultationPhoneRequired: { he: "יש למלא טלפון", en: "Phone is required" },
   consultationPhoneInvalid: { he: "מספר הטלפון אינו תקין", en: "Invalid phone number" },
+  consultationServiceRequired: { he: "יש לבחור תחום שירות", en: "Please select a service area" },
   consultationWhatsappMessage: {
     he: "שלום, אני",
     en: "Hi, I'm",
   },
   consultationWhatsappPhoneLabel: { he: "טלפון", en: "Phone" },
-  consultationWhatsappServiceLabel: { he: "מתעניינת ב", en: "Interested in" },
+  consultationWhatsappClosingWithService: {
+    he: "אשמח לקבל פרטים נוספים על",
+    en: "I'd love to get more details about",
+  },
 
   reviewsTitle: { he: "לקוחות מספרות", en: "Clients Share" },
   addReviewButton: { he: "הוסיפי ביקורת", en: "Add a Review" },
@@ -182,6 +191,9 @@ const dictionary: Dictionary = {
   },
   reviewTextTooLong: { he: "הביקורת ארוכה מדי (עד 500 תווים)", en: "Review is too long (max 500 characters)" },
   reviewGenericError: { he: "אירעה שגיאה. נסי שוב מאוחר יותר.", en: "Something went wrong. Please try again later." },
+  reviewDeleteButton: { he: "מחיקת ביקורת", en: "Delete review" },
+  reviewDeleteConfirm: { he: "למחוק את הביקורת הזו לצמיתות?", en: "Permanently delete this review?" },
+  reviewDeleteError: { he: "לא ניתן למחוק את הביקורת כרגע.", en: "The review cannot be deleted right now." },
   reviewRateLimited: {
     he: "נשלחו יותר מדי ביקורות מהמכשיר הזה. נסי שוב בעוד כמה דקות.",
     en: "Too many reviews submitted from this device. Please try again in a few minutes.",
@@ -302,46 +314,55 @@ const dictionary: Dictionary = {
   // ---------- Privacy policy page ----------
   ppGeneralTitle: { he: "כללי", en: "General" },
   ppGeneralText: {
-    he: "Reut Cosmetics מכבדת את פרטיותך. מדיניות זו מסבירה אילו נתונים אנו אוספות, לשם מה, וכיצד הם נשמרים ומאובטחים. השימוש באתר ובשירותים מהווה הסכמה לתנאי מדיניות זו.",
-    en: "Reut Cosmetics respects your privacy. This policy explains what data we collect, why, and how it is stored and secured. Using the site and its services constitutes agreement to the terms of this policy.",
+    he: "Reut Cosmetics מכבדת את פרטיותך. מדיניות זו היא הודעה בדבר איסוף מידע אישי: היא מסבירה איזה מידע נאסף, האם מסירתו חובה, לאילו מטרות הוא משמש, למי הוא עשוי להימסר, כמה זמן הוא נשמר ומהן זכויותייך. גלישה באתר כשלעצמה אינה מהווה הסכמה לעיבוד שאינו נחוץ להפעלתו; במקום שבו נדרשת הסכמה, היא מתבקשת באופן מפורש בנקודת האיסוף.",
+    en: "Reut Cosmetics respects your privacy. This policy is a notice about the collection of personal information: it explains what is collected, whether providing it is mandatory, the purposes of use, potential recipients, retention periods, and your rights. Browsing the site alone is not consent to processing that is not necessary for its operation; where consent is required, it is requested expressly at the point of collection.",
+  },
+  ppControllerTitle: { he: "בעלת השליטה במאגר ופרטי קשר", en: "Data Controller and Contact Details" },
+  ppControllerText: {
+    he: "בעלת השליטה במידע היא רעות יעקובי, המפעילה את Reut Cosmetics, בכתובת משה רחמילביץ 34, ירושלים. לפניות בנושא פרטיות ניתן ליצור קשר בטלפון או ב-WhatsApp:",
+    en: "The data controller is Reut Yakobi, operator of Reut Cosmetics, at 34 Moshe Rachmilevitz Street, Jerusalem. For privacy inquiries, contact us by phone or WhatsApp:",
   },
   ppDataCollectedTitle: { he: "המידע שאנו אוספות", en: "Information We Collect" },
   ppDataItem1: {
-    he: "ביקורות: שם, דירוג וטקסט הביקורת, מוצגים באופן פומבי בעמוד הביקורות באתר.",
-    en: "Reviews: name, rating, and review text, displayed publicly on the site's reviews page.",
+    he: "ביקורות: שם, דירוג וטקסט הביקורת. המסירה היא לבחירתך; ללא המידע לא ניתן לפרסם ביקורת. לאחר אישור מפורש, הפרטים מוצגים בפומבי בעמוד הביקורות באתר.",
+    en: "Reviews: name, rating, and review text. Providing them is optional; without them, a review cannot be published. After express approval, the details are displayed publicly on the site's reviews page.",
   },
   ppDataItem2: {
-    he: "הצהרת בריאות: שם מלא, מספר תעודת זהות, מספר טלפון ותשובות לשאלון הבריאות, נאספים לצורך בדיקת התאמה ובטיחות לפני טיפול.",
-    en: "Health declaration: full name, ID number, phone number, and answers to the health questionnaire, collected to assess suitability and safety before treatment.",
+    he: "הצהרת בריאות: שם מלא, מספר תעודת זהות, מספר טלפון ותשובות לשאלון הבריאות. מסירת המידע תלויה ברצונך ובהסכמתך; ללא המידע לא נוכל לבדוק התאמה ובטיחות לטיפול או להעניק טיפול המחייב בדיקה זו.",
+    en: "Health declaration: full name, ID number, phone number, and health-questionnaire answers. Providing this information depends on your choice and consent; without it, we cannot assess treatment suitability and safety or provide a treatment that requires such an assessment.",
   },
   ppDataItem3: {
-    he: 'פניית "צרי קשר": שם, מספר טלפון ותחום השירות המבוקש, נשלחים ישירות בהודעת WhatsApp ואינם נשמרים בשרתי האתר.',
-    en: 'A "Contact Us" inquiry: name, phone number, and the requested service area, sent directly as a WhatsApp message and not stored on the site\'s servers.',
+    he: 'פניית "צרי קשר": שם, מספר טלפון ותחום השירות המבוקש. המסירה היא לבחירתך; ללא שם וטלפון לא ניתן ליצור הודעת WhatsApp מוכנה. המידע אינו נשמר בשרתי האתר ונשלח ל-WhatsApp רק לאחר פעולתך.',
+    en: 'A "Contact Us" inquiry: name, phone number, and requested service area. Providing them is optional; without a name and phone number, a prepared WhatsApp message cannot be created. The information is not stored on the site servers and is sent to WhatsApp only after your action.',
   },
   ppDataItem4: {
-    he: "העדפת שפה: נשמרת בעוגייה (cookie) במכשיר שלך, לצורך הצגת האתר בשפה שבחרת בביקור הבא.",
-    en: "Language preference: stored in a cookie on your device, so the site displays in the language you chose on your next visit.",
+    he: "מידע במכשיר: העדפת שפה נשמרת בעוגייה למשך שנה; העדפות נגישות, אסימון עריכת ביקורת זמני ואסימון התחברות של מנהלת נשמרים באחסון המקומי של הדפדפן לפי הצורך.",
+    en: "Information on your device: language preference is stored in a cookie for one year; accessibility preferences, a temporary review-edit token, and an administrator login token are stored in browser local storage as needed.",
   },
   ppDataItem5: {
-    he: "פרטי התחברות מנהלת: אימייל וסיסמה, לשימוש צוות האתר בלבד.",
-    en: "Admin login details: email and password, for use by the site team only.",
+    he: "התחברות מנהלת: כתובת אימייל וסיסמה נשלחות לשרת לצורך אימות בלבד. הסיסמה אינה נשמרת במאגר כטקסט גלוי; בדפדפן נשמר אסימון התחברות מוגבל בזמן.",
+    en: "Administrator login: an email address and password are sent to the server solely for authentication. The password is not stored in the database as plain text; a time-limited login token is stored in the browser.",
   },
-  ppSensitiveTitle: { he: "מידע רגיש, הצהרת בריאות", en: "Sensitive Information — Health Declaration" },
+  ppDataItem6: {
+    he: "מידע טכני ואבטחתי: תשתיות האירוח עשויות לתעד כתובת IP, מועד בקשה, סוג דפדפן או מכשיר, נתוני שגיאה ואירועי אבטחה, לצורך תפעול, אבטחה, מניעת שימוש לרעה ואבחון תקלות.",
+    en: "Technical and security data: hosting infrastructure may record IP address, request time, browser or device type, error data, and security events for operation, security, abuse prevention, and troubleshooting.",
+  },
+  ppSensitiveTitle: { he: "מידע בעל רגישות מיוחדת — הצהרת בריאות", en: "Specially Sensitive Information — Health Declaration" },
   ppSensitiveIntro: {
-    he: 'פרטי הצהרת הבריאות (לרבות תעודת הזהות ותשובות שאלון הבריאות) מהווים "מידע רגיש" כהגדרתו בחוק הגנת הפרטיות, התשמ"א-1981 (לרבות תיקון 13 לחוק). בהתאם לכך:',
-    en: 'The health declaration details (including the ID number and health questionnaire answers) constitute "sensitive information" as defined by the Israeli Privacy Protection Law, 5741-1981 (including Amendment 13). Accordingly:',
+    he: 'פרטי הצהרת הבריאות, ובפרט תשובות רפואיות ומספר תעודת זהות, עשויים להיחשב "מידע בעל רגישות מיוחדת" לפי חוק הגנת הפרטיות, התשמ"א-1981. הם נאספים רק לאחר הודעה והסכמה מפורשת ולמטרת בדיקת התאמה ובטיחות לטיפול. בהתאם לכך:',
+    en: 'Health-declaration details, particularly medical answers and an ID number, may constitute "specially sensitive information" under the Israeli Privacy Protection Law, 5741-1981. They are collected only after notice and express consent for assessing treatment suitability and safety. Accordingly:',
   },
   ppSensitiveItem1: {
-    he: "המידע מוצפן (AES-256) באחסון, כך שגם גישה ישירה לקובצי הנתונים אינה חושפת אותו כטקסט גלוי.",
-    en: "The information is encrypted (AES-256) at rest, so that even direct access to the data files does not expose it as plain text.",
+    he: "תוכן ההצהרה מוצפן באחסון באמצעות AES-256-GCM, כך שגישה ישירה לרשומה אינה חושפת אותו כטקסט גלוי ואף מאפשרת לזהות שינוי בלתי מורשה במידע.",
+    en: "Declaration content is encrypted at rest using AES-256-GCM, so direct access to a record does not reveal plain text and unauthorized alteration can be detected.",
   },
   ppSensitiveItem2: {
     he: "הגישה למידע מוגבלת לצוות מורשה בלבד, באמצעות התחברות מאובטחת.",
     en: "Access to the information is limited to authorized staff only, via secure login.",
   },
   ppSensitiveItem3: {
-    he: "המידע נמחק אוטומטית 7 שנים לאחר מועד המסירה.",
-    en: "The information is automatically deleted 7 years after the date it was submitted.",
+    he: "המידע נשמר עד 7 שנים ממועד המסירה ונמחק בתום התקופה באמצעות מנגנון מחיקה מתוזמן ובדיקות ניקוי בשרת.",
+    en: "The information is retained for up to seven years from submission and deleted at the end of that period through scheduled deletion and server-side cleanup checks.",
   },
   ppSensitiveItem4: {
     he: "קיימת הגבלת קצב על שליחת טפסים כדי למנוע ניצול לרעה של המערכת.",
@@ -354,8 +375,13 @@ const dictionary: Dictionary = {
   },
   ppSharingTitle: { he: "שיתוף עם צדדים שלישיים", en: "Sharing With Third Parties" },
   ppSharingText: {
-    he: 'פנייה דרך טופס "צרי קשר" נשלחת כהודעת WhatsApp ישירות למספר העסק; מרגע השליחה חלה עליה מדיניות הפרטיות של WhatsApp/Meta. מלבד זאת, אין אנו משתפות מידע אישי עם גורמים חיצוניים, למעט כאשר הדבר נדרש על פי דין.',
-    en: 'An inquiry sent via the "Contact Us" form is delivered as a WhatsApp message directly to the business\'s number; from the moment it is sent, it becomes subject to WhatsApp/Meta\'s own privacy policy. Beyond that, we do not share personal information with external parties, except where required by law.',
+    he: "לצורך הפעלת האתר ואבטחתו נעשה שימוש בשירותי Google/Firebase, ובהם Hosting, Cloud Run, Firestore ו-Cloud Storage, העשויים לעבד מידע עבורנו כספקי תשתית. פניות קשר מועברות ל-WhatsApp/Meta רק לאחר בחירתך לשלוח אותן. מפה מוטמעת של Google Maps נטענת בעמוד הבית, וקישור Waze נפתח רק בלחיצה. ספקים אלה עשויים לעבד מידע גם מחוץ לישראל בהתאם לתשתיותיהם ולהגדרות השירות. מידע עשוי להימסר גם לרשות מוסמכת אם הדבר נדרש על פי דין. איננו מוכרות מידע אישי ואיננו מוסרות אותו לצדדים שלישיים לצורכי פרסום שלהם.",
+    en: "To operate and secure the site, we use Google/Firebase services, including Hosting, Cloud Run, Firestore, and Cloud Storage, which may process information for us as infrastructure providers. Contact inquiries are transferred to WhatsApp/Meta only after you choose to send them. An embedded Google Maps map loads on the home page, and a Waze link opens only when clicked. These providers may process information outside Israel according to their infrastructure and service settings. Information may also be disclosed to a competent authority where required by law. We do not sell personal information or disclose it to third parties for their advertising purposes.",
+  },
+  ppRetentionTitle: { he: "משך שמירת המידע ומחיקתו", en: "Retention and Deletion" },
+  ppRetentionText: {
+    he: "הצהרות בריאות נשמרות עד 7 שנים ממועד המסירה. ביקורות נשמרות כל עוד הן מוצגות או נדרשות לניהול השירות, אלא אם התבקשה הסרתן ונמצא שאין חובה חוקית לשמרן. פרטי פנייה אינם נשמרים בשרת האתר, אך הודעה שנשלחה נשמרת ב-WhatsApp בהתאם למדיניות ולהגדרות החשבון שם. העדפות ואסימונים בדפדפן נשמרים עד לפקיעתם, למחיקתם בידי המשתמשת או לניקוי נתוני האתר. יומנים טכניים נשמרים בהתאם להגדרות ולתקופות השמירה של ספקי התשתית ורק כל עוד הם נחוצים לתפעול, אבטחה ועמידה בדין.",
+    en: "Health declarations are retained for up to seven years from submission. Reviews are retained while displayed or needed to manage the service, unless removal is requested and no legal duty requires retention. Contact details are not stored on the site server, but a sent message is retained by WhatsApp according to its policy and account settings. Browser preferences and tokens remain until expiry, user deletion, or clearing site data. Technical logs are retained according to infrastructure-provider settings and only as long as needed for operation, security, and legal compliance.",
   },
   ppSecurityTitle: { he: "אבטחת מידע", en: "Data Security" },
   ppSecurityText: {
@@ -364,13 +390,13 @@ const dictionary: Dictionary = {
   },
   ppCookiesTitle: { he: "עוגיות (Cookies)", en: "Cookies" },
   ppCookiesText: {
-    he: "האתר משתמש בעוגייה אחת בלבד, לשמירת העדפת השפה שבחרת. איננו משתמשות בעוגיות מעקב, פרסום או ניתוח שימוש.",
-    en: "The site uses a single cookie, to remember your chosen language preference. We do not use tracking, advertising, or usage-analytics cookies.",
+    he: "האתר שומר עוגיית שפה למשך שנה ומשתמש באחסון המקומי של הדפדפן לשמירת העדפות נגישות, אסימון עריכת ביקורת זמני ואסימון מנהלת. הטמעת Google Maps עשויה להשתמש בעוגיות או באחסון של Google בעת טעינת המפה. האתר עצמו אינו מפעיל עוגיות פרסום או מערכת ניתוח שיווקית. ניתן למחוק או לחסום עוגיות ואחסון מקומי דרך הגדרות הדפדפן, אך חלק מההעדפות או התכונות עלולות שלא להישמר.",
+    en: "The site stores a language cookie for one year and uses browser local storage for accessibility preferences, a temporary review-edit token, and an administrator token. The Google Maps embed may use Google cookies or storage when the map loads. The site itself does not run advertising cookies or a marketing analytics system. Cookies and local storage can be deleted or blocked through browser settings, but some preferences or features may no longer persist.",
   },
   ppRightsTitle: { he: "הזכויות שלך", en: "Your Rights" },
   ppRightsText: {
-    he: "בהתאם לחוק הגנת הפרטיות, את/ה רשאי/ת לפנות אלינו בבקשה לעיין במידע שנשמר עליך, לתקן אותו או לבקש את מחיקתו (בכפוף לכל דין המחייב שמירתו, כגון הוראות רפואיות). נשמח לטפל בכל פנייה בהקדם.",
-    en: "In accordance with the Privacy Protection Law, you are entitled to contact us to request to review the information held about you, correct it, or request its deletion (subject to any legal requirement to retain it, such as medical record-keeping rules). We will be glad to handle any request promptly.",
+    he: "בכפוף לחוק הגנת הפרטיות, עומדת לך הזכות לעיין בעצמך, או באמצעות באת כוח שהורשתה בכתב, במידע אישי המוחזק עלייך; ואם מצאת שאינו נכון, שלם, ברור או מעודכן — לבקש את תיקונו או מחיקתו. ניתן גם לבקש הסרת ביקורת או מידע שאינו דרוש עוד. בקשות מחיקה נבחנות לפי הדין, מטרת האיסוף וחובות שמירה החלות על העסק ואינן זכות מוחלטת בכל מקרה. לצורך הגנה על פרטיותך אנו עשויות לבקש אימות זהות לפני מסירת מידע או ביצוע שינוי.",
+    en: "Subject to the Israeli Privacy Protection Law, you may inspect personal information held about you, personally or through a representative authorized in writing; if it is incorrect, incomplete, unclear, or outdated, you may request correction or deletion. You may also request removal of a review or information no longer needed. Deletion requests are assessed under applicable law, the collection purpose, and any retention duties, and are not an absolute right in every case. To protect your privacy, we may verify identity before disclosing or changing information.",
   },
   ppContactTitle: { he: "יצירת קשר בנושא פרטיות", en: "Contact Us About Privacy" },
   ppContactIntro: {
@@ -379,79 +405,134 @@ const dictionary: Dictionary = {
   },
   ppUpdatesTitle: { he: "עדכוני מדיניות", en: "Policy Updates" },
   ppUpdatesText: {
-    he: "מדיניות זו עשויה להתעדכן מעת לעת. המשך השימוש באתר לאחר עדכון מהווה הסכמה לתנאים המעודכנים.",
-    en: "This policy may be updated from time to time. Continued use of the site after an update constitutes agreement to the updated terms.",
+    he: "מדיניות זו עשויה להתעדכן מעת לעת. מועד העדכון יופיע בתחתית העמוד. אם יחול שינוי מהותי באופן השימוש במידע, תפורסם הודעה בולטת ובמקום שבו הדין מחייב זאת תתבקש הסכמה חדשה; עצם המשך הגלישה לא יחליף הסכמה מפורשת הנדרשת לפי דין.",
+    en: "This policy may be updated from time to time, and the revision date will appear at the bottom of this page. If there is a material change in how information is used, a prominent notice will be posted and, where required by law, renewed consent will be requested; continued browsing alone will not replace express consent required by law.",
   },
   ppLastUpdated: {
-    he: "מדיניות פרטיות זו עודכנה לאחרונה בתאריך 25.08.2026.",
-    en: "This privacy policy was last updated on 25.08.2026.",
+    he: "מדיניות פרטיות זו עודכנה לאחרונה בתאריך 02.09.2026.",
+    en: "This privacy policy was last updated on 02.09.2026.",
   },
+
+  // ---------- Privacy notices at collection points ----------
+  privacyPolicyLinkLabel: { he: "למדיניות הפרטיות המלאה", en: "Read the full privacy policy" },
+  hdPrivacyNoticeTitle: { he: "פרטיות והסכמה למסירת מידע רפואי", en: "Privacy and Consent to Provide Health Information" },
+  hdPrivacyNoticeText: {
+    he: "המידע בטופס נמסר מרצונך לבעלת השליטה במידע, רעות יעקובי — Reut Cosmetics, ומשמש לבדיקת התאמה ובטיחות לפני טיפול. ללא המידע לא ניתן לבצע את הבדיקה או להעניק טיפול המחייב אותה. תוכן ההצהרה מוצפן ונשמר בתשתיות Google/Firebase עד 7 שנים, ונגיש רק למורשות. ניתן לפנות בטלפון או ב-WhatsApp המופיעים במדיניות לצורך עיון, תיקון או בקשה למחיקה, בכפוף לדין.",
+    en: "The information in this form is provided voluntarily to the data controller, Reut Yakobi — Reut Cosmetics, and is used to assess treatment suitability and safety. Without it, the assessment or a treatment requiring it cannot be provided. Declaration content is encrypted and stored on Google/Firebase infrastructure for up to seven years, with access limited to authorized persons. Use the phone or WhatsApp listed in the policy to request access, correction, or deletion, subject to law.",
+  },
+  hdPrivacyConsentText: {
+    he: "קראתי את הודעת הפרטיות ואני מסכימה לאיסוף, לשימוש ולאחסון של פרטי הזיהוי והמידע הרפואי שמסרתי למטרות המפורטות בה",
+    en: "I have read the privacy notice and consent to the collection, use, and storage of the identification and health information I provided for the stated purposes",
+  },
+  hdPrivacyConsentRequired: { he: "יש לאשר את הודעת הפרטיות כדי להמשיך", en: "You must accept the privacy notice to continue" },
+  reviewPrivacyNoticeText: {
+    he: "השם, הדירוג ותוכן הביקורת יישמרו ויוצגו בפומבי באתר. המסירה היא לבחירתך; ללא הסכמה לפרסום לא ניתן לשלוח ביקורת. ניתן לבקש את הסרתה באמצעות פרטי הקשר שבמדיניות הפרטיות.",
+    en: "Your name, rating, and review text will be stored and displayed publicly on the site. Providing them is optional; without publication consent, the review cannot be submitted. You may request removal using the contact details in the privacy policy.",
+  },
+  reviewPublishConsentText: {
+    he: "אני מסכימה לפרסום שמי, הדירוג ותוכן הביקורת באתר",
+    en: "I consent to the publication of my name, rating, and review text on the site",
+  },
+  reviewConsentRequired: { he: "יש לאשר את פרסום הביקורת כדי להמשיך", en: "You must approve publication of the review to continue" },
 
   // ---------- Terms of use page ----------
   touGeneralTitle: { he: "כללי", en: "General" },
   touGeneralText: {
-    he: "תנאי שימוש אלו חלים על כל שימוש באתר Reut Cosmetics ובשירותים המוצעים בו. גלישה באתר, שימוש בטפסים או הזמנת שירות מהווים הסכמה לתנאים אלו במלואם.",
-    en: "These terms of use apply to all use of the Reut Cosmetics site and the services it offers. Browsing the site, using its forms, or booking a service constitutes full agreement to these terms.",
+    he: "תנאים אלה מסדירים את השימוש באתר Reut Cosmetics. האתר מיועד להצגת מידע, יצירת קשר, פרסום ביקורות ומתן גישה לשירותים נלווים; הוא אינו מאפשר כרגע ביצוע תשלום או השלמת הזמנה באופן מקוון. השימוש באתר כפוף לתנאים אלה. אם אינך מסכימה להם, יש להימנע מן השימוש באתר. אין בתנאים כדי לגרוע מזכות או מהגנה שלא ניתן להתנות עליהן לפי דין.",
+    en: "These terms govern use of the Reut Cosmetics website. The site provides information, contact options, customer reviews, and access to related services; it does not currently process payments or complete bookings online. Use of the site is subject to these terms. If you do not agree, please refrain from using it. Nothing in these terms limits any right or protection that cannot lawfully be waived.",
+  },
+  touOperatorTitle: { he: "מפעילת האתר ופרטי העסק", en: "Website Operator and Business Details" },
+  touOperatorText: {
+    he: "האתר והשירותים מופעלים בידי רעות יעקובי — Reut Cosmetics, בכתובת משה רחמילביץ 34, ירושלים. ניתן ליצור קשר בטלפון או ב-WhatsApp:",
+    en: "The site and services are operated by Reut Yakobi — Reut Cosmetics, at 34 Moshe Rachmilevitz Street, Jerusalem. Contact is available by phone or WhatsApp:",
   },
   touServicesTitle: { he: "השירותים המוצעים", en: "Services Offered" },
   touServicesText: {
-    he: "Reut Cosmetics מציעה טיפולי איפור קבוע (מיקרובליידינג) והדרכת קורסים בתחום. האתר מספק מידע על השירותים, אפשרות ליצירת קשר ותיאום, ומרחב להצגת ביקורות לקוחות.",
-    en: "Reut Cosmetics offers permanent makeup treatments (microblading) and training courses in the field. The site provides information about the services, a way to get in touch and schedule, and a space to display customer reviews.",
+    he: "Reut Cosmetics מציעה טיפולי איפור קבוע, לרבות מיקרובליידינג, איפור כלות וערב, הסרת שיער בשעווה באזור הפנים וקורסי הכשרה מקצועיים. התיאור באתר הוא כללי; התאמת הטיפול, היקפו, מחירו, מועדי המפגשים והתנאים הייחודיים לו יימסרו ויאושרו לפני ביצוע עסקה. במקרה של סתירה בין מידע כללי באתר לבין הצעה או הסכם פרטני שאושרו כדין, יחול המסמך הפרטני, בכפוף להוראות הדין.",
+    en: "Reut Cosmetics offers permanent makeup treatments, including microblading, bridal and evening makeup, facial waxing, and professional training courses. Site descriptions are general; treatment suitability, scope, price, session dates, and service-specific terms will be disclosed and approved before a transaction is concluded. If general site information conflicts with a lawfully approved individual quote or agreement, the individual document applies, subject to applicable law.",
+  },
+  touBookingTitle: { he: "יצירת קשר, קביעת תור והרשמה לקורס", en: "Contact, Appointments, and Course Enrollment" },
+  touBookingText: {
+    he: "שליחת טופס, פתיחת קישור WhatsApp, שיחת טלפון או בקשת מידע אינן קובעות תור ואינן משלימות הרשמה או עסקה. תור או הרשמה לקורס יחייבו רק לאחר אישור מפורש של Reut Cosmetics ושל הלקוחה, ולאחר מסירת הפרטים המהותיים הנדרשים, לרבות סוג השירות, מחיר, תנאי תשלום, מועד ותנאי ביטול. זמינות המועדים עשויה להשתנות עד לקבלת אישור סופי.",
+    en: "Submitting a form, opening a WhatsApp link, making a phone call, or requesting information does not book an appointment or complete an enrollment or transaction. An appointment or course enrollment becomes binding only after express confirmation by both Reut Cosmetics and the customer and disclosure of the required material details, including service type, price, payment terms, date, and cancellation terms. Availability may change until final confirmation is given.",
   },
   touHealthTitle: { he: "הצהרת בריאות", en: "Health Declaration" },
   touHealthText: {
-    he: "לפני קבלת טיפול נדרשת מילוי הצהרת בריאות מלאה ואמיתית. מסירת מידע חלקי או לא מדויק עלולה לפגוע בתוצאה הסופית ואף לסכן את בריאות הלקוחה, והאחריות לכך תחול על הלקוחה בלבד.",
-    en: "Before receiving treatment, you are required to complete a full and truthful health declaration. Providing partial or inaccurate information may harm the final result and even endanger the client's health, and responsibility for this rests solely with the client.",
+    he: "לפני טיפול המחייב בדיקת התאמה תתבקש הלקוחה למלא הצהרת בריאות מלאה ומדויקת ולעדכן בכל שינוי רלוונטי. מידע חסר או שגוי עלול לפגוע בבטיחות הטיפול או בתוצאתו. Reut Cosmetics רשאית לדחות, להפסיק או לסרב לבצע טיפול אם קיים חשש בטיחותי או אם חסר מידע הנחוץ לבדיקת ההתאמה. אחריות הלקוחה למסירת מידע נכון אינה גורעת מחובות המטפלת, מאחריות מקצועית החלה עליה או מזכויות הלקוחה לפי דין.",
+    en: "Before a treatment that requires a suitability assessment, the customer will be asked to complete an accurate and complete health declaration and report relevant changes. Missing or incorrect information may affect treatment safety or results. Reut Cosmetics may postpone, stop, or decline a treatment where there is a safety concern or information needed for the assessment is missing. The customer's responsibility to provide accurate information does not limit the practitioner's duties, applicable professional responsibility, or the customer's legal rights.",
   },
-  touPaymentTitle: { he: "תנאי תשלום, ביטולים והחזרים", en: "Payment, Cancellation, and Refund Terms" },
+  touPaymentTitle: { he: "תשלום, ביטול והחזרים", en: "Payment, Cancellation, and Refunds" },
   touPayment1: {
-    he: 'התמורה הכספית (להלן: "שכר טרחה") מזכה בשני טיפולים בלבד. כל טיפול נוסף מעבר לכך יהיה בתשלום.',
-    en: 'The payment (hereinafter: "the fee") entitles the client to two treatments only. Any additional treatment beyond that will be charged separately.',
+    he: "התנאים הנוגעים לשני מפגשים חלים רק על חבילת איפור קבוע שנמכרה כחבילה כזו. תנאי איפור כלות וערב, שעווה בפנים וקורסים יימסרו בנפרד לפני ביצוע העסקה.",
+    en: "Terms referring to two sessions apply only to a permanent-makeup package sold as such. Terms for bridal and evening makeup, facial waxing, and courses will be disclosed separately before the transaction.",
   },
   touPayment2: {
-    he: "יש לשלם מראש את מלוא המחיר עבור שני הטיפולים.",
-    en: "The full price for both treatments must be paid in advance.",
+    he: "אלא אם הוסכם אחרת בכתב, מחיר חבילת האיפור הקבוע כולל שני מפגשים ומשולם מראש בהתאם להצעה שנמסרה ללקוחה. כל טיפול נוסף מחייב הסכמה נפרדת למחירו לפני ביצועו.",
+    en: "Unless otherwise agreed in writing, the permanent-makeup package price covers two sessions and is paid in advance according to the quote provided to the customer. Any additional treatment requires separate price approval before it is performed.",
   },
   touPayment3: {
-    he: "לא תתאפשר החזרת כספים לאחר תחילת הטיפול הראשון, גם אם בוצע רק חלקית.",
-    en: "No refunds will be given once the first treatment has begun, even if it was only partially performed.",
+    he: "ביטול עסקה והחזר כספי יטופלו בהתאם לחוק הגנת הצרכן, לתקנות החלות ולנסיבות העסקה. כאשר הדין מאפשר ביטול לאחר שהשירות החל, ניתן יהיה לחייב בתמורה היחסית עבור השירות שניתן בפועל ובדמי ביטול המותרים בדין, ככל שמותר לגבותם. אין בסעיף זה כדי לשלול זכות בשל פגם, אי-התאמה או הפרת חובה לפי דין.",
+    en: "Cancellations and refunds are handled under the Israeli Consumer Protection Law, applicable regulations, and the circumstances of the transaction. Where the law permits cancellation after service has begun, the customer may be charged the proportionate value of services actually provided and any cancellation fee lawfully permitted. This clause does not limit rights arising from a defect, non-conformity, or breach of a legal duty.",
   },
   touPayment4: {
-    he: 'הצבע המתקבל תלוי בפיגמנט העור ומשתנה מאדם לאדם. במקרים בהם הצבע נדחה על ידי העור, ייתכן צורך בטיפול נוסף בתשלום (להלן: "טיפול שלישי").',
-    en: 'The resulting color depends on the client\'s skin pigment and varies from person to person. In cases where the color is rejected by the skin, an additional paid treatment may be required (hereinafter: "the third treatment").',
+    he: "קליטת הפיגמנט והתוצאה משתנות לפי סוג העור, תגובת הגוף, אורח החיים והקפדה על הוראות הטיפול. אם לאחר שני המפגשים יומלץ על מפגש נוסף, הצורך בו, מחירו ומועדו יימסרו ללקוחה ויאושרו מראש.",
+    en: "Pigment retention and results vary according to skin type, individual response, lifestyle, and adherence to aftercare instructions. If an additional session is recommended after the two included sessions, its purpose, price, and date will be disclosed and approved in advance.",
   },
   touPayment5: {
-    he: "יש להגיע לטיפול השני במועד שייקבע. אי הגעה בטווח של עד חודשיים עלולה לפגוע בתוצאה הסופית, והאחריות לכך לא תחול על המטפלת.",
-    en: "The client must arrive for the second treatment on the scheduled date. Failing to attend within two months may harm the final result, and responsibility for this will not fall on the practitioner.",
+    he: "יש להגיע למפגש השני במועד שייקבע, ובדרך כלל בתוך פרק הזמן המקצועי שיימסר ללקוחה, אשר עשוי להיות עד חודשיים מהמפגש הראשון. דחייה מעבר לטווח המומלץ עלולה להשפיע על התוצאה ולחייב הערכה מקצועית חדשה.",
+    en: "The second session should take place on the agreed date and generally within the professional timeframe communicated to the customer, which may be up to two months after the first session. A delay beyond the recommended period may affect the result and require a new professional assessment.",
   },
   touPayment6: {
-    he: "המטפלת אינה מחויבת לקבל לקוחה לטיפול מעבר למועד המיועד והנכון לכך.",
-    en: "The practitioner is not obligated to accept a client for treatment beyond the date designated and appropriate for it.",
+    he: "בקשה לשינוי או ביטול מועד יש למסור מוקדם ככל האפשר בטלפון או ב-WhatsApp. דמי ביטול, אובדן מקדמה או חיוב בגין אי-הגעה יחולו רק אם נמסרו ואושרו מראש ובמידה המותרת לפי דין.",
+    en: "A request to change or cancel an appointment should be made as early as possible by phone or WhatsApp. A cancellation fee, loss of a deposit, or no-show charge applies only if disclosed and agreed in advance and to the extent permitted by law.",
+  },
+  touPayment7: {
+    he: "אם עסקה נכרתת מרחוק, לרבות בטלפון או ב-WhatsApp בעקבות פנייה דרך האתר, יימסרו ללקוחה הפרטים ודרכי הביטול הנדרשים לפי דין. ניתן למסור הודעת ביטול באמצעות פרטי הקשר המופיעים בתנאים אלה, בכפוף לסוג העסקה ולהוראות החוק.",
+    en: "If a transaction is concluded remotely, including by phone or WhatsApp following contact through the site, the customer will receive the disclosures and cancellation methods required by law. A cancellation notice may be delivered using the contact details in these terms, subject to the transaction type and applicable law.",
+  },
+  touPayment8: {
+    he: "הרשמה לקורס כפופה לתוכנית, למועדים, למחיר ולתנאים שיימסרו בכתב לפני ההרשמה. זכות הביטול של קורס וכל החזר ייקבעו לפי הדין החל ומועד תחילת הקורס; תנאי פרטני לא יגרע מזכות שלא ניתן להתנות עליה.",
+    en: "Course enrollment is subject to the syllabus, dates, price, and terms provided in writing before enrollment. Course cancellation rights and refunds are determined by applicable law and the course start date; individual terms do not limit rights that cannot lawfully be waived.",
   },
   touReviewsTitle: { he: "ביקורות לקוחות", en: "Customer Reviews" },
   touReviewsText: {
-    he: "ביקורות המתפרסמות באתר משקפות את דעתן האישית של הלקוחות ואינן מבוטאות את עמדת Reut Cosmetics. לקוחה רשאית לערוך ביקורת שפרסמה בתוך 15 דקות ממועד הפרסום. אנו שומרות לעצמנו את הזכות להסיר ביקורות הכוללות תוכן פוגעני, מטעה או שאינו הולם.",
-    en: "Reviews published on the site reflect the personal opinions of customers and do not represent the position of Reut Cosmetics. A customer may edit a review she posted within 15 minutes of publishing it. We reserve the right to remove reviews containing offensive, misleading, or inappropriate content.",
+    he: "ביקורות משקפות את דעת הכותבות ואינן מבטאות את עמדת Reut Cosmetics. שולחת הביקורת מאשרת שהיא מתארת חוויה אישית ואמיתית, שאינה מתחזה לאחרת ושאין בתוכן הפרת דין או זכויות של צד שלישי. בשליחת ביקורת ניתן ל-Reut Cosmetics רישיון לא בלעדי וללא תמורה להציג אותה באתר. ניתן לערוך ביקורת במשך 15 דקות לאחר פרסומה ולבקש את הסרתה באמצעות פרטי הקשר. Reut Cosmetics רשאית שלא לפרסם או להסיר ספאם, התחזות, מידע אישי של אחרים, תוכן פוגעני, מטעה, בלתי חוקי או שאינו קשור לשירות, תוך הפעלת שיקול דעת סביר.",
+    en: "Reviews reflect their authors' opinions and do not express the position of Reut Cosmetics. A submitter confirms that the review describes a genuine personal experience, does not impersonate another person, and does not violate law or third-party rights. By submitting a review, the author grants Reut Cosmetics a non-exclusive, royalty-free license to display it on the site. A review may be edited for 15 minutes after publication, and removal may be requested using the contact details. Reut Cosmetics may decline to publish or remove spam, impersonation, another person's personal information, offensive, misleading, unlawful, or unrelated content, using reasonable judgment.",
+  },
+  touPrivacyTitle: { he: "פרטיות ומידע אישי", en: "Privacy and Personal Information" },
+  touPrivacyText: {
+    he: "איסוף מידע אישי והשימוש בו מתוארים במדיניות הפרטיות, המהווה חלק מתנאים אלה. במקום שבו נדרשת הסכמה נפרדת לעיבוד מידע או לפרסום ביקורת, היא תתבקש באופן מפורש:",
+    en: "The collection and use of personal information are described in the Privacy Policy, which forms part of these terms. Where separate consent is required for data processing or review publication, it will be requested expressly:",
   },
   touIpTitle: { he: "קניין רוחני", en: "Intellectual Property" },
   touIpText: {
-    he: "כל הזכויות בתכני האתר, לרבות טקסטים, תמונות, עיצוב ולוגו, שייכות ל-Reut Cosmetics. אין להעתיק, להפיץ או לעשות שימוש בתכני האתר ללא אישור מראש ובכתב.",
-    en: "All rights to the site's content, including text, images, design, and logo, belong to Reut Cosmetics. The site's content may not be copied, distributed, or used without prior written permission.",
+    he: "הזכויות בתכנים המקוריים של האתר, לרבות עיצוב, טקסטים, תמונות ולוגו, שייכות ל-Reut Cosmetics או משמשות אותה ברישיון. סימנים, שירותים ותכנים של צדדים שלישיים, לרבות Google,‏ WhatsApp ו-Waze, שייכים לבעליהם. ביקורות נשארות של הכותבות בכפוף לרישיון ההצגה שניתן לעיל. אין להעתיק, להפיץ, לשנות או לעשות שימוש מסחרי בתכני האתר ללא הרשאה מראש או זכות מפורשת בדין.",
+    en: "Rights in the site's original content, including design, text, images, and logo, belong to Reut Cosmetics or are used under license. Third-party marks, services, and content, including Google, WhatsApp, and Waze, belong to their respective owners. Reviews remain their authors' content, subject to the display license above. Site content may not be copied, distributed, modified, or commercially used without prior permission or an express legal right.",
   },
   touLiabilityTitle: { he: "הגבלת אחריות", en: "Limitation of Liability" },
   touLiabilityText: {
-    he: "הטיפולים המוצעים הינם אינדיבידואליים ותוצאותיהם משתנות מאדם לאדם בהתאם לסוג העור ולגורמים נוספים; אין באתר או בתיאום טיפול משום התחייבות לתוצאה מסוימת. Reut Cosmetics אינה אחראית לתכנים חיצוניים המוטמעים באתר (כגון מפת Google Maps) ואינה נושאת באחריות לנזק עקיף שייגרם כתוצאה משימוש באתר.",
-    en: "The treatments offered are individual, and their results vary from person to person depending on skin type and other factors; neither the site nor scheduling a treatment constitutes a commitment to any particular result. Reut Cosmetics is not responsible for external content embedded in the site (such as the Google Maps map) and bears no liability for indirect damage arising from use of the site.",
+    he: "המידע באתר הוא כללי ואינו מהווה אבחון, ייעוץ רפואי או תחליף להתייעצות עם גורם רפואי מוסמך. תוצאות טיפול משתנות מאדם לאדם ואין התחייבות לתוצאה מסוימת, אך אין בכך כדי לגרוע מחובת זהירות, מאחריות מקצועית או מאחריות אחרת החלה לפי דין. האתר עשוי לכלול קישורים ותוכן של צדדים שלישיים; השימוש בהם כפוף לתנאיהם ואינו מהווה המלצה או אחריות לתוכנם. Reut Cosmetics אינה אחראית להפרעות זמניות באתר או לנזק שלא ניתן היה לצפותו באופן סביר, והכול במידה המרבית המותרת לפי דין.",
+    en: "Information on the site is general and is not a diagnosis, medical advice, or a substitute for consultation with a qualified medical professional. Treatment results vary and no specific result is promised, but this does not limit any duty of care, professional responsibility, or other liability imposed by law. The site may include third-party links and content; their use is subject to their own terms and does not constitute endorsement or responsibility for their content. Reut Cosmetics is not responsible for temporary site interruptions or damage that could not reasonably have been foreseen, to the fullest extent permitted by law.",
+  },
+  touProhibitedTitle: { he: "שימוש אסור באתר", en: "Prohibited Use" },
+  touProhibitedText: {
+    he: "אין להשתמש באתר למטרה בלתי חוקית; להתחזות לאחרת; למסור תוכן כוזב או פוגעני; לפגוע בזכויות צד שלישי; לנסות לקבל גישה ללא הרשאה למערכות, לחשבונות או למידע; להחדיר קוד מזיק; לשבש את פעילות האתר; או לבצע איסוף אוטומטי בהיקף הפוגע באתר או במשתמשותיו. אין באמור כדי למנוע שימוש חוקי, סביר ונגיש באתר.",
+    en: "The site may not be used for unlawful purposes; impersonation; false or abusive content; violation of third-party rights; unauthorized access to systems, accounts, or information; introduction of malicious code; disruption of the site; or automated collection at a scale that harms the site or its users. This does not restrict lawful, reasonable, and accessible use of the site.",
   },
   touChangesTitle: { he: "שינויים בתנאים", en: "Changes to These Terms" },
   touChangesText: {
-    he: "Reut Cosmetics רשאית לעדכן תנאים אלו מעת לעת. המשך השימוש באתר לאחר פרסום עדכון מהווה הסכמה לתנאים המעודכנים.",
-    en: "Reut Cosmetics may update these terms from time to time. Continued use of the site after an update is published constitutes agreement to the updated terms.",
+    he: "Reut Cosmetics רשאית לעדכן תנאים אלה מעת לעת. מועד העדכון יופיע בתחתית העמוד, ובשינוי מהותי תפורסם הודעה בולטת ככל שנדרש. שינוי לא יחול למפרע על עסקה שכבר נכרתה ולא יגרע מזכות שהוקנתה ללקוחה לפי דין. המשך שימוש לאחר פרסום עדכון יחיל את הנוסח החדש על שימוש עתידי באתר בלבד.",
+    en: "Reut Cosmetics may update these terms from time to time. The revision date will appear at the bottom of the page, and a material change will be prominently announced where required. A change will not apply retroactively to an existing transaction or reduce a right granted by law. Continued use after publication applies the revised terms only to future use of the site.",
   },
   touJurisdictionTitle: { he: "דין וסמכות שיפוט", en: "Governing Law and Jurisdiction" },
   touJurisdictionText: {
-    he: "על תנאים אלו יחולו דיני מדינת ישראל בלבד, וסמכות השיפוט הבלעדית בכל עניין הנוגע להם תהא נתונה לבתי המשפט המוסמכים בירושלים.",
-    en: "These terms are governed solely by the laws of the State of Israel, and exclusive jurisdiction over any matter relating to them shall rest with the competent courts in Jerusalem.",
+    he: "על תנאים אלה יחולו דיני מדינת ישראל. כל מחלוקת תידון בבית המשפט המוסמך בהתאם להוראות הדין ולכללי הסמכות החלים, מבלי לשלול מהלקוחה זכות דיונית המוקנית לה לפי דין.",
+    en: "These terms are governed by the laws of the State of Israel. Any dispute will be heard by a competent court under applicable jurisdiction rules, without limiting any procedural right granted to the customer by law.",
+  },
+  touSeverabilityTitle: { he: "הפרדת הוראות", en: "Severability" },
+  touSeverabilityText: {
+    he: "אם ייקבע שהוראה מתנאים אלה אינה תקפה או אינה ניתנת לאכיפה, היא תצומצם או תופרד במידה הנדרשת, ויתר ההוראות יוסיפו לעמוד בתוקפן. בכל מקרה יגברו הוראות דין שאי אפשר להתנות עליהן.",
+    en: "If a provision of these terms is found invalid or unenforceable, it will be limited or severed only to the extent necessary, and the remaining provisions will continue in effect. Mandatory legal provisions prevail in all cases.",
   },
   touContactTitle: { he: "יצירת קשר", en: "Contact Us" },
   touContactIntro: {
@@ -459,8 +540,8 @@ const dictionary: Dictionary = {
     en: "For any question regarding these terms of use, you can reach us at:",
   },
   touLastUpdated: {
-    he: "תנאי שימוש אלו עודכנו לאחרונה בתאריך 25.08.2026.",
-    en: "These terms of use were last updated on 25.08.2026.",
+    he: "תנאי שימוש אלה עודכנו לאחרונה בתאריך 02.09.2026.",
+    en: "These terms of use were last updated on 02.09.2026.",
   },
 
   // ---------- Accessibility statement page ----------
@@ -566,44 +647,44 @@ const dictionary: Dictionary = {
   hdAgreementTitle: { he: "הסכם", en: "Agreement" },
   hdAgreementIntro: { he: "ידוע לי כי:", en: "I understand that:" },
   hdAgreement1: {
-    he: "ידוע לי כי חובת המטפלת להראות לי את הצורה המתאימה לי בהתאם לתווי הפנים שלי על ידי שימוש בשבלונה/סרגל או כל כלי עזר שברשותה. רק לאחר שראיתי והסכמתי, המטפלת תחל בעבודתה. כמו כן מובן לי שלא יהיה ניתן לעשות כל שינוי בצורה לאחר תחילת העבודה.",
-    en: "I understand that the practitioner is required to show me the shape suited to my facial features, using a stencil, ruler, or any tool she has available. Only after I have seen and agreed to it will the practitioner begin her work. I also understand that no change to the shape will be possible once work has begun.",
+    he: "המטפלת תציג לי לפני תחילת הטיפול את הצורה המוצעת בהתאם לתווי פניי, באמצעות שבלונה, סרגל או כלי עזר מתאים. הטיפול יתחיל רק לאחר שאאשר את הצורה. ידוע לי שלאחר תחילת העבודה האפשרות לבצע שינויים עשויה להיות מוגבלת ותלויה בשלב הטיפול, בבטיחות ובשיקול דעת מקצועי.",
+    en: "Before treatment begins, the practitioner will show me the proposed shape based on my facial features, using a stencil, ruler, or another suitable aid. Treatment will begin only after I approve the shape. I understand that once work begins, changes may be limited depending on the treatment stage, safety, and professional judgment.",
   },
   hdAgreement2: {
     he: 'ידוע לי כי הצבע המתקבל תלוי בפיגמנט העור שלי ולכן זה שונה מאדם לאדם. לפיכך ידועה לי העובדה כי במקרים מסוימים הצבע עלול להידחות על ידי העור שלי ואתבקש להגיע לטיפול נוסף בתשלום (להלן: "טיפול שלישי").',
     en: 'I understand that the resulting color depends on my skin pigment and therefore differs from person to person. I am accordingly aware that in some cases the color may be rejected by my skin, and I may be asked to come in for an additional paid treatment (hereinafter: "the third treatment").',
   },
   hdAgreement3: {
-    he: 'ידוע לי כי בעבור התמורה הכספית (להלן: "שכר טרחה") אקבל שני טיפולים בלבד. כל טיפול מעבר לכך יהיה בתשלום.',
-    en: 'I understand that in exchange for the payment (hereinafter: "the fee") I will receive two treatments only. Any treatment beyond that will be charged separately.',
+    he: "ידוע לי כי המחיר שנמסר לי עבור חבילת האיפור הקבוע כולל שני מפגשים בלבד, אלא אם הוסכם אחרת בכתב. כל טיפול נוסף יהיה כפוף להסכמה נפרדת ומראש על מחירו.",
+    en: "I understand that the quoted permanent-makeup package price includes two sessions only, unless otherwise agreed in writing. Any additional treatment is subject to separate advance agreement on its price.",
   },
   hdAgreement4: {
     he: "ידוע לי כי אין אחריות על קליטת הפיגמנט בעור והליך המיקרובליידינג הינו אינדיבידואלי ומשתנה מאדם לאדם (סוגי העור שונים וכיוצא בזה).",
     en: "I understand that there is no guarantee regarding how the skin absorbs the pigment, and that the microblading procedure is individual and varies from person to person (different skin types, and so on).",
   },
   hdAgreement5: {
-    he: "ידוע לי כי לא תתאפשר החזרת כספים לאחר תחילת הטיפול הראשון, גם אם בוצע רק חלקית.",
-    en: "I understand that no refund will be given once the first treatment has begun, even if it was only partially performed.",
+    he: "ידוע לי כי ביטול והחזר כספי יטופלו בהתאם להוראות הדין ולנסיבות העסקה. אם הביטול נעשה לאחר תחילת השירות, ניתן יהיה לחייב עבור החלק שניתן בפועל ובדמי ביטול המותרים בדין, מבלי לגרוע מזכויותיי במקרה של פגם, אי-התאמה או הפרת חובה.",
+    en: "I understand that cancellations and refunds are handled under applicable law and the circumstances of the transaction. If cancellation occurs after service has begun, I may be charged for the portion actually provided and any cancellation fee permitted by law, without limiting my rights in the event of a defect, non-conformity, or breach of duty.",
   },
   hdAgreement6: {
     he: "אני מבינה את חשיבות מסירת כל המידע הנוגע לי לפני תחילת העבודה וברור לי שהסתרת כל מידע רלוונטי הנוגע אלי עלול לפגוע בתוצאה הסופית ואף לסכן את בריאותי.",
     en: "I understand the importance of disclosing all information relevant to me before work begins, and I understand that withholding any relevant information about myself may harm the final result and even endanger my health.",
   },
   hdAgreement7: {
-    he: 'אני מבינה את חשיבות "דף ההוראות לטיפול בעור לאחר איפור קבוע" שאקבל בסיום הטיפול ואי התייחסותי אליו ואי ביצוע ההוראות שרשומות עלול לפגוע בתהליך הכולל של האיפור הקבוע.',
-    en: 'I understand the importance of the "skin aftercare instructions for permanent makeup" sheet I will receive at the end of the treatment, and that disregarding it or not following the instructions listed may harm the overall permanent makeup process.',
+    he: "אני מבינה את חשיבות הוראות הטיפול בעור לאחר איפור קבוע שאקבל בסיום הטיפול, וכי אי-קיום ההוראות עלול לפגוע בתהליך ההחלמה ובתוצאה.",
+    en: "I understand the importance of the permanent-makeup aftercare instructions I will receive at the end of treatment, and that failing to follow them may affect healing and the result.",
   },
   hdAgreement8: {
-    he: "ידוע לי כי עליי להגיע לטיפול השני במועד שייקבע לי, וכי אי הגעה לטיפול בטווח של עד חודשיים עלולה לפגוע בתוצאה הסופית הרצויה, כאשר האחריות לכך לא תחול על המטפלת.",
-    en: "I understand that I must arrive for the second treatment on the date set for me, and that failing to attend within two months may harm the desired final result, with responsibility for this not falling on the practitioner.",
+    he: "ידוע לי כי מומלץ להגיע למפגש השני במועד שייקבע ובתוך הטווח המקצועי שיימסר לי, אשר עשוי להיות עד חודשיים מהמפגש הראשון. דחייה מעבר לטווח המומלץ עלולה להשפיע על התוצאה ולחייב הערכה מקצועית חדשה.",
+    en: "I understand that the second session should take place on the scheduled date and within the professional timeframe communicated to me, which may be up to two months after the first session. A delay beyond the recommended period may affect the result and require a new professional assessment.",
   },
   hdAgreement9: {
-    he: "כמו כן ידוע לי כי המטפלת לא תהיה חייבת לקבל אותי לטיפול מעבר למועד המיועד והנכון לכך.",
-    en: "I also understand that the practitioner will not be obligated to accept me for treatment beyond the date designated and appropriate for it.",
+    he: "אם חלף הטווח המקצועי למפגש השני, המטפלת תבחן מחדש את התאמת הטיפול, ורשאית מטעמי בטיחות או התאמה להציע מועד או טיפול חלופי, או שלא לבצעו. כל חיוב נוסף יימסר ויאושר מראש ובכפוף לדין.",
+    en: "If the professional timeframe for the second session has passed, the practitioner will reassess suitability and may, for safety or suitability reasons, offer another date or treatment or decline to perform it. Any additional charge will be disclosed and approved in advance, subject to law.",
   },
   hdAgreement10: {
-    he: "על הלקוחה לשלם מראש את מלוא המחיר עבור שני הטיפולים.",
-    en: "The client must pay the full price for both treatments in advance.",
+    he: "אלא אם הוסכם אחרת בכתב, מלוא מחיר חבילת שני המפגשים ישולם מראש בהתאם להצעה שנמסרה לי.",
+    en: "Unless otherwise agreed in writing, the full price of the two-session package will be paid in advance according to the quote provided to me.",
   },
   hdAgreementCheckboxText: {
     he: "אני מאשרת שקראתי ואני מסכימה להסכם זה",
@@ -682,6 +763,18 @@ const dictionary: Dictionary = {
   a11yGrayscale: { he: "גווני אפור", en: "Grayscale" },
   a11yResetSettings: { he: "איפוס הגדרות", en: "Reset settings" },
   a11yResetPosition: { he: "איפוס מיקום", en: "Reset position" },
+
+  // ---------- Home page: before/after comparison slider ----------
+  beforeAfterTitle: { he: "לפני ואחרי", en: "Before and After" },
+  beforeAfterBeforeLabel: { he: "לפני", en: "Before" },
+  beforeAfterAfterLabel: { he: "אחרי", en: "After" },
+  beforeAfterBeforeAlt: { he: "תמונת לפני הטיפול", en: "Before treatment photo" },
+  beforeAfterAfterAlt: { he: "תמונת אחרי הטיפול", en: "After treatment photo" },
+  beforeAfterHandleLabel: {
+    he: "גררי כדי להשוות בין לפני לאחרי",
+    en: "Drag to compare before and after",
+  },
+  beforeAfterExampleLabel: { he: "דוגמה", en: "Example" },
 };
 
 export type TranslationKey = keyof typeof dictionary;

@@ -1,5 +1,6 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { Timestamp } from "firebase-admin/firestore";
 import { getFirestoreDb, isFirebaseBackendEnabled } from "../services/firebaseAdmin.js";
 import { readJsonFile, writeJsonFile } from "../services/jsonFileStore.js";
 
@@ -22,7 +23,11 @@ export async function addHealthDeclaration(record) {
     await writeJsonFile(DATA_FILE, records);
     return;
   }
-  await getFirestoreDb().collection(COLLECTION).doc(String(record.id)).create(record);
+  const firestoreRecord = {
+    ...record,
+    expiresAt: Timestamp.fromDate(new Date(record.expiresAt)),
+  };
+  await getFirestoreDb().collection(COLLECTION).doc(String(record.id)).create(firestoreRecord);
 }
 
 export async function purgeHealthDeclarationsBefore(cutoffIso) {

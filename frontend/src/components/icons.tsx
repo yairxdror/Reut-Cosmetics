@@ -61,6 +61,20 @@ export function SparkleIcon(props: IconProps) {
   );
 }
 
+export function VipBadgeIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <circle cx="12" cy="12" r="9" />
+      <circle cx="12" cy="12" r="6.7" strokeWidth="1.15" opacity="0.58" />
+      <path
+        d="m12 6.8 1.55 3.15 3.48.5-2.52 2.45.6 3.46L12 14.72l-3.11 1.64.6-3.46-2.52-2.45 3.48-.5Z"
+        fill="currentColor"
+        fillOpacity="0.16"
+      />
+    </Icon>
+  );
+}
+
 export function PersonIcon(props: IconProps) {
   return (
     <Icon {...props}>
@@ -140,11 +154,44 @@ export function PerfumeIcon(props: IconProps) {
 export function MakeupBrushIcon(props: IconProps) {
   return (
     <Icon {...props}>
-      <circle cx="12" cy="6" r="4" />
-      <path d="M12 9.5 9 4M12 9.5 10.6 3.3M12 9.5 12 3M12 9.5 13.4 3.3M12 9.5 15 4" />
-      <path d="M9.3 9.8 10 12.5h4l.7-2.7" />
-      <path d="M10 12.9h4" />
-      <path d="M10.3 13.3V19a1.7 1.7 0 0 0 3.4 0v-5.7" />
+      <g strokeWidth="1.25">
+        <path d="M10.05 10.1C9.2 7.35 6.65 5.05 3.75 4.15" />
+        <path d="M10.55 10C10.05 6.7 8.25 3.65 6.15 2.3" />
+        <path d="M11.1 9.95C10.85 6.35 10.15 3.05 9.35 1.45" />
+        <path d="M11.7 9.9C11.55 5.85 11.75 2.55 12 1" />
+        <path d="M12.3 9.9C12.45 5.85 12.25 2.55 12 1" />
+        <path d="M12.9 9.95C13.15 6.35 13.85 3.05 14.65 1.45" />
+        <path d="M13.45 10C13.95 6.7 15.75 3.65 17.85 2.3" />
+        <path d="M13.95 10.1C14.8 7.35 17.35 5.05 20.25 4.15" />
+      </g>
+      <g strokeWidth="0.72" opacity="0.68">
+        <path d="M10.25 10.08C9.55 7.05 7.35 4.35 4.85 3.35" />
+        <path d="M10.78 10C10.35 6.45 9 3.15 7.7 1.8" />
+        <path d="M11.38 9.93C11.15 6.05 10.75 2.75 10.65 1.1" />
+        <path d="M12 9.88V0.72" />
+        <path d="M12.62 9.93C12.85 6.05 13.25 2.75 13.35 1.1" />
+        <path d="M13.22 10C13.65 6.45 15 3.15 16.3 1.8" />
+        <path d="M13.75 10.08C14.45 7.05 16.65 4.35 19.15 3.35" />
+      </g>
+      <path d="M9.25 9.85h5.5l-.65 3.15h-4.2z" fill="currentColor" fillOpacity="0.2" />
+      <path d="M9.9 13h4.2v6.7a2.1 2.1 0 0 1-4.2 0z" fill="currentColor" fillOpacity="0.07" />
+      <path d="M11.05 14.5v5.05a1.05 1.05 0 0 0 1.05 1.05" opacity="0.58" />
+    </Icon>
+  );
+}
+
+export function LipstickIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path
+        d="M10.1 9.2V5.8c0-1.2.7-2.3 1.8-2.9L15 1.25c.4-.22.9.08.9.54V9.2Z"
+        fill="currentColor"
+        fillOpacity="0.2"
+      />
+      <path d="M10.1 9.2V5.8c0-1.2.7-2.3 1.8-2.9L15 1.25c.4-.22.9.08.9.54V9.2Z" />
+      <rect x="9" y="9.2" width="8" height="3.8" rx="0.75" fill="currentColor" fillOpacity="0.07" />
+      <path d="M8.4 13h9.2v7.4c0 .9-.7 1.6-1.6 1.6h-6c-.9 0-1.6-.7-1.6-1.6Z" />
+      <path d="M14.9 15.1v3.4" opacity="0.48" />
     </Icon>
   );
 }
@@ -322,6 +369,16 @@ export function DropletIcon(props: IconProps) {
   return (
     <Icon {...props}>
       <path d="M12 4s7.5 6.2 7.5 9.5a7.5 7.5 0 0 1-15 0C4.5 10.2 12 4 12 4z" />
+    </Icon>
+  );
+}
+
+export function SlideArrowsIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M8 8 4 12l4 4" />
+      <path d="M16 8l4 4-4 4" />
+      <path d="M4 12h16" />
     </Icon>
   );
 }

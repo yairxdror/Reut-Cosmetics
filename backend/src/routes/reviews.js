@@ -2,7 +2,8 @@ import { Router } from "express";
 import rateLimit from "express-rate-limit";
 import crypto from "node:crypto";
 import { containsProfanity } from "../utils/profanityFilter.js";
-import { createReview, getReview, listReviews, replaceReview } from "../repositories/reviewsRepository.js";
+import { createReview, getReview, listReviews, removeReview, replaceReview } from "../repositories/reviewsRepository.js";
+import { requireAdmin } from "../middleware/requireAdmin.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 const router = Router();
@@ -11,9 +12,10 @@ const MAX_NAME_LENGTH = 60;
 const MIN_TEXT_LENGTH = 3;
 const MAX_TEXT_LENGTH = 500;
 const EDIT_WINDOW_MS = 15 * 60 * 1000;
+const PRIVACY_NOTICE_VERSION = "2026-09-02";
 
 function toPublicReview(review) {
-  const { editToken, ...publicFields } = review;
+  const { editToken, publicationConsentAt, privacyNoticeVersion, ...publicFields } = review;
   return publicFields;
 }
 
@@ -67,6 +69,10 @@ router.post("/", createReviewLimiter, asyncHandler(async (req, res) => {
     return res.status(400).json({ error: "Invalid submission" });
   }
 
+  if (req.body?.publicationConsent !== true) {
+    return res.status(400).json({ error: "Publication consent is required" });
+  }
+
   const fields = validateReviewFields(req.body || {});
   if (fields.error) {
     return res.status(400).json({ error: fields.error });
@@ -78,6 +84,8 @@ router.post("/", createReviewLimiter, asyncHandler(async (req, res) => {
     rating: fields.rating,
     text: fields.text,
     createdAt: new Date().toISOString(),
+    publicationConsentAt: new Date().toISOString(),
+    privacyNoticeVersion: PRIVACY_NOTICE_VERSION,
     editToken: crypto.randomUUID(),
   };
 
@@ -114,6 +122,15 @@ router.put("/:id", editReviewLimiter, asyncHandler(async (req, res) => {
   await replaceReview(review);
 
   res.json(toPublicReview(review));
+}));
+
+router.delete("/:id", requireAdmin, asyncHandler(async (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isSafeInteger(id) || !(await removeReview(id))) {
+    return res.status(404).json({ error: "Review not found" });
+  }
+
+  res.status(204).end();
 }));
 
 export default router;

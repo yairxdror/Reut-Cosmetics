@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { PHONE_TEL_URL } from "@/lib/contact";
 import { useLanguage } from "@/context/LanguageContext";
 import Editable from "@/components/Editable";
@@ -12,6 +13,8 @@ const PAYMENT_TERM_KEYS: EditableTextKey[] = [
   "touPayment4",
   "touPayment5",
   "touPayment6",
+  "touPayment7",
+  "touPayment8",
 ];
 
 export default function TermsOfUse() {
@@ -30,10 +33,31 @@ export default function TermsOfUse() {
 
       <section className="form-section">
         <h2 className="form-section-title text-gold">
+          <Editable contentKey="touOperatorTitle">{t("touOperatorTitle")}</Editable>
+        </h2>
+        <p className="legal-contact-line">
+          <Editable contentKey="touOperatorText">{t("touOperatorText")}</Editable>{" "}
+          <a href={PHONE_TEL_URL}>
+            <Editable contentKey="phoneDisplayNumber">{t("phoneDisplayNumber")}</Editable>
+          </a>
+        </p>
+      </section>
+
+      <section className="form-section">
+        <h2 className="form-section-title text-gold">
           <Editable contentKey="touServicesTitle">{t("touServicesTitle")}</Editable>
         </h2>
         <p>
           <Editable contentKey="touServicesText">{t("touServicesText")}</Editable>
+        </p>
+      </section>
+
+      <section className="form-section">
+        <h2 className="form-section-title text-gold">
+          <Editable contentKey="touBookingTitle">{t("touBookingTitle")}</Editable>
+        </h2>
+        <p>
+          <Editable contentKey="touBookingText">{t("touBookingText")}</Editable>
         </p>
       </section>
 
@@ -70,6 +94,16 @@ export default function TermsOfUse() {
 
       <section className="form-section">
         <h2 className="form-section-title text-gold">
+          <Editable contentKey="touPrivacyTitle">{t("touPrivacyTitle")}</Editable>
+        </h2>
+        <p>
+          <Editable contentKey="touPrivacyText">{t("touPrivacyText")}</Editable>{" "}
+          <Link href="/privacy-policy">{t("privacyPolicyLinkLabel")}</Link>
+        </p>
+      </section>
+
+      <section className="form-section">
+        <h2 className="form-section-title text-gold">
           <Editable contentKey="touIpTitle">{t("touIpTitle")}</Editable>
         </h2>
         <p>
@@ -88,6 +122,15 @@ export default function TermsOfUse() {
 
       <section className="form-section">
         <h2 className="form-section-title text-gold">
+          <Editable contentKey="touProhibitedTitle">{t("touProhibitedTitle")}</Editable>
+        </h2>
+        <p>
+          <Editable contentKey="touProhibitedText">{t("touProhibitedText")}</Editable>
+        </p>
+      </section>
+
+      <section className="form-section">
+        <h2 className="form-section-title text-gold">
           <Editable contentKey="touChangesTitle">{t("touChangesTitle")}</Editable>
         </h2>
         <p>
@@ -101,6 +144,15 @@ export default function TermsOfUse() {
         </h2>
         <p>
           <Editable contentKey="touJurisdictionText">{t("touJurisdictionText")}</Editable>
+        </p>
+      </section>
+
+      <section className="form-section">
+        <h2 className="form-section-title text-gold">
+          <Editable contentKey="touSeverabilityTitle">{t("touSeverabilityTitle")}</Editable>
+        </h2>
+        <p>
+          <Editable contentKey="touSeverabilityText">{t("touSeverabilityText")}</Editable>
         </p>
       </section>
 

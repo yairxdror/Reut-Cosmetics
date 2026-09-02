@@ -65,11 +65,9 @@ export function decryptSubmission(record) {
 
 const RETENTION_YEARS = 7;
 
-// Health declarations are kept for RETENTION_YEARS from submission and then
-// deleted automatically — no manual cleanup step needed. Swept on every
-// request rather than on a timer, since this route only runs inside a
-// long-lived Node process and a per-request check is cheap at this scale.
-async function purgeExpiredSubmissions() {
+// This request-level sweep complements the startup/daily sweep and Firestore
+// TTL. Keeping it here also covers local file-backed development instances.
+export async function purgeExpiredHealthDeclarations() {
   const cutoff = new Date();
   cutoff.setFullYear(cutoff.getFullYear() - RETENTION_YEARS);
   await purgeHealthDeclarationsBefore(cutoff.toISOString());
@@ -79,7 +77,7 @@ const DEFAULT_PAGE_SIZE = 20;
 const MAX_PAGE_SIZE = 100;
 
 router.get("/", requireAdmin, asyncHandler(async (req, res) => {
-  await purgeExpiredSubmissions();
+  await purgeExpiredHealthDeclarations();
 
   const submissions = await listHealthDeclarations();
   const sorted = [...submissions].sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
@@ -103,7 +101,7 @@ router.get("/", requireAdmin, asyncHandler(async (req, res) => {
 }));
 
 router.post("/", submitLimiter, asyncHandler(async (req, res) => {
-  await purgeExpiredSubmissions();
+  await purgeExpiredHealthDeclarations();
   const {
     fullName,
     idNumber,
@@ -112,6 +110,7 @@ router.post("/", submitLimiter, asyncHandler(async (req, res) => {
     details,
     healthDeclarationConfirmed,
     agreementAccepted,
+    privacyConsentAccepted,
   } = req.body || {};
 
   if (!fullName || !idNumber || !phone) {
@@ -138,7 +137,14 @@ router.post("/", submitLimiter, asyncHandler(async (req, res) => {
     return res.status(400).json({ error: "Agreement must be accepted" });
   }
 
+  if (privacyConsentAccepted !== true) {
+    return res.status(400).json({ error: "Privacy consent must be accepted" });
+  }
+
   const submittedAt = new Date().toISOString();
+  const expiresAtDate = new Date(submittedAt);
+  expiresAtDate.setFullYear(expiresAtDate.getFullYear() + RETENTION_YEARS);
+  const expiresAt = expiresAtDate.toISOString();
   const encrypted = encryptPayload({
     fullName,
     idNumber,
@@ -147,11 +153,15 @@ router.post("/", submitLimiter, asyncHandler(async (req, res) => {
     details: details || {},
     healthDeclarationConfirmed,
     agreementAccepted,
+    privacyConsentAccepted,
+    privacyConsentAt: submittedAt,
+    privacyNoticeVersion: "2026-09-02",
   });
 
   const record = {
     id: Date.now(),
     submittedAt,
+    expiresAt,
     ...encrypted,
   };
 

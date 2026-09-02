@@ -45,3 +45,19 @@ export async function replaceReview(review) {
   await getFirestoreDb().collection(COLLECTION).doc(String(review.id)).set(review);
   return true;
 }
+
+export async function removeReview(id) {
+  if (!isFirebaseBackendEnabled()) {
+    const reviews = await readJsonFile(DATA_FILE, []);
+    const retained = reviews.filter((review) => review.id !== id);
+    if (retained.length === reviews.length) return false;
+    await writeJsonFile(DATA_FILE, retained);
+    return true;
+  }
+
+  const ref = getFirestoreDb().collection(COLLECTION).doc(String(id));
+  const snapshot = await ref.get();
+  if (!snapshot.exists) return false;
+  await ref.delete();
+  return true;
+}

@@ -49,6 +49,16 @@ npm run migrate:firebase
 
 The migration copies local JSON records and any existing override images. It does not delete local data or remote documents. Health declarations remain encrypted during migration.
 
+## Health-declaration retention
+
+Every health-declaration document has an `expiresAt` Firestore timestamp seven years after submission. Enable Firestore TTL for that field so expired records are deleted even while Cloud Run is scaled to zero:
+
+```text
+gcloud firestore fields ttls update expiresAt --collection-group=healthDeclarations --enable-ttl
+```
+
+The API also removes expired records at startup, once every 24 hours while running, and whenever the health-declaration endpoint is used. The migration adds `expiresAt` to older local records. If production already contains documents created by an older version, backfill an `expiresAt` timestamp for them before relying on TTL.
+
 ## Build the static frontend
 
 From `frontend`, build without the GitHub Pages base path:

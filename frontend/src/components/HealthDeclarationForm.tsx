@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import Link from "next/link";
 import { submitHealthDeclaration } from "@/lib/api";
 import { isValidIsraeliId, isValidIsraeliPhone } from "@/lib/israeliValidation";
 import { useLanguage } from "@/context/LanguageContext";
@@ -48,6 +49,7 @@ interface FormState {
   details: Record<string, string>;
   healthDeclarationConfirmed: boolean;
   agreementAccepted: boolean;
+  privacyConsentAccepted: boolean;
 }
 
 const initialState: FormState = {
@@ -58,6 +60,7 @@ const initialState: FormState = {
   details: {},
   healthDeclarationConfirmed: false,
   agreementAccepted: false,
+  privacyConsentAccepted: false,
 };
 
 export default function HealthDeclarationForm() {
@@ -65,13 +68,6 @@ export default function HealthDeclarationForm() {
   const [form, setForm] = useState<FormState>(initialState);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
-  const isFormComplete =
-    form.fullName.trim().length > 0 &&
-    isValidIsraeliId(form.idNumber) &&
-    isValidIsraeliPhone(form.phone) &&
-    QUESTIONS.every((question) => Boolean(form.answers[question.id])) &&
-    form.healthDeclarationConfirmed &&
-    form.agreementAccepted;
 
   function setAnswer(questionId: string, value: YesNo) {
     setForm((prev) => ({
@@ -99,6 +95,7 @@ export default function HealthDeclarationForm() {
       next.healthDeclarationConfirmation = t("hdAgreementRequired");
     }
     if (!form.agreementAccepted) next.agreement = t("hdAgreementRequired");
+    if (!form.privacyConsentAccepted) next.privacyConsent = t("hdPrivacyConsentRequired");
     return next;
   }
 
@@ -120,6 +117,7 @@ export default function HealthDeclarationForm() {
         details: form.details,
         healthDeclarationConfirmed: form.healthDeclarationConfirmed,
         agreementAccepted: form.agreementAccepted,
+        privacyConsentAccepted: form.privacyConsentAccepted,
       });
       setStatus("success");
       setForm(initialState);
@@ -144,6 +142,16 @@ export default function HealthDeclarationForm() {
 
   return (
     <form className="health-form" onSubmit={handleSubmit} noValidate>
+      <aside className="privacy-notice" aria-labelledby="health-privacy-notice-title">
+        <h2 id="health-privacy-notice-title" className="privacy-notice-title">
+          <Editable contentKey="hdPrivacyNoticeTitle">{t("hdPrivacyNoticeTitle")}</Editable>
+        </h2>
+        <p>
+          <Editable contentKey="hdPrivacyNoticeText">{t("hdPrivacyNoticeText")}</Editable>
+        </p>
+        <Link href="/privacy-policy">{t("privacyPolicyLinkLabel")}</Link>
+      </aside>
+
       <section className="form-section">
         <h2 className="form-section-title text-gold">
           <Editable contentKey="hdPersonalTitle">{t("hdPersonalTitle")}</Editable>
@@ -285,8 +293,23 @@ export default function HealthDeclarationForm() {
         {errors.agreement && <span className="form-error">{errors.agreement}</span>}
       </section>
 
+      <section className="form-section privacy-consent-section">
+        <label className="form-checkbox-row">
+          <input
+            type="checkbox"
+            checked={form.privacyConsentAccepted}
+            onChange={(e) => setForm((prev) => ({ ...prev, privacyConsentAccepted: e.target.checked }))}
+          />
+          <span>
+            <Editable contentKey="hdPrivacyConsentText">{t("hdPrivacyConsentText")}</Editable>{" "}
+            <span className="form-required">*</span>
+          </span>
+        </label>
+        {errors.privacyConsent && <span className="form-error">{errors.privacyConsent}</span>}
+      </section>
+
       <div className="form-submit-row">
-        <button className="btn btn-blue" type="submit" disabled={!isFormComplete || status === "submitting"}>
+        <button className="btn btn-blue" type="submit" disabled={status === "submitting"}>
           {status === "submitting" ? t("hdSubmitting") : <Editable contentKey="hdSubmit">{t("hdSubmit")}</Editable>}
         </button>
         {status === "error" && <span className="form-error">{t("hdSubmitError")}</span>}

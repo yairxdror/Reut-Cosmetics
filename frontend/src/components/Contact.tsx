@@ -2,8 +2,8 @@
 
 import { useState, type FormEvent } from "react";
 import { useLanguage, type TranslationKey } from "@/context/LanguageContext";
-import { WhatsAppIcon, InstagramIcon, PhoneIcon } from "@/components/icons";
-import { WHATSAPP_URL, PHONE_TEL_URL, INSTAGRAM_URL, whatsappUrl } from "@/lib/contact";
+import { FacebookIcon, InstagramIcon, PhoneIcon } from "@/components/icons";
+import { FACEBOOK_URL, PHONE_TEL_URL, INSTAGRAM_URL, whatsappUrl } from "@/lib/contact";
 import { isValidIsraeliPhone } from "@/lib/israeliValidation";
 import Editable from "@/components/Editable";
 
@@ -22,6 +22,10 @@ export default function Contact() {
       setError(t("consultationNameRequired"));
       return;
     }
+    if (name.trim().length < 2) {
+      setError(t("consultationNameTooShort"));
+      return;
+    }
     if (!phone.trim()) {
       setError(t("consultationPhoneRequired"));
       return;
@@ -30,13 +34,21 @@ export default function Contact() {
       setError(t("consultationPhoneInvalid"));
       return;
     }
+    if (!service) {
+      setError(t("consultationServiceRequired"));
+      return;
+    }
     setError("");
 
     const lines = [
       `${t("consultationWhatsappMessage")} ${name.trim()}.`,
       `${t("consultationWhatsappPhoneLabel")}: ${phone.trim()}`,
     ];
-    if (service) lines.push(`${t("consultationWhatsappServiceLabel")}: ${service}`);
+
+    // A warm, personal line below the structured details, asking for more
+    // info about the service chosen.
+    lines.push("");
+    lines.push(`${t("consultationWhatsappClosingWithService")} ${service} 😊`);
 
     window.open(whatsappUrl(lines.join("\n")), "_blank", "noopener,noreferrer");
   }
@@ -47,17 +59,32 @@ export default function Contact() {
         <Editable contentKey="contactSectionTitle">{t("contactSectionTitle")}</Editable>
       </h2>
       <div className="contact-buttons">
-        <a className="btn-hero btn-hero-gold" href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
-          <WhatsAppIcon size={18} />
-          <Editable contentKey="whatsappCta">{t("whatsappCta")}</Editable>
+        <a className="btn-hero btn-hero-gold" href={FACEBOOK_URL} target="_blank" rel="noopener noreferrer">
+          <FacebookIcon size={18} />
+          <span className="contact-button-label-desktop">
+            <Editable contentKey="facebookCta">{t("facebookCta")}</Editable>
+          </span>
+          <span className="contact-button-label-mobile">
+            <Editable contentKey="facebookCtaMobile">{t("facebookCtaMobile")}</Editable>
+          </span>
         </a>
         <a className="btn-hero btn-hero-gold" href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer">
           <InstagramIcon size={18} />
-          <Editable contentKey="instagramCta">{t("instagramCta")}</Editable>
+          <span className="contact-button-label-desktop">
+            <Editable contentKey="instagramCta">{t("instagramCta")}</Editable>
+          </span>
+          <span className="contact-button-label-mobile">
+            <Editable contentKey="instagramCtaMobile">{t("instagramCtaMobile")}</Editable>
+          </span>
         </a>
         <a className="btn-hero btn-hero-gold" href={PHONE_TEL_URL}>
           <PhoneIcon size={18} />
-          <Editable contentKey="phoneCta">{t("phoneCta")}</Editable>
+          <span className="contact-button-label-desktop">
+            <Editable contentKey="phoneCta">{t("phoneCta")}</Editable>
+          </span>
+          <span className="contact-button-label-mobile">
+            <Editable contentKey="phoneCtaMobile">{t("phoneCtaMobile")}</Editable>
+          </span>
         </a>
       </div>
 

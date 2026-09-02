@@ -3,7 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
-import { FieldValue } from "firebase-admin/firestore";
+import { FieldValue, Timestamp } from "firebase-admin/firestore";
 import { getDownloadURL } from "firebase-admin/storage";
 import { getFirebaseStorageBucket, getFirestoreDb, isFirebaseBackendEnabled } from "../services/firebaseAdmin.js";
 
@@ -65,13 +65,23 @@ async function writeCollection(collectionName, records) {
   return records.length;
 }
 
+function withHealthDeclarationExpiry(record) {
+  const submittedAt = new Date(record.submittedAt);
+  const expiresAt = record.expiresAt ? new Date(record.expiresAt) : new Date(submittedAt);
+  if (!record.expiresAt) expiresAt.setFullYear(expiresAt.getFullYear() + 7);
+  if (Number.isNaN(expiresAt.getTime())) {
+    throw new Error(`Health declaration ${record.id} has an invalid retention date.`);
+  }
+  return { ...record, expiresAt: Timestamp.fromDate(expiresAt) };
+}
+
 const counts = {
   contentImages: await migrateContent(),
   faq: await writeCollection("faq", readJson("faq.json", [])),
   reviews: await writeCollection("reviews", readJson("reviews.json", [])),
   healthDeclarations: await writeCollection(
     "healthDeclarations",
-    readJson("health-declarations.json", [])
+    readJson("health-declarations.json", []).map(withHealthDeclarationExpiry)
   ),
 };
 

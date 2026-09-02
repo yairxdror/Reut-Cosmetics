@@ -13,17 +13,18 @@ import {
   HeartIcon,
   PersonIcon,
   ShieldIcon,
-  SparkleIcon,
+  VipBadgeIcon,
   WhatsAppIcon,
 } from "@/components/icons";
 import Services from "@/components/Services";
+import BeforeAfter from "@/components/BeforeAfter";
 import Location from "@/components/Location";
 import Reviews from "@/components/Reviews";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 
 const FEATURES = [
-  { icon: SparkleIcon, key: "featureDiagnostics" as const },
+  { icon: VipBadgeIcon, key: "featureDiagnostics" as const },
   { icon: PersonIcon, key: "featurePersonalService" as const },
   { icon: DiamondIcon, key: "featureEquipped" as const },
   { icon: ShieldIcon, key: "featureMaterials" as const },
@@ -246,6 +247,7 @@ export default function Home() {
       </section>
 
       <Services />
+      <BeforeAfter />
       <Location />
       <Reviews />
       <Contact />

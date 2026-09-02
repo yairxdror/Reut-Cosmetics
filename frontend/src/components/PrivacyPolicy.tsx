@@ -5,7 +5,14 @@ import { useLanguage } from "@/context/LanguageContext";
 import Editable from "@/components/Editable";
 import type { EditableTextKey } from "@/lib/editableContent";
 
-const DATA_ITEM_KEYS: EditableTextKey[] = ["ppDataItem1", "ppDataItem2", "ppDataItem3", "ppDataItem4", "ppDataItem5"];
+const DATA_ITEM_KEYS: EditableTextKey[] = [
+  "ppDataItem1",
+  "ppDataItem2",
+  "ppDataItem3",
+  "ppDataItem4",
+  "ppDataItem5",
+  "ppDataItem6",
+];
 const SENSITIVE_ITEM_KEYS: EditableTextKey[] = [
   "ppSensitiveItem1",
   "ppSensitiveItem2",
@@ -24,6 +31,18 @@ export default function PrivacyPolicy() {
         </h2>
         <p>
           <Editable contentKey="ppGeneralText">{t("ppGeneralText")}</Editable>
+        </p>
+      </section>
+
+      <section className="form-section">
+        <h2 className="form-section-title text-gold">
+          <Editable contentKey="ppControllerTitle">{t("ppControllerTitle")}</Editable>
+        </h2>
+        <p className="legal-contact-line">
+          <Editable contentKey="ppControllerText">{t("ppControllerText")}</Editable>{" "}
+          <a href={PHONE_TEL_URL}>
+            <Editable contentKey="phoneDisplayNumber">{t("phoneDisplayNumber")}</Editable>
+          </a>
         </p>
       </section>
 
@@ -71,6 +90,15 @@ export default function PrivacyPolicy() {
         </h2>
         <p>
           <Editable contentKey="ppSharingText">{t("ppSharingText")}</Editable>
+        </p>
+      </section>
+
+      <section className="form-section">
+        <h2 className="form-section-title text-gold">
+          <Editable contentKey="ppRetentionTitle">{t("ppRetentionTitle")}</Editable>
+        </h2>
+        <p>
+          <Editable contentKey="ppRetentionText">{t("ppRetentionText")}</Editable>
         </p>
       </section>
 

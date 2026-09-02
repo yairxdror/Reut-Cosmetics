@@ -1,8 +1,20 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
-import { fetchReviews, submitReview, updateReview, RateLimitError, EditNotAllowedError, type Review } from "@/lib/api";
+import { useAdmin } from "@/context/AdminContext";
+import {
+  deleteReview,
+  fetchReviews,
+  submitReview,
+  updateReview,
+  EditNotAllowedError,
+  RateLimitError,
+  UnauthorizedError,
+  type Review,
+} from "@/lib/api";
+import { clearAdminToken, getAdminToken } from "@/lib/adminAuth";
 import { saveEditToken, getEditToken } from "@/lib/reviewEditTokens";
 import { containsProfanity } from "@/lib/profanityFilter";
 import { PencilIcon, QuoteIcon, StarIcon } from "@/components/icons";
@@ -50,6 +62,7 @@ function StarRatingInput({ value, onChange }: { value: number; onChange: (rating
 
 export default function Reviews() {
   const { t, language } = useLanguage();
+  const { isAdmin } = useAdmin();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loadState, setLoadState] = useState<"loading" | "loaded" | "error">("loading");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -58,8 +71,16 @@ export default function Reviews() {
   const [rating, setRating] = useState(0);
   const [text, setText] = useState("");
   const [website, setWebsite] = useState("");
-  const [errors, setErrors] = useState<{ name?: string; rating?: string; text?: string; form?: string }>({});
+  const [publicationConsent, setPublicationConsent] = useState(false);
+  const [errors, setErrors] = useState<{
+    name?: string;
+    rating?: string;
+    text?: string;
+    publicationConsent?: string;
+    form?: string;
+  }>({});
   const [status, setStatus] = useState<"idle" | "submitting">("idle");
+  const [moderationError, setModerationError] = useState("");
   const [editingReview, setEditingReview] = useState<Review | null>(null);
   const [now, setNow] = useState(() => Date.now());
   const gridRef = useRef<HTMLDivElement>(null);
@@ -133,13 +154,18 @@ export default function Reviews() {
     };
   }, [isModalOpen]);
 
-  const isFormComplete = name.trim().length > 0 && rating >= 1 && text.trim().length >= MIN_TEXT_LENGTH;
+  const isFormComplete =
+    name.trim().length > 0 &&
+    rating >= 1 &&
+    text.trim().length >= MIN_TEXT_LENGTH &&
+    (Boolean(editingReview) || publicationConsent);
 
   function resetForm() {
     setName("");
     setRating(0);
     setText("");
     setWebsite("");
+    setPublicationConsent(false);
     setErrors({});
     setStatus("idle");
   }
@@ -154,10 +180,29 @@ export default function Reviews() {
     setName(review.name);
     setRating(review.rating);
     setText(review.text);
+    setPublicationConsent(false);
     setErrors({});
     setStatus("idle");
     setEditingReview(review);
     setIsModalOpen(true);
+  }
+
+  async function handleAdminDelete(review: Review) {
+    if (!window.confirm(t("reviewDeleteConfirm"))) return;
+    const token = getAdminToken();
+    if (!token) {
+      clearAdminToken();
+      return;
+    }
+
+    setModerationError("");
+    try {
+      await deleteReview(token, review.id);
+      setReviews((prev) => prev.filter((item) => item.id !== review.id));
+    } catch (error) {
+      if (error instanceof UnauthorizedError) clearAdminToken();
+      setModerationError(t("reviewDeleteError"));
+    }
   }
 
   async function handleSubmit(event: FormEvent) {
@@ -177,6 +222,10 @@ export default function Reviews() {
     else if (trimmedText.length > MAX_TEXT_LENGTH) nextErrors.text = t("reviewTextTooLong");
     else if (containsProfanity(trimmedText)) nextErrors.text = t("reviewProfanityError");
 
+    if (!editingReview && !publicationConsent) {
+      nextErrors.publicationConsent = t("reviewConsentRequired");
+    }
+
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
 
@@ -192,9 +241,22 @@ export default function Reviews() {
         });
         setReviews((prev) => prev.map((r) => (r.id === updated.id ? updated : r)));
       } else {
-        const created = await submitReview({ name: trimmedName, rating, text: trimmedText, website });
+        const created = await submitReview({
+          name: trimmedName,
+          rating,
+          text: trimmedText,
+          website,
+          publicationConsent,
+        });
         saveEditToken(created.id, created.editToken);
-        const { editToken: _editToken, ...publicReview } = created;
+        const publicReview: Review = {
+          id: created.id,
+          name: created.name,
+          rating: created.rating,
+          text: created.text,
+          createdAt: created.createdAt,
+          updatedAt: created.updatedAt,
+        };
         setReviews((prev) => [publicReview, ...prev]);
       }
       setIsModalOpen(false);
@@ -223,6 +285,7 @@ export default function Reviews() {
 
       {loadState === "loading" && <p className="reviews-status">…</p>}
       {loadState === "error" && <p className="reviews-status">{t("reviewsLoadError")}</p>}
+      {moderationError && <p className="form-error reviews-status">{moderationError}</p>}
       {loadState === "loaded" && reviews.length === 0 && <p className="reviews-status">{t("reviewsEmpty")}</p>}
 
       {loadState === "loaded" && reviews.length > 0 && (
@@ -250,6 +313,16 @@ export default function Reviews() {
                       aria-label="Edit review"
                     >
                       <PencilIcon size={14} />
+                    </button>
+                  )}
+                  {isAdmin && (
+                    <button
+                      type="button"
+                      className="review-edit-btn review-delete-btn"
+                      onClick={() => handleAdminDelete(review)}
+                      aria-label={t("reviewDeleteButton")}
+                    >
+                      ✕
                     </button>
                   )}
                 </span>
@@ -331,6 +404,31 @@ export default function Reviews() {
                 />
                 {errors.text && <span className="form-error">{errors.text}</span>}
               </div>
+
+              {!editingReview && (
+                <div className="privacy-notice review-privacy-notice">
+                  <p>
+                    <Editable contentKey="reviewPrivacyNoticeText">{t("reviewPrivacyNoticeText")}</Editable>
+                  </p>
+                  <Link href="/privacy-policy" onClick={() => setIsModalOpen(false)}>
+                    {t("privacyPolicyLinkLabel")}
+                  </Link>
+                  <label className="form-checkbox-row">
+                    <input
+                      type="checkbox"
+                      checked={publicationConsent}
+                      onChange={(event) => setPublicationConsent(event.target.checked)}
+                    />
+                    <span>
+                      <Editable contentKey="reviewPublishConsentText">{t("reviewPublishConsentText")}</Editable>{" "}
+                      <span className="form-required">*</span>
+                    </span>
+                  </label>
+                  {errors.publicationConsent && (
+                    <span className="form-error">{errors.publicationConsent}</span>
+                  )}
+                </div>
+              )}
 
               <div className="form-submit-row">
                 <button className="btn btn-black" type="submit" disabled={!isFormComplete || status === "submitting"}>

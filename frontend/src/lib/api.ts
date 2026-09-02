@@ -12,6 +12,7 @@ export interface HealthDeclarationPayload {
   details: Record<string, string>;
   healthDeclarationConfirmed: boolean;
   agreementAccepted: boolean;
+  privacyConsentAccepted: boolean;
 }
 
 export async function submitHealthDeclaration(payload: HealthDeclarationPayload): Promise<{ id: number; submittedAt: string }> {
@@ -86,7 +87,7 @@ export class RateLimitError extends Error {}
 export class EditNotAllowedError extends Error {}
 
 export async function submitReview(
-  payload: { name: string; rating: number; text: string; website?: string }
+  payload: { name: string; rating: number; text: string; website?: string; publicationConsent: boolean }
 ): Promise<CreatedReview> {
   const res = await fetch(`${API_BASE_URL}/api/reviews`, {
     method: "POST",
@@ -122,6 +123,19 @@ export async function updateReview(
     throw new Error(`Failed to update review: ${res.status}`);
   }
   return res.json();
+}
+
+export async function deleteReview(token: string, id: number): Promise<void> {
+  const res = await fetch(`${API_BASE_URL}/api/reviews/${id}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (res.status === 401 || res.status === 403) {
+    throw new UnauthorizedError("Not authorized");
+  }
+  if (!res.ok) {
+    throw new Error(`Failed to delete review: ${res.status}`);
+  }
 }
 
 export interface SiteContent {
