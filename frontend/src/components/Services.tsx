@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import eyebrowShaping from "@/assets/Eyebrow-shaping.png";
@@ -117,6 +117,10 @@ function MagicTrailArtwork({
   className,
   viewBox,
   path,
+  startPoint,
+  endPoint,
+  startFadeRadius,
+  endFadeRadius,
   flares,
   flareSpread,
   trailSpread,
@@ -125,11 +129,18 @@ function MagicTrailArtwork({
   className: string;
   viewBox: string;
   path: string;
+  startPoint: [number, number];
+  endPoint: [number, number];
+  startFadeRadius: number;
+  endFadeRadius: number;
   flares: MagicTrailFlare[];
   flareSpread: number;
   trailSpread: number;
   endpointTaper: number;
 }) {
+  const uid = useId();
+  const fadeMaskId = `${uid}-magic-trail-fade-mask`;
+  const fadeGradientId = `${uid}-magic-trail-fade-gradient`;
   const flareLanes = [
     {
       x: trailSpread * -1.08,
@@ -180,34 +191,77 @@ function MagicTrailArtwork({
 
   return (
     <svg className={className} viewBox={viewBox} preserveAspectRatio="none" focusable="false">
-      <path
-        className="service-magic-trail-glow service-magic-trail-glow-wide service-magic-trail-motion-path"
-        d={path}
-      />
-      <path className="service-magic-trail-glow service-magic-trail-glow-core" d={path} />
-      <path
-        className="service-magic-trail-stream service-magic-trail-stream-scatter service-magic-trail-stream-scatter-a"
-        d={path}
-        transform={`translate(${trailSpread * -0.52} ${trailSpread * 0.38})`}
-      />
-      <path
-        className="service-magic-trail-stream service-magic-trail-stream-scatter service-magic-trail-stream-scatter-b"
-        d={path}
-        transform={`translate(${trailSpread * 0.54} ${trailSpread * -0.4})`}
-      />
-      <path
-        className="service-magic-trail-stream service-magic-trail-stream-scatter service-magic-trail-stream-scatter-c"
-        d={path}
-        transform={`translate(${-trailSpread} ${trailSpread * 0.72})`}
-      />
-      <path
-        className="service-magic-trail-stream service-magic-trail-stream-scatter service-magic-trail-stream-scatter-d"
-        d={path}
-        transform={`translate(${trailSpread} ${trailSpread * -0.72})`}
-      />
-      <path className="service-magic-trail-stream service-magic-trail-stream-soft" d={path} />
-      <path className="service-magic-trail-stream service-magic-trail-stream-dust" d={path} />
-      <path className="service-magic-trail-stream service-magic-trail-stream-shards" d={path} />
+      <defs>
+        {/* Radial alpha ramps (opaque at center -> transparent at the rim),
+            painted as "erasers" over the mask's base stroke at each tip so
+            the ribbon fades out like a trail instead of stopping with a
+            hard, snake-like edge. userSpaceOnUse + explicit cx/cy/r (rather
+            than the default objectBoundingBox) so the fade radius means the
+            same thing in path units regardless of this artwork's non-uniform
+            preserveAspectRatio="none" stretch. */}
+        <radialGradient
+          id={`${fadeGradientId}-start`}
+          gradientUnits="userSpaceOnUse"
+          cx={startPoint[0]}
+          cy={startPoint[1]}
+          r={startFadeRadius}
+        >
+          <stop offset="0%" stopColor="black" stopOpacity="1" />
+          <stop offset="100%" stopColor="black" stopOpacity="0" />
+        </radialGradient>
+        <radialGradient
+          id={`${fadeGradientId}-end`}
+          gradientUnits="userSpaceOnUse"
+          cx={endPoint[0]}
+          cy={endPoint[1]}
+          r={endFadeRadius}
+        >
+          <stop offset="0%" stopColor="black" stopOpacity="1" />
+          <stop offset="100%" stopColor="black" stopOpacity="0" />
+        </radialGradient>
+        <mask id={fadeMaskId} maskUnits="userSpaceOnUse" x="-20%" y="-20%" width="140%" height="140%">
+          <path
+            d={path}
+            stroke="white"
+            strokeWidth={80}
+            strokeLinecap="round"
+            fill="none"
+            vectorEffect="non-scaling-stroke"
+          />
+          <circle cx={startPoint[0]} cy={startPoint[1]} r={startFadeRadius} fill={`url(#${fadeGradientId}-start)`} />
+          <circle cx={endPoint[0]} cy={endPoint[1]} r={endFadeRadius} fill={`url(#${fadeGradientId}-end)`} />
+        </mask>
+      </defs>
+      <g mask={`url(#${fadeMaskId})`}>
+        <path
+          className="service-magic-trail-glow service-magic-trail-glow-wide service-magic-trail-motion-path"
+          d={path}
+        />
+        <path className="service-magic-trail-glow service-magic-trail-glow-core" d={path} />
+        <path
+          className="service-magic-trail-stream service-magic-trail-stream-scatter service-magic-trail-stream-scatter-a"
+          d={path}
+          transform={`translate(${trailSpread * -0.52} ${trailSpread * 0.38})`}
+        />
+        <path
+          className="service-magic-trail-stream service-magic-trail-stream-scatter service-magic-trail-stream-scatter-b"
+          d={path}
+          transform={`translate(${trailSpread * 0.54} ${trailSpread * -0.4})`}
+        />
+        <path
+          className="service-magic-trail-stream service-magic-trail-stream-scatter service-magic-trail-stream-scatter-c"
+          d={path}
+          transform={`translate(${-trailSpread} ${trailSpread * 0.72})`}
+        />
+        <path
+          className="service-magic-trail-stream service-magic-trail-stream-scatter service-magic-trail-stream-scatter-d"
+          d={path}
+          transform={`translate(${trailSpread} ${trailSpread * -0.72})`}
+        />
+        <path className="service-magic-trail-stream service-magic-trail-stream-soft" d={path} />
+        <path className="service-magic-trail-stream service-magic-trail-stream-dust" d={path} />
+        <path className="service-magic-trail-stream service-magic-trail-stream-shards" d={path} />
+      </g>
       <g className="service-magic-trail-flares">
         {flareLanes.map((lane, laneIndex) => (
           <g className={lane.className} key={`${className}-lane-${laneIndex}`}>
@@ -256,6 +310,10 @@ function PermanentMakeupMagicTrail() {
         className="service-magic-trail-art service-magic-trail-art-desktop"
         viewBox="0 0 1000 760"
         path={MAGIC_TRAIL_DESKTOP_PATH}
+        startPoint={[125, 10]}
+        endPoint={[995, 747]}
+        startFadeRadius={120}
+        endFadeRadius={350}
         flares={DESKTOP_TRAIL_FLARES}
         flareSpread={18}
         trailSpread={40}
@@ -265,6 +323,10 @@ function PermanentMakeupMagicTrail() {
         className="service-magic-trail-art service-magic-trail-art-mobile"
         viewBox="0 0 360 520"
         path={MAGIC_TRAIL_MOBILE_PATH}
+        startPoint={[306, 52]}
+        endPoint={[80, 519]}
+        startFadeRadius={45}
+        endFadeRadius={45}
         flares={MOBILE_TRAIL_FLARES}
         flareSpread={7}
         trailSpread={16}

@@ -48,7 +48,7 @@ export default function Contact() {
     // A warm, personal line below the structured details, asking for more
     // info about the service chosen.
     lines.push("");
-    lines.push(`${t("consultationWhatsappClosingWithService")} ${service} 😊`);
+    lines.push(`${t("consultationWhatsappClosingWithService")} ${service}`);
 
     window.open(whatsappUrl(lines.join("\n")), "_blank", "noopener,noreferrer");
   }
