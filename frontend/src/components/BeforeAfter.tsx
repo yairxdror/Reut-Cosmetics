@@ -1,18 +1,18 @@
 "use client";
 
-import { useRef, useState, type KeyboardEvent, type PointerEvent as ReactPointerEvent } from "react";
+import { Fragment, useEffect, useRef, useState, type KeyboardEvent, type PointerEvent as ReactPointerEvent } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import Editable from "@/components/Editable";
 import EditableImage from "@/components/EditableImage";
 import TieredTitle from "@/components/TieredTitle";
 import { SlideArrowsIcon } from "@/components/icons";
 import type { EditableImageKey } from "@/lib/editableContent";
-import beforePhoto from "@/assets/before-after-before.png";
-import afterPhoto from "@/assets/before-after-after.png";
-import beforePhoto2 from "@/assets/before-after-before-2.png";
-import afterPhoto2 from "@/assets/before-after-after-2.png";
-import beforePhoto3 from "@/assets/before-after-before-3.png";
-import afterPhoto3 from "@/assets/before-after-after-3.png";
+import beforePhoto from "@/assets/before-after-before.webp";
+import afterPhoto from "@/assets/before-after-after.webp";
+import beforePhoto2 from "@/assets/before-after-before-2.webp";
+import afterPhoto2 from "@/assets/before-after-after-2.webp";
+import beforePhoto3 from "@/assets/before-after-before-3.webp";
+import afterPhoto3 from "@/assets/before-after-after-3.webp";
 
 const DEFAULT_POSITION = 50;
 const MIN_POSITION = 5;
@@ -46,11 +46,38 @@ const SETS: Array<{
 ];
 
 export default function BeforeAfter() {
-  const { t } = useLanguage();
+  const { t, getImageUrl } = useLanguage();
   const [position, setPosition] = useState(DEFAULT_POSITION);
   const [activeSet, setActiveSet] = useState(0);
+  const [visitedSets, setVisitedSets] = useState([0]);
+  const [preloadImages, setPreloadImages] = useState(false);
+  const requestedSetRef = useRef(0);
+  const loadedImagesRef = useRef(new Set<string>());
   const containerRef = useRef<HTMLDivElement>(null);
   const draggingRef = useRef(false);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    if (typeof IntersectionObserver === "undefined") {
+      const frame = window.requestAnimationFrame(() => setPreloadImages(true));
+      return () => window.cancelAnimationFrame(frame);
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      setPreloadImages(true);
+      observer.disconnect();
+    }, {
+      // Match SiteChrome's scrolling container so the preload margin applies.
+      root: container.closest(".page-scroll"),
+      rootMargin: "800px 0px",
+    });
+
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
 
   function updateFromClientX(clientX: number) {
     const container = containerRef.current;
@@ -94,45 +121,92 @@ export default function BeforeAfter() {
   }
 
   function selectSet(index: number) {
+    requestedSetRef.current = index;
+    setVisitedSets((previous) => previous.includes(index) ? previous : [...previous, index]);
+    showSetWhenReady(index);
+  }
+
+  function pairKey(index: number) {
+    const set = SETS[index];
+    return JSON.stringify([
+      getImageUrl(set.beforeKey) ?? set.beforeFallback.src,
+      getImageUrl(set.afterKey) ?? set.afterFallback.src,
+    ]);
+  }
+
+  function showSetWhenReady(index: number) {
+    const key = pairKey(index);
+    if (
+      requestedSetRef.current !== index ||
+      !loadedImagesRef.current.has(`${key}:before`) ||
+      !loadedImagesRef.current.has(`${key}:after`)
+    ) return;
+
     setActiveSet(index);
     setPosition(DEFAULT_POSITION);
   }
 
-  const current = SETS[activeSet];
+  function handleImageLoad(index: number, key: string, side: "before" | "after") {
+    loadedImagesRef.current.add(`${key}:${side}`);
+    showSetWhenReady(index);
+  }
 
   return (
     <section className="before-after-section">
       <TieredTitle contentKey="beforeAfterTitle" className="before-after-title" />
 
       <div className="before-after-slider" ref={containerRef}>
-        <div className="before-after-layer before-after-layer-base">
-          <EditableImage
-            imageKey={current.beforeKey}
-            fallbackSrc={current.beforeFallback}
-            alt={t("beforeAfterBeforeAlt")}
-            sizes="(max-width: 860px) 90vw, 640px"
-            className="before-after-image"
-          />
-          <span className="before-after-badge before-after-badge-before">
-            <Editable contentKey="beforeAfterBeforeLabel">{t("beforeAfterBeforeLabel")}</Editable>
-          </span>
-        </div>
+        {/* Load all pairs near the viewport and keep them mounted for instant switching. */}
+        {(preloadImages ? SETS.map((_, index) => index) : visitedSets).map((index) => {
+          const current = SETS[index];
+          const key = pairKey(index);
+          const visible = index === activeSet;
 
-        <div
-          className="before-after-layer before-after-layer-reveal"
-          style={{ clipPath: `inset(0 ${100 - position}% 0 0)` }}
-        >
-          <EditableImage
-            imageKey={current.afterKey}
-            fallbackSrc={current.afterFallback}
-            alt={t("beforeAfterAfterAlt")}
-            sizes="(max-width: 860px) 90vw, 640px"
-            className="before-after-image"
-          />
-          <span className="before-after-badge before-after-badge-after">
-            <Editable contentKey="beforeAfterAfterLabel">{t("beforeAfterAfterLabel")}</Editable>
-          </span>
-        </div>
+          return (
+            <Fragment key={`${index}:${key}`}>
+              <div
+                className="before-after-layer before-after-layer-base"
+                style={{ visibility: visible ? "visible" : "hidden" }}
+                aria-hidden={!visible}
+              >
+                <EditableImage
+                  imageKey={current.beforeKey}
+                  fallbackSrc={current.beforeFallback}
+                  alt={t("beforeAfterBeforeAlt")}
+                  sizes="(max-width: 860px) 90vw, 640px"
+                  className="before-after-image"
+                  loading={preloadImages || index !== 0 ? "eager" : "lazy"}
+                  onLoad={() => handleImageLoad(index, key, "before")}
+                />
+                <span className="before-after-badge before-after-badge-before">
+                  <Editable contentKey="beforeAfterBeforeLabel">{t("beforeAfterBeforeLabel")}</Editable>
+                </span>
+              </div>
+
+              <div
+                className="before-after-layer before-after-layer-reveal"
+                style={{
+                  clipPath: `inset(0 ${100 - position}% 0 0)`,
+                  visibility: visible ? "visible" : "hidden",
+                }}
+                aria-hidden={!visible}
+              >
+                <EditableImage
+                  imageKey={current.afterKey}
+                  fallbackSrc={current.afterFallback}
+                  alt={t("beforeAfterAfterAlt")}
+                  sizes="(max-width: 860px) 90vw, 640px"
+                  className="before-after-image"
+                  loading={preloadImages || index !== 0 ? "eager" : "lazy"}
+                  onLoad={() => handleImageLoad(index, key, "after")}
+                />
+                <span className="before-after-badge before-after-badge-after">
+                  <Editable contentKey="beforeAfterAfterLabel">{t("beforeAfterAfterLabel")}</Editable>
+                </span>
+              </div>
+            </Fragment>
+          );
+        })}
 
         <div
           className="before-after-handle-track"

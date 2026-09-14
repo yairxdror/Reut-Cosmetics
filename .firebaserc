@@ -1,0 +1,23 @@
+{
+  "projects": {
+    "default": "reut-cosmetics-67df5"
+  },
+  "targets": {
+    "reut-cosmetics-67df5": {
+      "storage": {
+        "default": [
+          "reut-cosmetics-67df5.firebasestorage.app"
+        ]
+      },
+      "hosting": {
+        "main": [
+          "reut-cosmetics-67df5"
+        ],
+        "www-redirect": [
+          "reut-cosmetics-redirect"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

@@ -85,9 +85,26 @@ router.get("/", requireAdmin, asyncHandler(async (req, res) => {
 
   // Names are only ever available in plaintext after decryption, so the
   // search necessarily happens post-decrypt rather than against the stored
-  // (encrypted) records directly.
+  // (encrypted) records directly. Matches by name or submission date — both
+  // locale renderings are included since the admin UI displays he-IL/en-US
+  // dates depending on the site language, and the admin may type either.
+  // "." and "/" are treated as interchangeable date separators (normalized
+  // to "-") so e.g. "20/8" matches the he-IL-rendered "20.8.2026".
+  const normalizeDateSeparators = (value) => value.replace(/[./]/g, "-");
   const search = typeof req.query.search === "string" ? req.query.search.trim().toLowerCase() : "";
-  const filtered = search ? decrypted.filter((s) => s.fullName.toLowerCase().includes(search)) : decrypted;
+  const normalizedSearch = normalizeDateSeparators(search);
+  const filtered = search
+    ? decrypted.filter((s) => {
+        if (s.fullName.toLowerCase().includes(search)) return true;
+        const submittedDate = new Date(s.submittedAt);
+        const dateStrings = [
+          s.submittedAt,
+          submittedDate.toLocaleDateString("he-IL"),
+          submittedDate.toLocaleDateString("en-US"),
+        ];
+        return dateStrings.some((value) => normalizeDateSeparators(value.toLowerCase()).includes(normalizedSearch));
+      })
+    : decrypted;
 
   const offset = Math.max(0, Number(req.query.offset) || 0);
   const limit = Math.min(MAX_PAGE_SIZE, Math.max(1, Number(req.query.limit) || DEFAULT_PAGE_SIZE));

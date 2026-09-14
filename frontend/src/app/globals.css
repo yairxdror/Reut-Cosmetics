@@ -2761,7 +2761,6 @@ html.a11y-reduce-motion .service-magic-trail-flare {
   padding: 0;
   border: 3px solid transparent;
   border-radius: 50%;
-  overflow: hidden;
   background: none;
   cursor: pointer;
   transition: border-color 0.25s ease, transform 0.15s ease;
@@ -2782,6 +2781,7 @@ html.a11y-reduce-motion .service-magic-trail-flare {
 
 .before-after-thumbnail-image {
   object-fit: cover;
+  border-radius: 50%;
 }
 
 /* EditableImage's default badge is a small corner accent on a large photo,

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type ChangeEvent, type CSSProperties } from "react";
-import Image, { type StaticImageData } from "next/image";
+import Image, { type ImageProps, type StaticImageData } from "next/image";
 import { useAdmin } from "@/context/AdminContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { getAdminToken, clearAdminToken } from "@/lib/adminAuth";
@@ -26,6 +26,8 @@ export default function EditableImage({
   className,
   style,
   priority,
+  loading,
+  onLoad,
   editable = true,
 }: {
   imageKey: EditableImageKey;
@@ -35,6 +37,8 @@ export default function EditableImage({
   className?: string;
   style?: CSSProperties;
   priority?: boolean;
+  loading?: ImageProps["loading"];
+  onLoad?: ImageProps["onLoad"];
   editable?: boolean;
 }) {
   const { isAdmin, isEditMode } = useAdmin();
@@ -109,6 +113,8 @@ export default function EditableImage({
         style={style}
         unoptimized={Boolean(overrideUrl)}
         priority={priority}
+        loading={loading}
+        onLoad={onLoad}
       />
 
       {editable && isAdmin && isEditMode && (

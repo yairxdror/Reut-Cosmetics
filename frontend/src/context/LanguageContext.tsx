@@ -115,7 +115,7 @@ const dictionary: Dictionary = {
   adminAnswerYes: { he: "כן", en: "Yes" },
   adminAnswerNo: { he: "לא", en: "No" },
   adminDetailLabel: { he: "פירוט", en: "Details" },
-  adminSearchPlaceholder: { he: "חיפוש לפי שם הלקוחה", en: "Search by customer name" },
+  adminSearchPlaceholder: { he: "חיפוש לפי שם הלקוחה או תאריך", en: "Search by customer name or date" },
   adminClearSearch: { he: "ניקוי חיפוש", en: "Clear search" },
   adminNoSearchResults: { he: "לא נמצאו הצהרות בריאות התואמות לחיפוש.", en: "No health declarations match your search." },
   adminLoadMore: { he: "הצג עוד", en: "Show More" },

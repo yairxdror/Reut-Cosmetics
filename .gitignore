@@ -11,6 +11,9 @@ node_modules/
 .next/
 out/
 
+# Firebase CLI local deploy cache
+.firebase/
+
 # misc
 .DS_Store
 Thumbs.db

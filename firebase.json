@@ -1,48 +1,63 @@
 {
-  "hosting": {
-    "public": "frontend/out",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "cleanUrls": true,
-    "trailingSlash": false,
-    "headers": [
-      {
-        "source": "/_next/static/**",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "public,max-age=31536000,immutable"
+  "hosting": [
+    {
+      "target": "main",
+      "public": "frontend/out",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "cleanUrls": true,
+      "trailingSlash": false,
+      "headers": [
+        {
+          "source": "/_next/static/**",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public,max-age=31536000,immutable"
+            }
+          ]
+        }
+      ],
+      "rewrites": [
+        {
+          "source": "/api/**",
+          "run": {
+            "serviceId": "reut-cosmetics-api",
+            "region": "me-west1",
+            "pinTag": true
           }
-        ]
-      }
-    ],
-    "rewrites": [
-      {
-        "source": "/api/**",
-        "run": {
-          "serviceId": "reut-cosmetics-api",
-          "region": "me-west1",
-          "pinTag": true
+        },
+        {
+          "source": "/uploads/**",
+          "run": {
+            "serviceId": "reut-cosmetics-api",
+            "region": "me-west1",
+            "pinTag": true
+          }
         }
-      },
-      {
-        "source": "/uploads/**",
-        "run": {
-          "serviceId": "reut-cosmetics-api",
-          "region": "me-west1",
-          "pinTag": true
+      ]
+    },
+    {
+      "target": "www-redirect",
+      "public": "www-redirect",
+      "redirects": [
+        {
+          "source": "/**",
+          "destination": "https://reutycosmetics.top",
+          "type": 301
         }
-      }
-    ]
-  },
+      ]
+    }
+  ],
   "firestore": {
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
   },
   "storage": {
+    "target": "default",
     "rules": "storage.rules"
   }
 }
