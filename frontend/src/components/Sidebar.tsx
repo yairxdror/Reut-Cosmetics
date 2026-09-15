@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { useLanguage, type TranslationKey } from "@/context/LanguageContext";
 import { useAdmin } from "@/context/AdminContext";
+import { clearAdminToken } from "@/lib/adminAuth";
 
 const NAV_ITEMS: { href: string; key: TranslationKey }[] = [
   { href: "/faq", key: "faq" },
@@ -58,6 +59,18 @@ export default function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose:
               {t(item.key)}
             </Link>
           ))}
+          {isAdmin && (
+            <button
+              type="button"
+              className="sidebar-link sidebar-link-logout"
+              onClick={() => {
+                clearAdminToken();
+                onClose();
+              }}
+            >
+              {t("logout")}
+            </button>
+          )}
         </nav>
       </aside>
     </>

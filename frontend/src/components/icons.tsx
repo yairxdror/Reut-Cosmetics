@@ -93,6 +93,16 @@ export function DiamondIcon(props: IconProps) {
   );
 }
 
+export function AdminIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <circle cx="9" cy="7" r="3" />
+      <path d="M3 20v-2a6 6 0 0 1 8-5.66" />
+      <path d="m17 12 4 1.5v3c0 2.5-1.7 4.1-4 5.5-2.3-1.4-4-3-4-5.5v-3Z" />
+    </Icon>
+  );
+}
+
 export function ShieldIcon(props: IconProps) {
   return (
     <Icon {...props}>
@@ -368,7 +378,13 @@ export function BookOpenIcon(props: IconProps) {
 export function DropletIcon(props: IconProps) {
   return (
     <Icon {...props}>
-      <path d="M12 4s7.5 6.2 7.5 9.5a7.5 7.5 0 0 1-15 0C4.5 10.2 12 4 12 4z" />
+      <path
+        d="M12 2.75C13.6 5.3 18.75 10.4 18.75 14.25A6.75 6.75 0 0 1 12 21Z"
+        fill="currentColor"
+        fillOpacity="0.55"
+        stroke="none"
+      />
+      <path d="M12 2.75C10.4 5.3 5.25 10.4 5.25 14.25a6.75 6.75 0 0 0 13.5 0C18.75 10.4 13.6 5.3 12 2.75Z" />
     </Icon>
   );
 }

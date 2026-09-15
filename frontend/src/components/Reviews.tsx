@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type FormEvent } from "react";
-import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
 import { useAdmin } from "@/context/AdminContext";
 import {
@@ -406,13 +405,7 @@ export default function Reviews() {
               </div>
 
               {!editingReview && (
-                <div className="privacy-notice review-privacy-notice">
-                  <p>
-                    <Editable contentKey="reviewPrivacyNoticeText">{t("reviewPrivacyNoticeText")}</Editable>
-                  </p>
-                  <Link href="/privacy-policy" onClick={() => setIsModalOpen(false)}>
-                    {t("privacyPolicyLinkLabel")}
-                  </Link>
+                <>
                   <label className="form-checkbox-row">
                     <input
                       type="checkbox"
@@ -427,7 +420,7 @@ export default function Reviews() {
                   {errors.publicationConsent && (
                     <span className="form-error">{errors.publicationConsent}</span>
                   )}
-                </div>
+                </>
               )}
 
               <div className="form-submit-row">

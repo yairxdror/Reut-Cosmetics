@@ -146,6 +146,13 @@ router.post("/", submitLimiter, asyncHandler(async (req, res) => {
     return res.status(400).json({ error: "All health questions must be answered" });
   }
 
+  const missingDetails = YES_NO_QUESTION_IDS.filter((id) =>
+    answers[id] === "yes" && (typeof details?.[id] !== "string" || !details[id].trim())
+  );
+  if (missingDetails.length > 0) {
+    return res.status(400).json({ error: "Details are required for Yes answers", fields: missingDetails });
+  }
+
   if (healthDeclarationConfirmed !== true) {
     return res.status(400).json({ error: "Health declaration must be confirmed" });
   }

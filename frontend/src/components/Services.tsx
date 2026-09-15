@@ -33,7 +33,7 @@ const MAGIC_TRAIL_DESKTOP_PATH =
   "M125 10C90 35 22 47 8 75C-8 110 28 145 76 190C95 208 110 213 135 222C220 303 335 400 430 492C465 530 470 590 440 645C405 705 320 730 220 750C120 770 62 735 62 670C60 590 80 545 120 515C195 458 310 425 430 432C560 430 680 500 785 585C870 655 930 720 995 747";
 
 const MAGIC_TRAIL_MOBILE_PATH =
-  "M306 52C328 61 342 103 337 141C333 176 312 191 289 211C266 232 263 252 259 279C255 308 247 325 225 329C198 333 177 326 158 316C139 306 116 308 99 322C78 340 82 366 103 371C126 376 141 353 130 338C116 318 82 324 57 348C28 376 25 423 29 468C31 486 38 500 52 508C60 514 69 518 80 519";
+  "M240 200C262 222 263 252 259 279C255 308 247 325 225 329C198 333 177 326 158 316C139 306 116 308 99 322C78 340 82 366 103 371C126 376 141 353 130 338C116 318 82 324 57 348C28 376 25 423 29 468C33 496 70 508 110 508C136 508 162 504 180 500";
 
 const DESKTOP_TRAIL_FLARES: MagicTrailFlare[] = [
   { x: 125, y: 10, scale: 0.7, rotation: -10, kind: "sparkle" },
@@ -71,12 +71,9 @@ const DESKTOP_TRAIL_FLARES: MagicTrailFlare[] = [
 ];
 
 const MOBILE_TRAIL_FLARES: MagicTrailFlare[] = [
-  { x: 306, y: 52, scale: 0.64, rotation: -10, kind: "sparkle" },
-  { x: 330, y: 88, scale: 0.34, rotation: 12, kind: "diamond" },
-  { x: 338, y: 139, scale: 0.44, rotation: -8, kind: "star" },
-  { x: 316, y: 184, scale: 0.37, rotation: 16, kind: "sparkle" },
-  { x: 287, y: 212, scale: 0.3, rotation: -5, kind: "diamond" },
-  { x: 266, y: 252, scale: 0.32, rotation: 9, kind: "star" },
+  { x: 240, y: 200, scale: 0.64, rotation: -10, kind: "sparkle" },
+  { x: 254, y: 223, scale: 0.3, rotation: -5, kind: "diamond" },
+  { x: 260, y: 252, scale: 0.32, rotation: 9, kind: "star" },
   { x: 254, y: 304, scale: 0.57, rotation: -12, kind: "sparkle" },
   { x: 224, y: 329, scale: 0.32, rotation: 15, kind: "diamond" },
   { x: 181, y: 320, scale: 0.42, rotation: 4, kind: "star" },
@@ -87,9 +84,10 @@ const MOBILE_TRAIL_FLARES: MagicTrailFlare[] = [
   { x: 48, y: 363, scale: 0.46, rotation: 8, kind: "star" },
   { x: 31, y: 404, scale: 0.34, rotation: 13, kind: "sparkle" },
   { x: 28, y: 449, scale: 0.3, rotation: -8, kind: "diamond" },
-  { x: 36, y: 486, scale: 0.42, rotation: 11, kind: "star" },
-  { x: 52, y: 508, scale: 0.6, rotation: -5, kind: "sparkle" },
-  { x: 72, y: 517, scale: 0.34, rotation: 8, kind: "diamond" },
+  { x: 43, y: 492, scale: 0.42, rotation: 11, kind: "star" },
+  { x: 77, y: 505, scale: 0.6, rotation: -5, kind: "sparkle" },
+  { x: 120, y: 508, scale: 0.34, rotation: 8, kind: "diamond" },
+  { x: 180, y: 500, scale: 0.3, rotation: -8, kind: "star" },
 ];
 
 function MagicTrailGlyph({ kind }: { kind: MagicTrailFlare["kind"] }) {
@@ -323,8 +321,8 @@ function PermanentMakeupMagicTrail() {
         className="service-magic-trail-art service-magic-trail-art-mobile"
         viewBox="0 0 360 520"
         path={MAGIC_TRAIL_MOBILE_PATH}
-        startPoint={[306, 52]}
-        endPoint={[80, 519]}
+        startPoint={[240, 200]}
+        endPoint={[180, 500]}
         startFadeRadius={45}
         endFadeRadius={45}
         flares={MOBILE_TRAIL_FLARES}

@@ -1,14 +1,31 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { submitHealthDeclaration } from "@/lib/api";
 import { isValidIsraeliId, isValidIsraeliPhone } from "@/lib/israeliValidation";
 import { useLanguage } from "@/context/LanguageContext";
 import Editable from "@/components/Editable";
+import { HomeButton } from "@/components/NavControls";
 import type { EditableTextKey } from "@/lib/editableContent";
+import {
+  EMPTY_HEALTH_DECLARATION,
+  useHealthDeclarationDraft,
+  type YesNo,
+} from "@/context/HealthDeclarationDraftContext";
 
-type YesNo = "yes" | "no";
+// Hebrew/English letters, spaces, hyphens and apostrophes (for names like
+// "אל-עלי" or "O'Brien") — strips anything else, digits included, as the
+// user types rather than only flagging it after the fact.
+const NAME_INVALID_CHARS = /[^a-zA-Zא-ת\s'-]/g;
+
+// Digits only — an ID number is never anything else.
+const ID_NUMBER_INVALID_CHARS = /\D/g;
+
+// Digits plus the separators isValidIsraeliPhone already tolerates (spaces
+// and hyphens, e.g. "050-1234567") — everything else, letters included, is
+// stripped as the user types.
+const PHONE_INVALID_CHARS = /[^\d\s-]/g;
 
 interface Question {
   id: string;
@@ -30,6 +47,7 @@ export const QUESTIONS: Question[] = [
 
 const AGREEMENT_PARAGRAPH_KEYS: EditableTextKey[] = [
   "hdAgreement1",
+  "hdAgreementRisks",
   "hdAgreement2",
   "hdAgreement3",
   "hdAgreement4",
@@ -41,33 +59,25 @@ const AGREEMENT_PARAGRAPH_KEYS: EditableTextKey[] = [
   "hdAgreement10",
 ];
 
-interface FormState {
-  fullName: string;
-  idNumber: string;
-  phone: string;
-  answers: Record<string, YesNo | undefined>;
-  details: Record<string, string>;
-  healthDeclarationConfirmed: boolean;
-  agreementAccepted: boolean;
-  privacyConsentAccepted: boolean;
-}
-
-const initialState: FormState = {
-  fullName: "",
-  idNumber: "",
-  phone: "",
-  answers: {},
-  details: {},
-  healthDeclarationConfirmed: false,
-  agreementAccepted: false,
-  privacyConsentAccepted: false,
-};
+const PRIVACY_NOTICE_KEYS: EditableTextKey[] = [
+  "hdPrivacyNotice1",
+  "hdPrivacyNotice2",
+  "hdPrivacyNotice3",
+  "hdPrivacyNotice4",
+];
 
 export default function HealthDeclarationForm() {
   const { t } = useLanguage();
-  const [form, setForm] = useState<FormState>(initialState);
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [form, setForm] = useHealthDeclarationDraft();
+  const [hasSubmitted, setHasSubmitted] = useState(false);
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+
+  // Moves the home button out of the top nav bar and into this screen's own
+  // content (see the success banner below) while it's showing.
+  useEffect(() => {
+    document.documentElement.classList.toggle("hd-success", status === "success");
+    return () => document.documentElement.classList.remove("hd-success");
+  }, [status]);
 
   function setAnswer(questionId: string, value: YesNo) {
     setForm((prev) => ({
@@ -84,26 +94,58 @@ export default function HealthDeclarationForm() {
   function validate(): Record<string, string> {
     const next: Record<string, string> = {};
     if (!form.fullName.trim()) next.fullName = t("hdNameRequired");
+    else if (form.fullName.trim().length < 2) next.fullName = t("hdNameTooShort");
     if (!form.idNumber.trim()) next.idNumber = t("hdIdNumberRequired");
     else if (!isValidIsraeliId(form.idNumber)) next.idNumber = t("hdIdNumberInvalid");
     if (!form.phone.trim()) next.phone = t("hdPhoneRequired");
     else if (!isValidIsraeliPhone(form.phone)) next.phone = t("hdPhoneInvalid");
     for (const q of QUESTIONS) {
       if (!form.answers[q.id]) next[q.id] = t("hdAnswerRequired");
+      if (form.answers[q.id] === "yes" && !form.details[q.id]?.trim()) {
+        next[`detail-${q.id}`] = t("hdDetailRequired");
+      }
     }
     if (!form.healthDeclarationConfirmed) {
-      next.healthDeclarationConfirmation = t("hdAgreementRequired");
+      next.healthDeclarationConfirmation = t("hdConfirmationRequired");
     }
     if (!form.agreementAccepted) next.agreement = t("hdAgreementRequired");
     if (!form.privacyConsentAccepted) next.privacyConsent = t("hdPrivacyConsentRequired");
     return next;
   }
 
-  async function handleSubmit(event: FormEvent) {
+  // Derive errors from the current answers so corrections clear immediately,
+  // including a detail field that disappears when an answer changes to "no".
+  const errors = hasSubmitted ? validate() : {};
+
+  function errorAttributes(key: string) {
+    return {
+      "aria-invalid": Boolean(errors[key]),
+      "aria-describedby": errors[key] ? `${key}-error` : undefined,
+    };
+  }
+
+  function renderError(key: string) {
+    return errors[key] ? (
+      <span id={`${key}-error`} className="form-error" aria-live="polite">
+        {errors[key]}
+      </span>
+    ) : null;
+  }
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const validationErrors = validate();
-    setErrors(validationErrors);
+    setHasSubmitted(true);
     if (Object.keys(validationErrors).length > 0) {
+      const formElement = event.currentTarget;
+      requestAnimationFrame(() => {
+        const firstInvalid = formElement.querySelector<HTMLElement>('[aria-invalid="true"]');
+        if (!firstInvalid) return;
+        firstInvalid.focus({ preventScroll: true });
+        const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+          document.documentElement.classList.contains("a11y-reduce-motion");
+        firstInvalid.scrollIntoView({ block: "center", behavior: reduceMotion ? "instant" : "smooth" });
+      });
       return;
     }
 
@@ -120,8 +162,8 @@ export default function HealthDeclarationForm() {
         privacyConsentAccepted: form.privacyConsentAccepted,
       });
       setStatus("success");
-      setForm(initialState);
-      setErrors({});
+      setForm(EMPTY_HEALTH_DECLARATION);
+      setHasSubmitted(false);
     } catch {
       setStatus("error");
     }
@@ -136,26 +178,24 @@ export default function HealthDeclarationForm() {
         <p>
           <Editable contentKey="hdSuccessText">{t("hdSuccessText")}</Editable>
         </p>
+        <HomeButton />
       </div>
     );
   }
 
   return (
-    <form className="health-form" onSubmit={handleSubmit} noValidate>
-      <aside className="privacy-notice" aria-labelledby="health-privacy-notice-title">
-        <h2 id="health-privacy-notice-title" className="privacy-notice-title">
-          <Editable contentKey="hdPrivacyNoticeTitle">{t("hdPrivacyNoticeTitle")}</Editable>
-        </h2>
-        <p>
-          <Editable contentKey="hdPrivacyNoticeText">{t("hdPrivacyNoticeText")}</Editable>
-        </p>
-        <Link href="/privacy-policy">{t("privacyPolicyLinkLabel")}</Link>
-      </aside>
-
-      <section className="form-section">
-        <h2 className="form-section-title text-gold">
-          <Editable contentKey="hdPersonalTitle">{t("hdPersonalTitle")}</Editable>
-        </h2>
+    <>
+      <h1 className="text-gold" style={{ textAlign: "center" }}>
+        {t("healthDeclaration")}
+      </h1>
+      <p style={{ textAlign: "center" }}>
+        <span className="form-required">*</span> {t("hdRequiredNote")}
+      </p>
+      <form className="health-form" onSubmit={handleSubmit} noValidate>
+        <section className="form-section">
+          <h2 className="form-section-title text-gold">
+            <Editable contentKey="hdPersonalTitle">{t("hdPersonalTitle")}</Editable>
+          </h2>
 
         <div className="form-field">
           <label className="form-label" htmlFor="fullName">
@@ -166,10 +206,15 @@ export default function HealthDeclarationForm() {
             id="fullName"
             className="form-input"
             type="text"
+            autoComplete="name"
+            required
+            {...errorAttributes("fullName")}
             value={form.fullName}
-            onChange={(e) => setForm((prev) => ({ ...prev, fullName: e.target.value }))}
+            onChange={(e) =>
+              setForm((prev) => ({ ...prev, fullName: e.target.value.replace(NAME_INVALID_CHARS, "") }))
+            }
           />
-          {errors.fullName && <span className="form-error">{errors.fullName}</span>}
+          {renderError("fullName")}
         </div>
 
         <div className="form-field">
@@ -182,10 +227,15 @@ export default function HealthDeclarationForm() {
             className="form-input"
             type="text"
             inputMode="numeric"
+            maxLength={9}
+            required
+            {...errorAttributes("idNumber")}
             value={form.idNumber}
-            onChange={(e) => setForm((prev) => ({ ...prev, idNumber: e.target.value }))}
+            onChange={(e) =>
+              setForm((prev) => ({ ...prev, idNumber: e.target.value.replace(ID_NUMBER_INVALID_CHARS, "") }))
+            }
           />
-          {errors.idNumber && <span className="form-error">{errors.idNumber}</span>}
+          {renderError("idNumber")}
         </div>
 
         <div className="form-field">
@@ -197,10 +247,15 @@ export default function HealthDeclarationForm() {
             id="phone"
             className="form-input"
             type="tel"
+            autoComplete="tel"
+            required
+            {...errorAttributes("phone")}
             value={form.phone}
-            onChange={(e) => setForm((prev) => ({ ...prev, phone: e.target.value }))}
+            onChange={(e) =>
+              setForm((prev) => ({ ...prev, phone: e.target.value.replace(PHONE_INVALID_CHARS, "") }))
+            }
           />
-          {errors.phone && <span className="form-error">{errors.phone}</span>}
+          {renderError("phone")}
         </div>
       </section>
 
@@ -209,12 +264,19 @@ export default function HealthDeclarationForm() {
           <Editable contentKey="hdQuestionnaireTitle">{t("hdQuestionnaireTitle")}</Editable>
         </h2>
 
-        {QUESTIONS.map((q) => (
+        {QUESTIONS.map((q, index) => (
           <div className="form-question" key={q.id}>
-            <p className="form-question-text">
-              <Editable contentKey={q.textKey}>{t(q.textKey)}</Editable> <span className="form-required">*</span>
+            <p id={`question-${q.id}`} className="form-question-text">
+              {index + 1}. <Editable contentKey={q.textKey}>{t(q.textKey)}</Editable>{" "}
+              <span className="form-required">*</span>
             </p>
-            <div className="form-radio-group">
+            <div
+              className="form-radio-group"
+              role="group"
+              aria-labelledby={`question-${q.id}`}
+              tabIndex={-1}
+              {...errorAttributes(q.id)}
+            >
               <button
                 type="button"
                 className={`form-radio-pill form-radio-no ${form.answers[q.id] === "no" ? "selected" : ""}`}
@@ -232,20 +294,24 @@ export default function HealthDeclarationForm() {
                 <Editable contentKey="healthFormYes">{t("healthFormYes")}</Editable>
               </button>
             </div>
-            {errors[q.id] && <span className="form-error">{errors[q.id]}</span>}
+            {renderError(q.id)}
 
             {form.answers[q.id] === "yes" && (
               <div className="form-detail-field">
                 <label className="form-label" htmlFor={`detail-${q.id}`}>
-                  <Editable contentKey="hdDetailLabel">{t("hdDetailLabel")}</Editable>
+                  <Editable contentKey="hdDetailLabel">{t("hdDetailLabel")}</Editable>{" "}
+                  <span className="form-required">*</span>
                 </label>
                 <input
                   id={`detail-${q.id}`}
                   className="form-input"
                   type="text"
+                  required
+                  {...errorAttributes(`detail-${q.id}`)}
                   value={form.details[q.id] || ""}
                   onChange={(e) => setDetail(q.id, e.target.value)}
                 />
+                {renderError(`detail-${q.id}`)}
               </div>
             )}
           </div>
@@ -254,6 +320,8 @@ export default function HealthDeclarationForm() {
         <label className="form-checkbox-row">
           <input
             type="checkbox"
+            required
+            {...errorAttributes("healthDeclarationConfirmation")}
             checked={form.healthDeclarationConfirmed}
             onChange={(e) => setForm((prev) => ({ ...prev, healthDeclarationConfirmed: e.target.checked }))}
           />
@@ -262,9 +330,7 @@ export default function HealthDeclarationForm() {
             <span className="form-required">*</span>
           </span>
         </label>
-        {errors.healthDeclarationConfirmation && (
-          <span className="form-error">{errors.healthDeclarationConfirmation}</span>
-        )}
+        {renderError("healthDeclarationConfirmation")}
       </section>
 
       <section className="form-section">
@@ -282,6 +348,8 @@ export default function HealthDeclarationForm() {
         <label className="form-checkbox-row">
           <input
             type="checkbox"
+            required
+            {...errorAttributes("agreement")}
             checked={form.agreementAccepted}
             onChange={(e) => setForm((prev) => ({ ...prev, agreementAccepted: e.target.checked }))}
           />
@@ -290,13 +358,27 @@ export default function HealthDeclarationForm() {
             <span className="form-required">*</span>
           </span>
         </label>
-        {errors.agreement && <span className="form-error">{errors.agreement}</span>}
+        {renderError("agreement")}
       </section>
 
-      <section className="form-section privacy-consent-section">
+      <section className="form-section" aria-labelledby="health-privacy-notice-title">
+        <h2 id="health-privacy-notice-title" className="form-section-title text-gold">
+          <Editable contentKey="hdPrivacyNoticeTitle">{t("hdPrivacyNoticeTitle")}</Editable>
+        </h2>
+        <ul className="form-agreement-box">
+          {PRIVACY_NOTICE_KEYS.map((key) => (
+            <li key={key}>
+              <Editable contentKey={key}>{t(key)}</Editable>
+            </li>
+          ))}
+        </ul>
+        <Link href="/privacy-policy">{t("privacyPolicyLinkLabel")}</Link>
+
         <label className="form-checkbox-row">
           <input
             type="checkbox"
+            required
+            {...errorAttributes("privacyConsent")}
             checked={form.privacyConsentAccepted}
             onChange={(e) => setForm((prev) => ({ ...prev, privacyConsentAccepted: e.target.checked }))}
           />
@@ -305,7 +387,7 @@ export default function HealthDeclarationForm() {
             <span className="form-required">*</span>
           </span>
         </label>
-        {errors.privacyConsent && <span className="form-error">{errors.privacyConsent}</span>}
+        {renderError("privacyConsent")}
       </section>
 
       <div className="form-submit-row">
@@ -314,6 +396,7 @@ export default function HealthDeclarationForm() {
         </button>
         {status === "error" && <span className="form-error">{t("hdSubmitError")}</span>}
       </div>
-    </form>
+      </form>
+    </>
   );
 }

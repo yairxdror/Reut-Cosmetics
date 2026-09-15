@@ -66,8 +66,8 @@ const PANEL_GAP = 12;
 // opens below instead. Doesn't need to be exact: the panel also has its own
 // max-height/overflow safety net for when this estimate runs short.
 const PANEL_HEIGHT_ESTIMATE = 410;
-// The custom scrollbar sits at the page's inline-end edge (left in RTL,
-// right in LTR). Keep that side's rail clear of it with a wider margin.
+// The browser's native scrollbar sits at the page's inline-end edge (left in
+// RTL, right in LTR). Keep that side's rail clear of it with a wider margin.
 const SCROLLBAR_CLEARANCE = 28;
 
 const FONT_CLASSES: Record<FontScale, string | null> = {
@@ -204,8 +204,8 @@ export default function AccessibilityWidget() {
   }, [isOpen]);
 
   useEffect(() => {
-    // Switching language flips text direction, which moves the custom
-    // scrollbar (and its clearance margin) to the other side. LanguageContext
+    // Switching language flips text direction, which moves the scrollbar
+    // (and its clearance margin) to the other side. LanguageContext
     // updates `dir` in its own effect on this same `language` change; since
     // this component sits deeper in the tree, its effects run first, so wait
     // a frame to make sure `dir` has actually been applied before re-reading it.

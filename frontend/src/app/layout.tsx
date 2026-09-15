@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import "./globals.css";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { AdminProvider } from "@/context/AdminContext";
+import { HealthDeclarationDraftProvider } from "@/context/HealthDeclarationDraftContext";
 import { LANGUAGE_COOKIE_NAME, type Language } from "@/lib/language";
 import SiteChrome from "@/components/SiteChrome";
 
@@ -25,7 +26,7 @@ export const metadata: Metadata = {
 
 // viewportFit: "cover" is what makes env(safe-area-inset-*) resolve to real
 // values on notched/rounded-corner phones instead of always being 0 — needed
-// so the custom scrollbar's bottom edge can stay clear of the rounded corner.
+// so fixed/floating UI near the screen edges can stay clear of the notch.
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
@@ -52,7 +53,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className={gveretLevin.variable}>
         <LanguageProvider initialLanguage={initialLanguage}>
           <AdminProvider>
-            <SiteChrome>{children}</SiteChrome>
+            <SiteChrome>
+              <HealthDeclarationDraftProvider>{children}</HealthDeclarationDraftProvider>
+            </SiteChrome>
           </AdminProvider>
         </LanguageProvider>
       </body>

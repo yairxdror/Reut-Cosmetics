@@ -6,6 +6,10 @@ export function isValidIsraeliId(id) {
   if (!/^\d{1,9}$/.test(trimmed)) return false;
 
   const padded = trimmed.padStart(9, "0");
+  // Reject the same digit repeated across the whole number (e.g. 000000000)
+  // — mathematically satisfies the checksum below but is never a real ID.
+  if (/^(\d)\1{8}$/.test(padded)) return false;
+
   let sum = 0;
   for (let i = 0; i < 9; i++) {
     let digit = Number(padded[i]) * ((i % 2) + 1);

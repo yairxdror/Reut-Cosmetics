@@ -109,7 +109,7 @@ export function LanguageButton() {
 export function HomeButton() {
   const router = useRouter();
   return (
-    <button className="btn-glass-thin btn-icon-only" onClick={() => router.push("/")} aria-label="Go home">
+    <button className="btn-glass-thin btn-icon-only home-button" onClick={() => router.push("/")} aria-label="Go home">
       <HomeIcon />
     </button>
   );

@@ -416,22 +416,30 @@ const dictionary: Dictionary = {
   // ---------- Privacy notices at collection points ----------
   privacyPolicyLinkLabel: { he: "למדיניות הפרטיות המלאה", en: "Read the full privacy policy" },
   hdPrivacyNoticeTitle: { he: "פרטיות והסכמה למסירת מידע רפואי", en: "Privacy and Consent to Provide Health Information" },
-  hdPrivacyNoticeText: {
-    he: "המידע בטופס נמסר מרצונך לבעלת השליטה במידע, רעות יעקובי — Reut Cosmetics, ומשמש לבדיקת התאמה ובטיחות לפני טיפול. ללא המידע לא ניתן לבצע את הבדיקה או להעניק טיפול המחייב אותה. תוכן ההצהרה מוצפן ונשמר בתשתיות Google/Firebase עד 7 שנים, ונגיש רק למורשות. ניתן לפנות בטלפון או ב-WhatsApp המופיעים במדיניות לצורך עיון, תיקון או בקשה למחיקה, בכפוף לדין.",
-    en: "The information in this form is provided voluntarily to the data controller, Reut Yakobi — Reut Cosmetics, and is used to assess treatment suitability and safety. Without it, the assessment or a treatment requiring it cannot be provided. Declaration content is encrypted and stored on Google/Firebase infrastructure for up to seven years, with access limited to authorized persons. Use the phone or WhatsApp listed in the policy to request access, correction, or deletion, subject to law.",
+  hdPrivacyNotice1: {
+    he: "המידע בטופס נמסר מרצונך לבעלת השליטה במידע, רעות יעקובי — Reut Cosmetics, ומשמש לבדיקת התאמה ובטיחות לפני טיפול.",
+    en: "The information in this form is provided voluntarily to the data controller, Reut Yakobi — Reut Cosmetics, and is used to assess treatment suitability and safety.",
+  },
+  hdPrivacyNotice2: {
+    he: "ללא המידע לא ניתן לבצע את הבדיקה או להעניק טיפול המחייב אותה.",
+    en: "Without it, the assessment or a treatment requiring it cannot be provided.",
+  },
+  hdPrivacyNotice3: {
+    he: "תוכן ההצהרה מוצפן ונשמר בתשתיות Google/Firebase עד 7 שנים, ונגיש רק למורשות.",
+    en: "Declaration content is encrypted and stored on Google/Firebase infrastructure for up to seven years, with access limited to authorized persons.",
+  },
+  hdPrivacyNotice4: {
+    he: "ניתן לפנות בטלפון או ב-WhatsApp המופיעים במדיניות לצורך עיון, תיקון או בקשה למחיקה, בכפוף לדין.",
+    en: "Use the phone or WhatsApp listed in the policy to request access, correction, or deletion, subject to law.",
   },
   hdPrivacyConsentText: {
-    he: "קראתי את הודעת הפרטיות ואני מסכימה לאיסוף, לשימוש ולאחסון של פרטי הזיהוי והמידע הרפואי שמסרתי למטרות המפורטות בה",
-    en: "I have read the privacy notice and consent to the collection, use, and storage of the identification and health information I provided for the stated purposes",
+    he: "קראתי את הודעת הפרטיות ומסכימה לאיסוף, לשימוש ולאחסון של המידע שמסרתי, כמפורט בה",
+    en: "I have read the privacy notice and consent to the collection, use, and storage of the information I provided, as detailed in it",
   },
   hdPrivacyConsentRequired: { he: "יש לאשר את הודעת הפרטיות כדי להמשיך", en: "You must accept the privacy notice to continue" },
-  reviewPrivacyNoticeText: {
-    he: "השם, הדירוג ותוכן הביקורת יישמרו ויוצגו בפומבי באתר. המסירה היא לבחירתך; ללא הסכמה לפרסום לא ניתן לשלוח ביקורת. ניתן לבקש את הסרתה באמצעות פרטי הקשר שבמדיניות הפרטיות.",
-    en: "Your name, rating, and review text will be stored and displayed publicly on the site. Providing them is optional; without publication consent, the review cannot be submitted. You may request removal using the contact details in the privacy policy.",
-  },
   reviewPublishConsentText: {
-    he: "אני מסכימה לפרסום שמי, הדירוג ותוכן הביקורת באתר",
-    en: "I consent to the publication of my name, rating, and review text on the site",
+    he: "אני מסכימה לפרסום בפומבי את השם שלי, הדירוג ותוכן הביקורת באתר",
+    en: "I consent to the public publication of my name, rating, and review text on the site",
   },
   reviewConsentRequired: { he: "יש לאשר את פרסום הביקורת כדי להמשיך", en: "You must approve publication of the review to continue" },
 
@@ -607,35 +615,35 @@ const dictionary: Dictionary = {
   hdPhoneLabel: { he: "מספר טלפון", en: "Phone Number" },
   hdQuestionnaireTitle: { he: "שאלון בריאות", en: "Health Questionnaire" },
   hdQ1: {
-    he: "האם הינך רגישה לתכשירים קוסמטיים (אלרגיות למשחות/תרופות/חומרים כלשהם)?",
+    he: "האם את רגישה לתכשירים קוסמטיים (אלרגיות למשחות/תרופות/חומרים כלשהם)?",
     en: "Are you sensitive to cosmetic products (allergies to ointments/medications/any substances)?",
   },
   hdQ2: {
-    he: "האם הינך סובלת ממחלת עור/גירוי פצע באזור המיועד לטיפול?",
-    en: "Do you suffer from a skin condition or wound irritation in the area intended for treatment?",
+    he: "האם את סובלת ממחלת עור, גירוי או פצע באזור המיועד לטיפול?",
+    en: "Do you have a skin condition, irritation, or a wound in the area intended for treatment?",
   },
   hdQ3: {
-    he: "האם הינך סובלת מריפוי איטי של פצעים/הצטלקותם?",
+    he: "האם את סובלת מריפוי איטי של פצעים/הצטלקותם?",
     en: "Do you suffer from slow wound healing or scarring?",
   },
-  hdQ4: { he: "האם הינך בהריון?", en: "Are you pregnant?" },
+  hdQ4: { he: "האם את בהריון?", en: "Are you pregnant?" },
   hdQ5: {
-    he: "האם הינך נוטלת תרופות באופן קבוע ו/או כדורים לדילול דם?",
+    he: "האם את נוטלת תרופות באופן קבוע ו/או כדורים לדילול דם?",
     en: "Do you regularly take medication and/or blood-thinning pills?",
   },
   hdQ6: {
-    he: "האם הינך כעת תחת השפעת אלכוהול/סמים/סמים עם מרשם רופא?",
+    he: "האם את כעת תחת השפעת אלכוהול/סמים/סמים עם מרשם רופא?",
     en: "Are you currently under the influence of alcohol, drugs, or prescription medication?",
   },
   hdQ7: { he: "האם קיים אצלך חוסר באנזים (G6PD)?", en: "Do you have a G6PD enzyme deficiency?" },
   hdQ8: {
-    he: "האם הינך סובלת ממחלת עור מסוג סבוריאה/אקזמה/פסוריאזיס במקום המיועד לטיפול?",
+    he: "האם את סובלת ממחלת עור מסוג סבוריאה/אקזמה/פסוריאזיס במקום המיועד לטיפול?",
     en: "Do you suffer from a skin condition such as seborrhea, eczema, or psoriasis at the site intended for treatment?",
   },
-  hdQ9: { he: "האם הינך נוטלת כדורים מסוג רקוטאן?", en: "Are you taking Roaccutane-type medication?" },
+  hdQ9: { he: "האם את נוטלת כדורים מסוג רקוטאן?", en: "Are you taking Roaccutane-type medication?" },
   hdQ10: {
-    he: "האם הינך לוקחת הורמונים באופן קבוע או בזמן טיפול פוריות IVF?",
-    en: "Are you regularly taking hormones, or currently undergoing IVF fertility treatment?",
+    he: "האם את לוקחת הורמונים באופן קבוע או בזמן טיפול פוריות IVF?",
+    en: "Are you taking hormones regularly or as part of IVF fertility treatment?",
   },
   healthFormYes: { he: "כן", en: "Yes" },
   healthFormNo: { he: "לא", en: "No" },
@@ -667,7 +675,7 @@ const dictionary: Dictionary = {
     en: "I understand that cancellations and refunds are handled under applicable law and the circumstances of the transaction. If cancellation occurs after service has begun, I may be charged for the portion actually provided and any cancellation fee permitted by law, without limiting my rights in the event of a defect, non-conformity, or breach of duty.",
   },
   hdAgreement6: {
-    he: "אני מבינה את חשיבות מסירת כל המידע הנוגע לי לפני תחילת העבודה וברור לי שהסתרת כל מידע רלוונטי הנוגע אלי עלול לפגוע בתוצאה הסופית ואף לסכן את בריאותי.",
+    he: "אני מבינה את חשיבות מסירת כל המידע הנוגע לי לפני תחילת העבודה וברור לי שהסתרת מידע רלוונטי הנוגע אלי עלולה לפגוע בתוצאה הסופית ואף לסכן את בריאותי.",
     en: "I understand the importance of disclosing all information relevant to me before work begins, and I understand that withholding any relevant information about myself may harm the final result and even endanger my health.",
   },
   hdAgreement7: {
@@ -686,26 +694,37 @@ const dictionary: Dictionary = {
     he: "אלא אם הוסכם אחרת בכתב, מלוא מחיר חבילת שני המפגשים ישולם מראש בהתאם להצעה שנמסרה לי.",
     en: "Unless otherwise agreed in writing, the full price of the two-session package will be paid in advance according to the quote provided to me.",
   },
+  // Risk information: https://www.fda.gov/consumers/consumer-updates/think-you-ink-tattoo-safety
+  hdAgreementRisks: {
+    he: "אני מבינה כי איפור קבוע כרוך בהחדרת פיגמנט לעור. לאחר הטיפול עשויים להופיע אדמומיות, נפיחות ואי־נוחות באזור. סיכונים אפשריים כוללים זיהום, תגובה אלרגית לפיגמנט והצטלקות, לרבות צלקות בולטות. תגובות עלולות להופיע סמוך לטיפול או בשלב מאוחר יותר. במקרה של פריחה, חום או אזור שאינו מחלים, יש לפנות לרופא ולעדכן את המטפלת; פנייה למטפלת אינה מחליפה בדיקה רפואית. לפני מתן הסכמתי אוכל לשאול שאלות ולקבל הסבר על הסיכונים ועל התאמת הטיפול למצבי.",
+    en: "I understand that permanent makeup involves inserting pigment into the skin. Redness, swelling, and discomfort may occur in the treated area. Possible risks include infection, an allergic reaction to the pigment, and scarring, including raised scars. Reactions may occur soon after treatment or later. If a rash, fever, or failure to heal occurs, I should seek medical advice and inform the practitioner; contacting the practitioner does not replace a medical assessment. Before giving consent, I can ask questions and receive an explanation of the risks and whether the treatment is suitable for me.",
+  },
   hdAgreementCheckboxText: {
     he: "אני מאשרת שקראתי ואני מסכימה להסכם זה",
     en: "I confirm that I have read and agree to this agreement",
   },
-  hdSubmit: { he: "שליחת הטופס", en: "Submit Form" },
-  hdSuccessTitle: { he: "הטופס נשלח בהצלחה", en: "Form Submitted Successfully" },
+  hdSubmit: { he: "שליחת הצהרת הבריאות", en: "Submit Health Declaration" },
+  hdSuccessTitle: { he: "תודה שמילאת את הצהרת הבריאות.", en: "Thank you for completing the health declaration." },
   hdSuccessText: {
-    he: "תודה שמילאת את הצהרת הבריאות. הפרטים התקבלו אצלנו.",
-    en: "Thank you for completing the health declaration. Your details have been received.",
+    he: "הפרטים נשמרו וייבדקו על ידי רעות לפני הטיפול, אם יידרש בירור נוסף ניצור איתך קשר.",
+    en: "Your details have been saved and will be reviewed by Reut before your treatment, and we'll contact you if anything needs clarification.",
   },
   hdRequiredNote: {
     he: "שאלות המסומנות בכוכבית אדומה הן שאלות חובה.",
     en: "Questions marked with a red asterisk are required.",
   },
   hdNameRequired: { he: "יש למלא שם מלא", en: "Full name is required" },
+  hdNameTooShort: { he: "השם חייב לכלול לפחות 2 אותיות", en: "Name must be at least 2 letters" },
   hdIdNumberRequired: { he: "יש למלא מספר תעודת זהות", en: "ID number is required" },
   hdIdNumberInvalid: { he: "מספר תעודת הזהות אינו תקין", en: "ID number is invalid" },
   hdPhoneRequired: { he: "יש למלא מספר טלפון", en: "Phone number is required" },
   hdPhoneInvalid: { he: "מספר הטלפון אינו תקין", en: "Phone number is invalid" },
   hdAnswerRequired: { he: "יש לבחור תשובה", en: "Please select an answer" },
+  hdDetailRequired: { he: "בחרת כן — יש למלא פירוט", en: "You selected Yes — please provide details" },
+  hdConfirmationRequired: {
+    he: "יש לאשר שתשובותייך בהצהרת הבריאות נכונות ומלאות",
+    en: "Please confirm that your health declaration answers are true and complete",
+  },
   hdAgreementRequired: { he: "יש לאשר את ההסכם כדי להמשיך", en: "You must accept the agreement to continue" },
   hdSubmitting: { he: "שולח...", en: "Sending..." },
   hdSubmitError: {
