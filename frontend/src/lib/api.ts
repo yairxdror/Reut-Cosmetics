@@ -138,9 +138,12 @@ export async function deleteReview(token: string, id: number): Promise<void> {
   }
 }
 
+export type LegalPage = "privacyPolicy" | "terms" | "accessibility";
+
 export interface SiteContent {
   text: Record<string, { he: string; en: string }>;
   images: Record<string, string>;
+  pageLastUpdated?: Partial<Record<LegalPage, string>>;
 }
 
 export async function fetchSiteContent(): Promise<SiteContent> {
@@ -155,7 +158,7 @@ export async function updateContentText(
   token: string,
   key: string,
   payload: { he: string; en: string }
-): Promise<{ key: string; he: string; en: string }> {
+): Promise<{ key: string; he: string; en: string; page?: LegalPage; pageLastUpdated?: string }> {
   const res = await fetch(`${API_BASE_URL}/api/content/text/${key}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },

@@ -34,6 +34,7 @@ export default function SiteChrome({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     function blockImageContextMenu(event: MouseEvent) {
+      if (!document.documentElement.classList.contains("no-select")) return;
       const target = event.target as HTMLElement;
       if (target.closest("img, svg, picture")) {
         event.preventDefault();

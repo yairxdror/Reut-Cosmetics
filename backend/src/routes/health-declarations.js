@@ -63,6 +63,19 @@ export function decryptSubmission(record) {
   return { id: record.id, submittedAt: record.submittedAt, ...JSON.parse(plaintext) };
 }
 
+// A record that was encrypted under a since-rotated HEALTH_DATA_ENCRYPTION_KEY
+// fails AES-GCM's auth-tag check here. Isolate that per record — one
+// undecryptable submission must not 500 the whole admin list and hide every
+// other (readable) one along with it.
+function safeDecryptSubmission(record) {
+  try {
+    return decryptSubmission(record);
+  } catch (err) {
+    console.error(`Failed to decrypt health declaration ${record.id}:`, err.message);
+    return null;
+  }
+}
+
 const RETENTION_YEARS = 7;
 
 // This request-level sweep complements the startup/daily sweep and Firestore
@@ -81,7 +94,7 @@ router.get("/", requireAdmin, asyncHandler(async (req, res) => {
 
   const submissions = await listHealthDeclarations();
   const sorted = [...submissions].sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
-  const decrypted = sorted.map(decryptSubmission);
+  const decrypted = sorted.map(safeDecryptSubmission).filter((s) => s !== null);
 
   // Names are only ever available in plaintext after decryption, so the
   // search necessarily happens post-decrypt rather than against the stored

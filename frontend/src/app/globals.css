@@ -27,10 +27,12 @@ body {
   overflow-x: hidden;
 }
 
-/* Site-wide: no selecting/copying text or images, on desktop or mobile.
+/* Site-wide: no selecting/copying text or images, on desktop or mobile —
+   production only (see layout.tsx's `no-select` class), so a developer
+   running the site locally can still select and copy text as normal.
    Form controls are explicitly exempted below — without that, typing and
    editing (including the admin edit popovers) would break. */
-html {
+html.no-select {
   -webkit-user-select: none;
   -moz-user-select: none;
   user-select: none;
@@ -44,9 +46,9 @@ textarea,
   user-select: text;
 }
 
-img,
-picture,
-svg {
+html.no-select img,
+html.no-select picture,
+html.no-select svg {
   -webkit-user-drag: none;
   user-drag: none;
   -webkit-touch-callout: none;
@@ -3707,6 +3709,10 @@ html[dir="rtl"] input.consultation-input[type="tel"] {
   color: #8a6414;
   font-weight: 700;
   text-underline-offset: 0.2em;
+}
+
+.care-instructions .form-section a.text-gold {
+  color: var(--color-gold);
 }
 
 .care-warning {

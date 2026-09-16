@@ -3,12 +3,18 @@
 import { useLanguage } from "@/context/LanguageContext";
 import Editable from "@/components/Editable";
 import type { EditableTextKey } from "@/lib/editableContent";
-import { PHONE_TEL_URL } from "@/lib/contact";
+import { whatsappUrl } from "@/lib/contact";
+import { formatLegalDate } from "@/lib/legalDate";
 
 const MEASURE_KEYS: EditableTextKey[] = ["asMeasure1", "asMeasure2", "asMeasure3", "asMeasure4", "asMeasure5"];
 
+// Shown until the first admin edit ever sets a server-computed date (see
+// backend/src/routes/content.js's pageLastUpdated logic).
+const FALLBACK_LAST_UPDATED = "2026-09-16T00:00:00.000Z";
+
 export default function AccessibilityStatement() {
-  const { t } = useLanguage();
+  const { t, getPageLastUpdated } = useLanguage();
+  const lastUpdated = getPageLastUpdated("accessibility") ?? FALLBACK_LAST_UPDATED;
 
   return (
     <div className="care-instructions">
@@ -36,6 +42,15 @@ export default function AccessibilityStatement() {
 
       <section className="form-section">
         <h2 className="form-section-title text-gold">
+          <Editable contentKey="asUsageTitle">{t("asUsageTitle")}</Editable>
+        </h2>
+        <p>
+          <Editable contentKey="asUsageText">{t("asUsageText")}</Editable>
+        </p>
+      </section>
+
+      <section className="form-section">
+        <h2 className="form-section-title text-gold">
           <Editable contentKey="asLevelTitle">{t("asLevelTitle")}</Editable>
         </h2>
         <p>
@@ -57,18 +72,33 @@ export default function AccessibilityStatement() {
           <Editable contentKey="asContactTitle">{t("asContactTitle")}</Editable>
         </h2>
         <p>
-          <Editable contentKey="asContactIntro">{t("asContactIntro")}</Editable>
-        </p>
-        <p>
-          <Editable contentKey="legalPhoneLabel">{t("legalPhoneLabel")}</Editable>{" "}
-          <a href={PHONE_TEL_URL}>
-            <Editable contentKey="phoneDisplayNumber">{t("phoneDisplayNumber")}</Editable>
+          <Editable contentKey="asContactIntroBefore">{t("asContactIntroBefore")}</Editable>
+          <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="text-gold">
+            WhatsApp
           </a>
-          <br />
-          <Editable contentKey="asEmailLabel">{t("asEmailLabel")}</Editable>{" "}
-          <a href="mailto:codedly.il@gmail.com">
+          <Editable contentKey="asContactIntroAfter">{t("asContactIntroAfter")}</Editable>
+          <a href="mailto:codedly.il@gmail.com" className="text-gold">
             <Editable contentKey="asCoordinatorEmail">{t("asCoordinatorEmail")}</Editable>
           </a>
+        </p>
+        <p>
+          <Editable contentKey="asContactDetails">{t("asContactDetails")}</Editable>
+        </p>
+        <p>
+          <Editable contentKey="asContactResponse">{t("asContactResponse")}</Editable>
+        </p>
+      </section>
+
+      <section className="form-section">
+        <h2 className="form-section-title text-gold">
+          <Editable contentKey="asVisitTitle">{t("asVisitTitle")}</Editable>
+        </h2>
+        <p>
+          <Editable contentKey="asVisitTextBefore">{t("asVisitTextBefore")}</Editable>
+          <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="text-gold">
+            WhatsApp
+          </a>
+          <Editable contentKey="asVisitTextAfter">{t("asVisitTextAfter")}</Editable>
         </p>
       </section>
 
@@ -79,10 +109,15 @@ export default function AccessibilityStatement() {
         <p>
           <Editable contentKey="asComplaintsText">{t("asComplaintsText")}</Editable>
         </p>
+        <p>
+          <a href="https://www.gov.il/he/service/complaint_discrimination_inaccessibility_people_with_disabilities" target="_blank" rel="noopener noreferrer">
+            <Editable contentKey="asComplaintsLink">{t("asComplaintsLink")}</Editable>
+          </a>
+        </p>
       </section>
 
       <p className="accessibility-updated">
-        <Editable contentKey="asLastUpdated">{t("asLastUpdated")}</Editable>
+        {t("asLastUpdatedPrefix")} {formatLegalDate(lastUpdated)}.
       </p>
     </div>
   );

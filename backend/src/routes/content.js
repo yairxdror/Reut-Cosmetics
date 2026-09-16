@@ -13,6 +13,23 @@ const MAX_UPLOAD_SIZE_BYTES = 15 * 1024 * 1024;
 const MAX_IMAGE_DIMENSION = 1920;
 const TARGET_IMAGE_SIZE_BYTES = 850 * 1024;
 
+// The three legal pages whose "last updated" date is server-computed rather
+// than admin-typed (see PUT /text/:key below) — every one of their editable
+// keys follows this prefix, a convention that already holds with zero
+// exceptions across the whole content key list.
+const LEGAL_PAGE_KEY_PREFIXES = {
+  pp: "privacyPolicy",
+  tou: "terms",
+  as: "accessibility",
+};
+
+function getLegalPageForKey(key) {
+  for (const [prefix, page] of Object.entries(LEGAL_PAGE_KEY_PREFIXES)) {
+    if (key.startsWith(prefix)) return page;
+  }
+  return null;
+}
+
 // Keep in sync with frontend/src/lib/editableContent.ts. A key added on the
 // frontend without a matching addition here fails at click-time with a 400
 // rather than at compile time, since there's no package shared between the
@@ -56,6 +73,7 @@ const ALLOWED_TEXT_KEYS = [
   "instagramHandle",
   "facebookName",
   "phoneDisplayNumber",
+  "whatsappDisplayNumber",
   "whatsappCta",
   "facebookCta",
   "facebookCtaMobile",
@@ -106,8 +124,6 @@ const ALLOWED_TEXT_KEYS = [
   "carePhoneNumber",
   "careSignoff",
   "careSignoffName",
-  "legalPhoneLabel",
-  "legalContactLabel",
   "ppGeneralTitle",
   "ppGeneralText",
   "ppControllerTitle",
@@ -141,7 +157,6 @@ const ALLOWED_TEXT_KEYS = [
   "ppContactIntro",
   "ppUpdatesTitle",
   "ppUpdatesText",
-  "ppLastUpdated",
   "hdPrivacyNoticeTitle",
   "hdPrivacyNotice1",
   "hdPrivacyNotice2",
@@ -168,6 +183,20 @@ const ALLOWED_TEXT_KEYS = [
   "touPayment6",
   "touPayment7",
   "touPayment8",
+  "touSchedulingTitle",
+  "touSchedulingText",
+  "touCancellationTitle",
+  "touCancellationNotice",
+  "touCancellationReceipt",
+  "touBusinessCancellationTitle",
+  "touBusinessAppointment",
+  "touBusinessSuitability",
+  "touBusinessSecondSession",
+  "touBusinessCourse",
+  "touBusinessRefund",
+  "touCoursesTitle",
+  "touCoursesDetails",
+  "touCoursesLink",
   "touReviewsTitle",
   "touReviewsText",
   "touPrivacyTitle",
@@ -185,8 +214,8 @@ const ALLOWED_TEXT_KEYS = [
   "touSeverabilityTitle",
   "touSeverabilityText",
   "touContactTitle",
-  "touContactIntro",
-  "touLastUpdated",
+  "touContactIntroBefore",
+  "touContactIntroAfter",
   "asCommitmentTitle",
   "asCommitmentText",
   "asMeasuresTitle",
@@ -200,12 +229,19 @@ const ALLOWED_TEXT_KEYS = [
   "asLimitationsTitle",
   "asLimitationsText",
   "asContactTitle",
-  "asContactIntro",
-  "asEmailLabel",
+  "asContactIntroBefore",
+  "asContactIntroAfter",
   "asCoordinatorEmail",
   "asComplaintsTitle",
   "asComplaintsText",
-  "asLastUpdated",
+  "asUsageTitle",
+  "asUsageText",
+  "asContactDetails",
+  "asContactResponse",
+  "asVisitTitle",
+  "asVisitTextBefore",
+  "asVisitTextAfter",
+  "asComplaintsLink",
   "hdPersonalTitle",
   "hdFullNameLabel",
   "hdIdNumberLabel",
@@ -342,9 +378,22 @@ router.put("/text/:key", requireAdmin, asyncHandler(async (req, res) => {
   const content = await getContent();
   content.text ||= {};
   content.text[key] = { he: trimmedHe, en: trimmedEn };
+
+  // Editing any part of a legal page silently refreshes that page's own
+  // "last updated" date to now — the date is no longer something the admin
+  // types by hand (see the removed ppLastUpdated/touLastUpdated/
+  // asLastUpdated entries above).
+  let pageLastUpdated;
+  const page = getLegalPageForKey(key);
+  if (page) {
+    content.pageLastUpdated ||= {};
+    pageLastUpdated = new Date().toISOString();
+    content.pageLastUpdated[page] = pageLastUpdated;
+  }
+
   await saveContent(content);
 
-  res.json({ key, he: trimmedHe, en: trimmedEn });
+  res.json({ key, he: trimmedHe, en: trimmedEn, page: page || undefined, pageLastUpdated });
 }));
 
 router.put(

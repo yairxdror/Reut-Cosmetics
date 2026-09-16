@@ -1,9 +1,14 @@
 "use client";
 
-import { PHONE_TEL_URL } from "@/lib/contact";
+import { whatsappUrl } from "@/lib/contact";
 import { useLanguage } from "@/context/LanguageContext";
 import Editable from "@/components/Editable";
 import type { EditableTextKey } from "@/lib/editableContent";
+import { formatLegalDate } from "@/lib/legalDate";
+
+// Shown until the first admin edit ever sets a server-computed date (see
+// backend/src/routes/content.js's pageLastUpdated logic).
+const FALLBACK_LAST_UPDATED = "2026-09-02T00:00:00.000Z";
 
 const DATA_ITEM_KEYS: EditableTextKey[] = [
   "ppDataItem1",
@@ -21,7 +26,8 @@ const SENSITIVE_ITEM_KEYS: EditableTextKey[] = [
 ];
 
 export default function PrivacyPolicy() {
-  const { t } = useLanguage();
+  const { t, getPageLastUpdated } = useLanguage();
+  const lastUpdated = getPageLastUpdated("privacyPolicy") ?? FALLBACK_LAST_UPDATED;
 
   return (
     <div className="care-instructions">
@@ -40,8 +46,8 @@ export default function PrivacyPolicy() {
         </h2>
         <p className="legal-contact-line">
           <Editable contentKey="ppControllerText">{t("ppControllerText")}</Editable>{" "}
-          <a href={PHONE_TEL_URL}>
-            <Editable contentKey="phoneDisplayNumber">{t("phoneDisplayNumber")}</Editable>
+          <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer">
+            WhatsApp
           </a>
         </p>
       </section>
@@ -143,17 +149,16 @@ export default function PrivacyPolicy() {
           <Editable contentKey="ppContactTitle">{t("ppContactTitle")}</Editable>
         </h2>
         <p className="legal-contact-line">
-          <Editable contentKey="ppContactIntro">{t("ppContactIntro")}</Editable>{" "}
-          <Editable contentKey="legalContactLabel">{t("legalContactLabel")}</Editable>
+          <Editable contentKey="ppContactIntro">{t("ppContactIntro")}</Editable>
           <br />
-          <a href={PHONE_TEL_URL}>
-            <Editable contentKey="phoneDisplayNumber">{t("phoneDisplayNumber")}</Editable>
+          <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer">
+            WhatsApp
           </a>
         </p>
       </section>
 
       <p className="accessibility-updated">
-        <Editable contentKey="ppLastUpdated">{t("ppLastUpdated")}</Editable>
+        {t("ppLastUpdatedPrefix")} {formatLegalDate(lastUpdated)}.
       </p>
     </div>
   );

@@ -78,7 +78,7 @@ export default function Footer() {
               <WhatsAppIcon size={16} />
             </span>
             <span className="footer-social-caption">
-              <Editable contentKey="phoneDisplayNumber">{t("phoneDisplayNumber")}</Editable>
+              <Editable contentKey="whatsappDisplayNumber">{t("whatsappDisplayNumber")}</Editable>
             </span>
           </a>
         </div>

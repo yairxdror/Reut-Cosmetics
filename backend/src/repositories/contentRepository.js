@@ -7,7 +7,7 @@ import { readJsonFile, writeJsonFile } from "../services/jsonFileStore.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_FILE = path.join(__dirname, "..", "data", "content.json");
 const FIRESTORE_DOCUMENT = "site/content";
-const EMPTY_CONTENT = { text: {}, images: {} };
+const EMPTY_CONTENT = { text: {}, images: {}, pageLastUpdated: {} };
 
 export async function getContent() {
   if (!isFirebaseBackendEnabled()) {

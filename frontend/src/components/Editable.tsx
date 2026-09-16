@@ -28,7 +28,7 @@ export default function Editable({
   interceptAncestorClick?: boolean;
 }) {
   const { isAdmin, isEditMode } = useAdmin();
-  const { t, getTextPair, applyTextOverride } = useLanguage();
+  const { t, getTextPair, applyTextOverride, applyPageLastUpdated } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [he, setHe] = useState("");
   const [en, setEn] = useState("");
@@ -68,8 +68,11 @@ export default function Editable({
 
     setStatus("submitting");
     try {
-      await updateContentText(token, contentKey, { he: trimmedHe, en: trimmedEn });
+      const result = await updateContentText(token, contentKey, { he: trimmedHe, en: trimmedEn });
       applyTextOverride(contentKey, trimmedHe, trimmedEn);
+      if (result.page && result.pageLastUpdated) {
+        applyPageLastUpdated(result.page, result.pageLastUpdated);
+      }
       setIsOpen(false);
     } catch (err) {
       setStatus("idle");

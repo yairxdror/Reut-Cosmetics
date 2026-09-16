@@ -40,6 +40,11 @@ export const viewport: Viewport = {
 const isStaticExport =
   process.env.GITHUB_PAGES === "true" || process.env.FIREBASE_HOSTING === "true";
 
+// Text/image selection and copying is blocked site-wide (see globals.css'
+// .no-select rules), but only on real production builds — a developer
+// running the site locally still needs to select and copy text.
+const isProduction = process.env.NODE_ENV === "production";
+
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   let initialLanguage: Language = "he";
   if (!isStaticExport) {
@@ -49,7 +54,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   }
 
   return (
-    <html lang={initialLanguage} dir={initialLanguage === "he" ? "rtl" : "ltr"}>
+    <html
+      lang={initialLanguage}
+      dir={initialLanguage === "he" ? "rtl" : "ltr"}
+      className={isProduction ? "no-select" : undefined}
+    >
       <body className={gveretLevin.variable}>
         <LanguageProvider initialLanguage={initialLanguage}>
           <AdminProvider>
