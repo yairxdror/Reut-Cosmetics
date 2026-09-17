@@ -435,8 +435,8 @@ const dictionary: Dictionary = {
   },
   hdPrivacyConsentRequired: { he: "יש לאשר את הודעת הפרטיות כדי להמשיך", en: "You must accept the privacy notice to continue" },
   reviewPublishConsentText: {
-    he: "אני מסכימה לפרסום בפומבי את השם שלי, הדירוג ותוכן הביקורת באתר",
-    en: "I consent to the public publication of my name, rating, and review text on the site",
+    he: "אני מסכימה ששמי, הדירוג ותוכן הביקורת שלי יפורסמו באתר ויהיו גלויים לציבור.",
+    en: "I agree that my name, rating, and review text will be published on the site and visible to the public.",
   },
   reviewConsentRequired: { he: "יש לאשר את פרסום הביקורת כדי להמשיך", en: "You must approve publication of the review to continue" },
 

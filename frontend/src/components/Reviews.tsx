@@ -8,6 +8,7 @@ import {
   fetchReviews,
   submitReview,
   updateReview,
+  AlreadyDeletedError,
   EditNotAllowedError,
   RateLimitError,
   UnauthorizedError,
@@ -80,6 +81,7 @@ export default function Reviews() {
   }>({});
   const [status, setStatus] = useState<"idle" | "submitting">("idle");
   const [moderationError, setModerationError] = useState("");
+  const [deletingIds, setDeletingIds] = useState<Set<number>>(new Set());
   const [editingReview, setEditingReview] = useState<Review | null>(null);
   const [now, setNow] = useState(() => Date.now());
   const gridRef = useRef<HTMLDivElement>(null);
@@ -187,6 +189,7 @@ export default function Reviews() {
   }
 
   async function handleAdminDelete(review: Review) {
+    if (deletingIds.has(review.id)) return; // already in flight — ignore a rapid re-click
     if (!window.confirm(t("reviewDeleteConfirm"))) return;
     const token = getAdminToken();
     if (!token) {
@@ -195,12 +198,29 @@ export default function Reviews() {
     }
 
     setModerationError("");
+    setDeletingIds((prev) => new Set(prev).add(review.id));
     try {
       await deleteReview(token, review.id);
       setReviews((prev) => prev.filter((item) => item.id !== review.id));
     } catch (error) {
-      if (error instanceof UnauthorizedError) clearAdminToken();
-      setModerationError(t("reviewDeleteError"));
+      if (error instanceof UnauthorizedError) {
+        clearAdminToken();
+        setModerationError(t("reviewDeleteError"));
+      } else if (error instanceof AlreadyDeletedError) {
+        // The end state the admin wanted — this review being gone — is
+        // already true (e.g. deleted moments earlier from another tab or
+        // a rapid double-click). Reflect that instead of showing a scary
+        // "couldn't delete" error for something that isn't actually wrong.
+        setReviews((prev) => prev.filter((item) => item.id !== review.id));
+      } else {
+        setModerationError(t("reviewDeleteError"));
+      }
+    } finally {
+      setDeletingIds((prev) => {
+        const next = new Set(prev);
+        next.delete(review.id);
+        return next;
+      });
     }
   }
 
@@ -319,6 +339,7 @@ export default function Reviews() {
                       type="button"
                       className="review-edit-btn review-delete-btn"
                       onClick={() => handleAdminDelete(review)}
+                      disabled={deletingIds.has(review.id)}
                       aria-label={t("reviewDeleteButton")}
                     >
                       ✕
@@ -340,7 +361,7 @@ export default function Reviews() {
             aria-label={editingReview ? t("reviewEditFormTitle") : t("reviewFormTitle")}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="sidebar-header">
+            <div className="sidebar-header sidebar-header-centered">
               <h2 className="text-gold" style={{ margin: 0 }}>
                 {editingReview ? t("reviewEditFormTitle") : t("reviewFormTitle")}
               </h2>
@@ -406,7 +427,7 @@ export default function Reviews() {
 
               {!editingReview && (
                 <>
-                  <label className="form-checkbox-row">
+                  <div className="form-checkbox-row">
                     <input
                       type="checkbox"
                       checked={publicationConsent}
@@ -416,7 +437,7 @@ export default function Reviews() {
                       <Editable contentKey="reviewPublishConsentText">{t("reviewPublishConsentText")}</Editable>{" "}
                       <span className="form-required">*</span>
                     </span>
-                  </label>
+                  </div>
                   {errors.publicationConsent && (
                     <span className="form-error">{errors.publicationConsent}</span>
                   )}

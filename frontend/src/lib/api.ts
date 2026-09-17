@@ -125,6 +125,12 @@ export async function updateReview(
   return res.json();
 }
 
+// Thrown when the review is already gone (e.g. an admin double-clicked
+// delete, or deleted it from another tab moments earlier) — the caller
+// treats this as success rather than a real failure, since the end state
+// the admin wanted (the review being gone) is already true.
+export class AlreadyDeletedError extends Error {}
+
 export async function deleteReview(token: string, id: number): Promise<void> {
   const res = await fetch(`${API_BASE_URL}/api/reviews/${id}`, {
     method: "DELETE",
@@ -132,6 +138,9 @@ export async function deleteReview(token: string, id: number): Promise<void> {
   });
   if (res.status === 401 || res.status === 403) {
     throw new UnauthorizedError("Not authorized");
+  }
+  if (res.status === 404) {
+    throw new AlreadyDeletedError("Review already deleted");
   }
   if (!res.ok) {
     throw new Error(`Failed to delete review: ${res.status}`);

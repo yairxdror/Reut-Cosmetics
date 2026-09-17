@@ -1115,9 +1115,18 @@ html.a11y-grayscale {
   flex-shrink: 0;
 }
 
+.sidebar-header-centered {
+  position: relative;
+}
+
 .sidebar-header-centered h2 {
   flex: 1;
   text-align: center;
+}
+
+.sidebar-header-centered button {
+  position: absolute;
+  inset-inline-end: 0;
 }
 
 /* Scoped to the nav sidebar specifically (not every .sidebar-header — the
@@ -1707,11 +1716,6 @@ html.hd-success .nav-bar-side .home-button {
 }
 
 .service-card-permanent {
-  --magic-trail-dash-offset: 0px;
-  --magic-trail-dash-offset-inner: 0px;
-  --magic-trail-dash-offset-outer: 0px;
-  --magic-trail-angle: 0deg;
-  --magic-trail-counter-angle: 0deg;
   position: relative;
   isolation: isolate;
   overflow: visible;
@@ -1861,151 +1865,55 @@ html.hd-success .nav-bar-side .home-button {
   pointer-events: none;
 }
 
-.service-magic-trail-art {
-  display: block;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
+/* Trail artwork: pre-made images (design assets), positioned to fill the
+   .service-magic-trail wrapper. The desktop and mobile versions are two
+   different image assets (different aspect ratios), swapped at 860px. */
+.service-magic-trail-desktop,
+.service-magic-trail-mobile {
+  object-fit: contain;
+  pointer-events: none;
+  animation: magicTrailFloat 8s ease-in-out infinite;
 }
 
-.service-magic-trail-art-mobile {
+.service-magic-trail-desktop {
+  object-position: center 70%;
+}
+
+.service-magic-trail-mobile {
   display: none;
+  object-position: center;
+  scale: 0.6;
+  translate: 25% 0;
 }
 
-.service-magic-trail-glow,
-.service-magic-trail-stream {
-  fill: none;
-  vector-effect: non-scaling-stroke;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+@keyframes magicTrailFloat {
+  0%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -4px, 0);
+  }
 }
 
-.service-magic-trail-glow-wide {
-  stroke: rgba(223, 173, 53, 0.13);
-  stroke-width: 54px;
-  filter: blur(17px);
-}
-
-.service-magic-trail-glow-core {
-  stroke: rgba(240, 207, 112, 0.19);
-  stroke-width: 18px;
-  filter: blur(6px);
-}
-
-.service-magic-trail-stream {
-  stroke-dashoffset: var(--magic-trail-dash-offset);
-  will-change: stroke-dashoffset;
-}
-
-.service-magic-trail-stream-scatter {
-  stroke-width: 1.8px;
-  opacity: 0.56;
-}
-
-.service-magic-trail-stream-scatter-a {
-  stroke: rgba(223, 173, 53, 0.7);
-  stroke-dasharray: 0.5 8 1.2 13 2.2 22;
-  stroke-dashoffset: var(--magic-trail-dash-offset-inner);
-}
-
-.service-magic-trail-stream-scatter-b {
-  stroke: rgba(240, 207, 112, 0.8);
-  stroke-dasharray: 0.6 11 1.8 18 0.8 9 2.6 29;
-  stroke-dashoffset: var(--magic-trail-dash-offset-inner);
-}
-
-.service-magic-trail-stream-scatter-c {
-  stroke: rgba(197, 138, 22, 0.54);
-  stroke-width: 1.45px;
-  stroke-dasharray: 0.5 14 1.2 20 2 34;
-  stroke-dashoffset: var(--magic-trail-dash-offset-outer);
-  opacity: 0.46;
-}
-
-.service-magic-trail-stream-scatter-d {
-  stroke: rgba(255, 240, 173, 0.76);
-  stroke-width: 1.55px;
-  stroke-dasharray: 0.6 17 2.2 26 0.8 13 3 38;
-  stroke-dashoffset: var(--magic-trail-dash-offset-outer);
-  opacity: 0.5;
-}
-
-.service-magic-trail-stream-soft {
-  stroke: rgba(240, 207, 112, 0.4);
-  stroke-width: 3.4px;
-  stroke-dasharray: 0.7 12 2.5 18;
-}
-
-.service-magic-trail-stream-dust {
-  stroke: rgba(197, 138, 22, 0.82);
-  stroke-width: 2.8px;
-  stroke-dasharray: 0.5 16 1.2 9 3 27;
-  opacity: 0.78;
-}
-
-.service-magic-trail-stream-shards {
-  stroke: rgba(159, 106, 11, 0.62);
-  stroke-width: 1.6px;
-  stroke-dasharray: 6 34 2 21 1 17;
-}
-
-.service-magic-trail-flares {
-  fill: #f1cb60;
-  filter: drop-shadow(0 0 4px rgba(223, 173, 53, 0.56));
-}
-
-.service-magic-trail-flare-lane-outer {
-  opacity: 0.62;
-}
-
-.service-magic-trail-flare-lane-inner {
-  opacity: 0.82;
-}
-
-.service-magic-trail-flare-lane-core {
-  opacity: 1;
-}
-
-.service-magic-trail-flare {
-  transform-box: fill-box;
-  transform-origin: center;
-  will-change: transform;
-}
-
-.service-magic-trail-flare-0 {
-  transform: rotate(var(--magic-trail-angle));
-  fill: #f7dd83;
-}
-
-.service-magic-trail-flare-1 {
-  transform: rotate(var(--magic-trail-counter-angle));
-  fill: #d8a52b;
-}
-
-.service-magic-trail-flare-2 {
-  transform: rotate(var(--magic-trail-angle));
-  fill: #edc95f;
-}
-
-html.a11y-reduce-motion .service-magic-trail-stream {
-  stroke-dashoffset: 0 !important;
-  will-change: auto;
-}
-
-html.a11y-reduce-motion .service-magic-trail-flare {
-  transform: none !important;
-  will-change: auto;
+html.a11y-reduce-motion .service-magic-trail-desktop,
+html.a11y-reduce-motion .service-magic-trail-mobile {
+  animation: none !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .service-magic-trail-stream {
-    stroke-dashoffset: 0 !important;
-    will-change: auto;
+  .service-magic-trail-desktop,
+  .service-magic-trail-mobile {
+    animation: none !important;
+  }
+}
+
+@media (max-width: 860px) {
+  .service-magic-trail-desktop {
+    display: none;
   }
 
-  .service-magic-trail-flare {
-    transform: none !important;
-    will-change: auto;
+  .service-magic-trail-mobile {
+    display: block;
   }
 }
 
@@ -2289,52 +2197,6 @@ html.a11y-reduce-motion .service-magic-trail-flare {
     width: 100vw;
     height: auto;
     transform: none;
-  }
-
-  .service-magic-trail-art-desktop {
-    display: none;
-  }
-
-  .service-magic-trail-art-mobile {
-    display: block;
-    /* Both tips extend behind opaque cards. Keep the connecting curve
-       visible up to the card edge, including glow outside the SVG box. */
-  }
-
-  .service-magic-trail-glow-wide {
-    stroke-width: 42px;
-    stroke: rgba(223, 173, 53, 0.145);
-    filter: blur(13px);
-  }
-
-  .service-magic-trail-glow-core {
-    stroke-width: 14px;
-    stroke: rgba(240, 207, 112, 0.21);
-    filter: blur(4.5px);
-  }
-
-  .service-magic-trail-stream-soft {
-    stroke-width: 2.1px;
-  }
-
-  .service-magic-trail-stream-dust {
-    stroke-width: 2.8px;
-  }
-
-  .service-magic-trail-stream-shards {
-    stroke-width: 1.5px;
-  }
-
-  .service-magic-trail-flares {
-    filter: drop-shadow(0 0 3.5px rgba(223, 173, 53, 0.52));
-  }
-
-  .service-magic-trail-art-mobile .service-magic-trail-flare-lane-outer {
-    opacity: 0.56;
-  }
-
-  .service-magic-trail-art-mobile .service-magic-trail-flare-lane-inner {
-    opacity: 0.76;
   }
 
   .services-title {
@@ -3129,6 +2991,7 @@ html[dir="rtl"] .reviews-grid-scroll {
   margin: -0.75rem 0 1.25rem;
   font-size: 0.8rem;
   opacity: 0.75;
+  text-align: center;
 }
 
 .review-modal-overlay {
@@ -3147,6 +3010,7 @@ html[dir="rtl"] .reviews-grid-scroll {
 
 .review-modal-panel .form-checkbox-row {
   margin-bottom: 1.25rem;
+  cursor: default;
 }
 
 .review-modal-panel {

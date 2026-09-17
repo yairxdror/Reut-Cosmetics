@@ -65,20 +65,20 @@ export default function Footer() {
               <Editable contentKey="facebookName">{t("facebookName")}</Editable>
             </span>
           </a>
-          <a className="footer-social-item" href={PHONE_TEL_URL} aria-label="Phone">
-            <span className="footer-social-btn">
-              <PhoneIcon size={16} />
-            </span>
-            <span className="footer-social-caption">
-              <Editable contentKey="phoneDisplayNumber">{t("phoneDisplayNumber")}</Editable>
-            </span>
-          </a>
           <a className="footer-social-item" href={whatsappUrl()} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
             <span className="footer-social-btn">
               <WhatsAppIcon size={16} />
             </span>
             <span className="footer-social-caption">
               <Editable contentKey="whatsappDisplayNumber">{t("whatsappDisplayNumber")}</Editable>
+            </span>
+          </a>
+          <a className="footer-social-item" href={PHONE_TEL_URL} aria-label="Phone">
+            <span className="footer-social-btn">
+              <PhoneIcon size={16} />
+            </span>
+            <span className="footer-social-caption">
+              <Editable contentKey="phoneDisplayNumber">{t("phoneDisplayNumber")}</Editable>
             </span>
           </a>
         </div>
