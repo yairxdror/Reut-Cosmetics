@@ -88,6 +88,16 @@ function applyPrefs(prefs: A11yPrefs) {
   root.classList.toggle("a11y-grayscale", prefs.grayscale);
 }
 
+// Reads the --safe-area-inset-bottom custom property (set from
+// env(safe-area-inset-bottom) in globals.css) so the drag bounds below can
+// keep the button clear of the home indicator on notched iPhones, the same
+// way the CSS fallback position already does.
+function getSafeAreaInsetBottom(): number {
+  if (typeof document === "undefined") return 0;
+  const value = getComputedStyle(document.documentElement).getPropertyValue("--safe-area-inset-bottom");
+  return Number.parseFloat(value) || 0;
+}
+
 function railToPixel(rail: RailPosition, bounds: Bounds): Position {
   const { minX, maxX, minY, maxY } = bounds;
   if (rail.rail === "bottom") {
@@ -141,13 +151,14 @@ export default function AccessibilityWidget() {
     const width = el?.offsetWidth ?? 48;
     const height = el?.offsetHeight ?? 48;
     const navHeight = document.querySelector<HTMLElement>(".nav-bar")?.offsetHeight ?? 0;
+    const bottomMargin = EDGE_MARGIN + getSafeAreaInsetBottom();
     const isRtl = document.documentElement.dir === "rtl";
     const minX = isRtl ? SCROLLBAR_CLEARANCE : EDGE_MARGIN;
     const rightMargin = isRtl ? EDGE_MARGIN : SCROLLBAR_CLEARANCE;
     return {
       minX,
       maxX: Math.max(minX, window.innerWidth - width - rightMargin),
-      maxY: Math.max(EDGE_MARGIN, window.innerHeight - height - EDGE_MARGIN),
+      maxY: Math.max(bottomMargin, window.innerHeight - height - bottomMargin),
       minY: navHeight + EDGE_MARGIN,
       rightMargin,
     };

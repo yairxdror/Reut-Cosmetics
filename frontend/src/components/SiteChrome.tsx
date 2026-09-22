@@ -9,7 +9,7 @@ import AccessibilityWidget from "./AccessibilityWidget";
 import ServiceWorkerRegistration from "./ServiceWorkerRegistration";
 import EditableImage from "@/components/EditableImage";
 import Editable from "@/components/Editable";
-import logo from "@/assets/logo.png";
+import logo from "@/assets/images/logo.png";
 import { useLanguage } from "@/context/LanguageContext";
 import { useAdmin } from "@/context/AdminContext";
 import { AdminIcon, PencilIcon } from "@/components/icons";

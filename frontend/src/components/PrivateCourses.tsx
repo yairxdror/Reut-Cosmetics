@@ -1,6 +1,6 @@
 "use client";
 
-import eyebrowShaping from "@/assets/Eyebrow-shaping.png";
+import eyebrowShaping from "@/assets/images/Eyebrow-shaping.png";
 import { useLanguage } from "@/context/LanguageContext";
 import Editable from "@/components/Editable";
 import EditableImage from "@/components/EditableImage";

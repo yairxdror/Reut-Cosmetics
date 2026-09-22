@@ -14,6 +14,12 @@
   --glass-blur: blur(14px);
   --radius-full: 999px;
 
+  /* Real values only where viewport-fit=cover is set (see layout.tsx) and
+     the device has a notch/home-indicator to clear — 0px everywhere else.
+     Exposed as a plain custom property so JS (the draggable accessibility
+     button) can read it too, not just CSS. */
+  --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+
   color-scheme: light;
   font-family: "Segoe UI", "Heebo", "Arial", sans-serif;
 }
@@ -25,6 +31,17 @@
 html,
 body {
   overflow-x: hidden;
+  /* All real scrolling happens inside .page-scroll. Without this, iOS
+     Safari can still "chain" a scroll gesture from that inner container
+     out to the outer page once it hits an edge, producing the double-
+     scrollbar/bounce feeling reported there; on Android Chrome the same
+     setting is what stops that edge-of-scroll gesture from triggering the
+     browser's own pull-to-refresh over the page. */
+  overscroll-behavior-y: none;
+  /* Android Chrome's default tap feedback is a gray flash on whatever was
+     tapped — every button/link here already has its own :active/:hover
+     styling, so this just stops the two from fighting visually. */
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* Site-wide: no selecting/copying text or images, on desktop or mobile —
@@ -60,6 +77,13 @@ body {
   background: linear-gradient(180deg, var(--color-cream) 0%, var(--color-cream-soft) 100%);
   color: var(--color-black);
   min-height: 100vh;
+  /* iOS Safari sizes 100vh against the viewport with its toolbars collapsed,
+     which is taller than what's actually visible whenever the toolbar is
+     showing — that mismatch is what caused the double-scrollbar/cut-off-
+     bottom bug there. 100dvh tracks the real, currently-visible viewport;
+     declared second (not replacing 100vh) so browsers without dvh support
+     just keep the first value. */
+  min-height: 100dvh;
   width: 100%;
 }
 
@@ -251,6 +275,12 @@ a {
   justify-content: center;
   min-height: 3.5rem;
   padding: 1rem 6rem;
+  /* viewport-fit=cover (see layout.tsx) lets content draw under the notch/
+     Dynamic Island — without this the fixed bar would sit partly behind it
+     on notched iPhones, in portrait or landscape. */
+  padding-top: calc(1rem + env(safe-area-inset-top));
+  padding-left: calc(6rem + env(safe-area-inset-left));
+  padding-right: calc(6rem + env(safe-area-inset-right));
   background: var(--glass-bg);
   -webkit-backdrop-filter: var(--glass-blur);
   backdrop-filter: var(--glass-blur);
@@ -265,9 +295,18 @@ a {
   top: 0;
   left: 0;
   right: 0;
-  bottom: 0;
+  /* height rather than bottom:0 — a bottom-anchored box stretches against
+     whatever the containing block resolves to, which on iOS Safari can be
+     sized off the "toolbars collapsed" 100vh. An explicit height (with the
+     100dvh override for browsers that support it, same reasoning as body's
+     min-height above) always matches the viewport that's actually visible,
+     which is what was producing the double scrollbar and clipped-bottom bug
+     there. */
+  height: 100vh;
+  height: 100dvh;
   overflow-y: auto;
   overflow-x: hidden;
+  overscroll-behavior-y: contain;
 }
 
 .nav-bar-lang {
@@ -865,7 +904,10 @@ html[dir="ltr"] .hero-image-placeholder-full {
 
 .a11y-toggle {
   position: fixed;
-  bottom: 12px;
+  /* Clear the home-indicator on notched iPhones — see --safe-area-inset-
+     bottom above. Only the CSS fallback needs this directly; the JS drag/
+     snap logic reads the same custom property once it takes over. */
+  bottom: calc(12px + var(--safe-area-inset-bottom));
   /* Physical (not logical) side: the JS-computed default always parks on
      the right, regardless of language direction — keep this fallback,
      shown for the instant before that position applies, on the same side.
@@ -918,8 +960,11 @@ html[dir="ltr"] .a11y-panel {
   flex-direction: column;
   gap: 0.5rem;
   /* Opens upward from wherever the button is; if that's close to the top of
-     the screen, scroll internally instead of running off-screen. */
+     the screen, scroll internally instead of running off-screen. dvh (with
+     the vh fallback) so it matches the real visible viewport on iOS Safari
+     instead of the toolbars-collapsed one — see body/.page-scroll above. */
   max-height: calc(100vh - 2rem);
+  max-height: calc(100dvh - 2rem);
   overflow-y: auto;
 }
 
@@ -1089,6 +1134,7 @@ html.a11y-grayscale {
   top: 0;
   right: 0;
   height: 100vh;
+  height: 100dvh;
   width: min(320px, 85vw);
   background: rgba(250, 248, 242, 0.94);
   -webkit-backdrop-filter: var(--glass-blur);
@@ -1101,6 +1147,8 @@ html.a11y-grayscale {
   display: flex;
   flex-direction: column;
   padding: 1.25rem;
+  padding-top: calc(1.25rem + env(safe-area-inset-top));
+  padding-bottom: calc(1.25rem + env(safe-area-inset-bottom));
 }
 
 .sidebar-panel-open {
@@ -1267,7 +1315,9 @@ html.a11y-grayscale {
   border: 1px solid rgba(169, 127, 30, 0.4);
   background: rgba(255, 255, 255, 0.5);
   padding: 0.65rem 0.9rem;
-  font-size: 0.95rem;
+  /* iOS Safari auto-zooms the page on focus for any input/textarea/select
+     under 16px — this keeps it just at that threshold. */
+  font-size: 1rem;
   font-family: inherit;
   color: var(--color-black);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -1882,8 +1932,9 @@ html.hd-success .nav-bar-side .home-button {
 .service-magic-trail-mobile {
   display: none;
   object-position: center;
-  scale: 0.6;
-  translate: 25% 0;
+  scale: 0.8;
+  translate: 21% 8%;
+  rotate: 222deg;
 }
 
 @keyframes magicTrailFloat {
@@ -2164,11 +2215,6 @@ html.a11y-reduce-motion .service-magic-trail-mobile {
   .service-card:nth-child(odd),
   .service-card:nth-child(even) {
     margin-inline: auto;
-  }
-
-  /* Conceal the trail's starting point and glow beneath the courses card. */
-  .service-card-courses {
-    background: var(--color-cream);
   }
 
   .service-golden-face {
@@ -3181,7 +3227,9 @@ html[dir="rtl"] .reviews-grid-scroll {
   border: 1px solid rgba(169, 127, 30, 0.35);
   background: rgba(255, 255, 255, 0.6);
   padding: 0.65rem 1rem;
-  font-size: 0.9rem;
+  /* iOS Safari auto-zooms the page on focus for any input/select under
+     16px — this keeps it just at that threshold, same as .form-input. */
+  font-size: 1rem;
   font-family: inherit;
   color: var(--color-black);
 }

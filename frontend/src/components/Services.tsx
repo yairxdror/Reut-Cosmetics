@@ -3,11 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import eyebrowShaping from "@/assets/Eyebrow-shaping.png";
-import goldenFaceLineArt from "@/assets/golden-face-line-art.png";
-import luxuryMakeupBrush from "@/assets/luxury-makeup-brush.png";
-import magicPathImage from "@/assets/magic-path.png";
-import magicPathMobileImage from "@/assets/magic-path-mobile.png";
+import eyebrowShaping from "@/assets/images/Eyebrow-shaping.png";
+import goldenFaceLineArt from "@/assets/images/golden-face-line-art.png";
+import luxuryMakeupBrush from "@/assets/images/luxury-makeup-brush.png";
+import magicPathImage from "@/assets/images/magic-path.png";
 import { useLanguage } from "@/context/LanguageContext";
 import { FeatherIcon, GraduationCapIcon, LeafIcon, LipstickIcon } from "@/components/icons";
 import Editable from "@/components/Editable";
@@ -35,7 +34,7 @@ function PermanentMakeupMagicTrail() {
       />
       <Image
         className="service-magic-trail-mobile"
-        src={magicPathMobileImage}
+        src={magicPathImage}
         alt=""
         fill
         sizes="(max-width: 860px) 500px, 0px"

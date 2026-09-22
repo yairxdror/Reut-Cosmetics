@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef } from "react";
-import heroProduct from "@/assets/hero-product.jpg";
+import heroProduct from "@/assets/images/hero-product.jpg";
 import { useLanguage } from "@/context/LanguageContext";
 import { useAdmin } from "@/context/AdminContext";
 import { WHATSAPP_URL } from "@/lib/contact";

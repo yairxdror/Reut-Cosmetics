@@ -1,6 +1,6 @@
 "use client";
 
-import healingTimeline from "@/assets/healing-timeline.png";
+import healingTimeline from "@/assets/images/healing-timeline.png";
 import { useLanguage } from "@/context/LanguageContext";
 import Editable from "@/components/Editable";
 import EditableImage from "@/components/EditableImage";

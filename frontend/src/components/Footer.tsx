@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
 import Editable from "@/components/Editable";
 import EditableImage from "@/components/EditableImage";
-import logo from "@/assets/logo.png";
+import logo from "@/assets/images/logo.png";
 import { WhatsAppIcon, PhoneIcon, InstagramIcon, FacebookIcon, LocationPinIcon } from "@/components/icons";
 import { PHONE_TEL_URL, INSTAGRAM_URL, FACEBOOK_URL, whatsappUrl } from "@/lib/contact";
 

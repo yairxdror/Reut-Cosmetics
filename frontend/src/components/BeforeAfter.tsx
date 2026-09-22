@@ -7,12 +7,12 @@ import EditableImage from "@/components/EditableImage";
 import TieredTitle from "@/components/TieredTitle";
 import { SlideArrowsIcon } from "@/components/icons";
 import type { EditableImageKey } from "@/lib/editableContent";
-import beforePhoto from "@/assets/before-after-before.webp";
-import afterPhoto from "@/assets/before-after-after.webp";
-import beforePhoto2 from "@/assets/before-after-before-2.webp";
-import afterPhoto2 from "@/assets/before-after-after-2.webp";
-import beforePhoto3 from "@/assets/before-after-before-3.webp";
-import afterPhoto3 from "@/assets/before-after-after-3.webp";
+import beforePhoto from "@/assets/images/before-after-before-1.webp";
+import afterPhoto from "@/assets/images/before-after-after-1.webp";
+import beforePhoto2 from "@/assets/images/before-after-before-2.webp";
+import afterPhoto2 from "@/assets/images/before-after-after-2.webp";
+import beforePhoto3 from "@/assets/images/before-after-before-3.webp";
+import afterPhoto3 from "@/assets/images/before-after-after-3.webp";
 
 const DEFAULT_POSITION = 50;
 const MIN_POSITION = 5;

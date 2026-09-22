@@ -27,10 +27,15 @@ export const metadata: Metadata = {
 // viewportFit: "cover" is what makes env(safe-area-inset-*) resolve to real
 // values on notched/rounded-corner phones instead of always being 0 — needed
 // so fixed/floating UI near the screen edges can stay clear of the notch.
+// themeColor tints Android Chrome's own address bar/status bar to match the
+// page (the cream background, not the PWA manifest's dark install-splash
+// color, which is a separate, already-deliberate choice for a different
+// context) instead of leaving it default white/gray.
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
+  themeColor: "#faf8f2",
 };
 
 // The GitHub Pages build is a static export (no server), which can't call
