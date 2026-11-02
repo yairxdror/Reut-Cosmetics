@@ -15,12 +15,21 @@ const gveretLevin = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Reut Cosmetics",
-  description: "Reut Cosmetics - natural beauty products",
+  // Bilingual so Hebrew searches for the brand name find the site too — the
+  // English name still leads, matching the logo/wordmark. This tag isn't
+  // part of the page's visible design (browser tab + search results only),
+  // so it doesn't need to visually match the logo.
+  title: "רעות קוסמטיקה | Reut Cosmetics",
+  description: "רעות קוסמטיקה (קוסמטיקס) - איפור קבוע, עיצוב גבות ואיפור כלות | Reut Cosmetics - permanent makeup, eyebrow design & bridal makeup",
   appleWebApp: {
     capable: true,
     title: "Reut Cosmetics",
     statusBarStyle: "black-translucent",
+  },
+  // Google Search Console domain-ownership verification — do not remove,
+  // it keeps the site verified there even after the initial check passes.
+  verification: {
+    google: "mi0lRb-iOTedfUQfW2QVjuc7J9hhmJJqWdobtLAqsCY",
   },
 };
 

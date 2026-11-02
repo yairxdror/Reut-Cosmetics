@@ -12,12 +12,12 @@ type Dictionary = Record<string, { he: string; en: string }>;
 
 const dictionary: Dictionary = {
 
-  heroTitleMain: { he: "יופי, דיוק ונוכחות", en: "Beauty, Precision, and Presence," },
-  heroTitleLine2Prefix: { he: "בדיוק", en: "Made" },
-  heroTitleHighlight: { he: "בשבילך", en: "Just for You" },
+  heroTitleMain: { he: "להעניק לפנים שלך", en: "To treat your face" },
+  heroTitleLine2Prefix: { he: "את הדיוק", en: "the precision" },
+  heroTitleHighlight: { he: "שמגיע להן", en: "That they deserve" },
   heroSubtitle: {
-    he: "טיפולי קוסמטיקה מתקדמים, איפור קבוע, איפור ערב, איפור כלות, עיצוב גבות, שעווה בפנים, קורסי הכשרה מקצועיים.\nכל מה שצריך כדי להרגיש מושלמת.",
-    en: "Advanced cosmetic treatments, permanent makeup, evening makeup, bridal makeup, eyebrow shaping, facial waxing, professional training courses.\nEverything you need to feel perfect.",
+    he: "טיפולי קוסמטיקה מתקדמים, איפור קבוע, איפור ערב, איפור כלות, עיצוב גבות, שעווה בפנים, קורסי הכשרה מקצועיים.",
+    en: "Advanced cosmetic treatments, permanent makeup, evening makeup, bridal makeup, eyebrow shaping, facial waxing, professional training courses.",
   },
   whatsappCta: { he: "דברו איתנו בוואטסאפ", en: "Chat with us on WhatsApp" },
   facebookCta: { he: "עקבו בפייסבוק", en: "Follow us on Facebook" },
@@ -26,11 +26,11 @@ const dictionary: Dictionary = {
   whatsappCtaSuffix: { he: "בוואטסאפ", en: "on WhatsApp" },
   featureDiagnostics: { he: "טיפול שמותאם\nבדיוק בשבילך", en: "A treatment tailored\njust for you" },
   featurePersonalService: { he: "שירות אישי\nוליווי צמוד", en: "Personal service\nand close guidance" },
-  featureEquipped: { he: "מכון מאובזר\nבסטנדרטים גבוהים", en: "Facility equipped\nto high standards" },
-  featureMaterials: { he: "חומרים איכותיים\nלמראה מושלם", en: "Quality materials\nfor a flawless look" },
+  featureEquipped: { he: "קליניקה מאובזרת\nבסטנדרטים גבוהים", en: "Fully equipped clinic\nHigh standards" },
+  featureMaterials: { he: "חומרים טבעיים ואיכותיים", en: "Quality natural materials" },
   heroBadgeLine1: { he: "סטנדרט של", en: "A standard of" },
   heroBadgeLine2: { he: "יוקרה", en: "luxury" },
-  heroBadgeLine3: { he: "ותוצאות מושלמות", en: "and flawless results" },
+  heroBadgeLine3: { he: "מקצועיות ודיוק", en: "Professionalism and precision" },
 
   servicesTitle: { he: "עולם האיפור", en: "Our Services" },
   servicesTitleKicker: { he: "עולם", en: "Our" },
@@ -38,13 +38,13 @@ const dictionary: Dictionary = {
   servicesImageLabel: { he: "תמונה תתווסף בקרוב", en: "Image coming soon" },
   detailsLink: { he: "לפרטים נוספים", en: "Learn more" },
   service1Title: { he: "איפור קבוע", en: "Permanent Makeup" },
-  service1Desc: { he: "גבות, אייליינר ושפתיים בתוצאה טבעית ומדויקת.", en: "Brows, eyeliner and lips with a natural, precise result." },
+  service1Desc: { he: "גבות, אייליינר וקו תחתון בתוצאה טבעית ומדויקת.", en: "Eyebrows, eyeliner, and the lower lash line – for a natural and precise result." },
   service2Title: { he: "איפור כלות וערב", en: "Bridal & Evening Makeup" },
-  service2Desc: { he: "איפור מקצועי לאירועים, חתונות וערבים מיוחדים.", en: "Professional makeup for events, weddings and special evenings." },
+  service2Desc: { he: "איפור מקצועי לחתונות וארועים מיוחדים.", en: "Professional makeup for weddings and special events." },
   service3Title: { he: "קורסי לימוד", en: "Training Courses" },
   service3Desc: { he: "קורסים מקצועיים באיפור קבוע בהדרכה אישית.", en: "Professional permanent makeup courses with personal guidance." },
   service4Title: { he: "שעווה בפנים", en: "Facial Waxing" },
-  service4Desc: { he: "עיצוב וחיטוב הפנים בטכניקה עדינה ומדויקת.", en: "Gentle, precise facial hair removal and shaping." },
+  service4Desc: { he: "עיצוב וניקוי גבות בצורה נקייה, מדויקת ומקצועית.", en: "Eyebrow shaping and cleaning in a clean, precise and professional manner" },
 
   privateCoursesIntro: {
     he: "קורסי הכשרה פרטניים בליווי אישי צמוד, המותאמים לקצב ולרמת הידע שלך.",
@@ -61,8 +61,8 @@ const dictionary: Dictionary = {
   pcCourse1Method3: { he: "השיטה המשולבת", en: "Combined method" },
   pcCourse2Title: { he: "עיצוב גבות", en: "Eyebrow Shaping" },
   pcCourse2Desc: {
-    he: "הקניית כלים מקצועיים לעיצוב וחיטוב גבות בהתאמה אישית, מהתאוריה ועד תרגול מעשי.",
-    en: "Professional tools for personalized eyebrow shaping and grooming, from theory to hands-on practice.",
+    he: "הקניית כלים מקצועיים לעיצוב ופיסול גבות טבעיות בהתאמה אישית, מהתאוריה ועד תרגול מעשי.",
+    en: "Providing professional tools for designing and sculpting natural, customized eyebrows, from theory to practical practice.",
   },
 
   menu: { he: "תפריט", en: "Menu" },
@@ -114,7 +114,13 @@ const dictionary: Dictionary = {
   adminUnauthorized: { he: "אין הרשאה לצפות בעמוד זה.", en: "You are not authorized to view this page." },
   adminAnswerYes: { he: "כן", en: "Yes" },
   adminAnswerNo: { he: "לא", en: "No" },
+  adminAnswerMissing: { he: "⚠ לא סומן", en: "⚠ Not answered" },
   adminDetailLabel: { he: "פירוט", en: "Details" },
+  adminConsentsTitle: { he: "אישורי הלקוחה", en: "Customer confirmations" },
+  adminConsentChecked: { he: "✓ סומן", en: "✓ Checked" },
+  adminConsentNotChecked: { he: "✕ לא סומן", en: "✕ Not checked" },
+  adminConsentNotRecorded: { he: "⚠ לא תועד", en: "⚠ Not recorded" },
+  adminDeclarationIssue: { he: "⚠ בעיה בהצהרה", en: "⚠ Declaration issue" },
   adminSearchPlaceholder: { he: "חיפוש לפי שם הלקוחה או תאריך", en: "Search by customer name or date" },
   adminClearSearch: { he: "ניקוי חיפוש", en: "Clear search" },
   adminNoSearchResults: { he: "לא נמצאו הצהרות בריאות התואמות לחיפוש.", en: "No health declarations match your search." },
@@ -136,8 +142,8 @@ const dictionary: Dictionary = {
   // values, not derived from these — editing this text doesn't repoint them.
   instagramHandle: { he: "reut_cosmetics_", en: "reut_cosmetics_" },
   facebookName: { he: "Reut Yakobi", en: "Reut Yakobi" },
-  phoneDisplayNumber: { he: "050-998-8848", en: "050-998-8848" },
-  whatsappDisplayNumber: { he: "050-998-8848", en: "050-998-8848" },
+  phoneDisplayNumber: { he: "Tel", en: "Tel" },
+  whatsappDisplayNumber: { he: "WhatsApp", en: "WhatsApp" },
   allRightsReserved: { he: "כל הזכויות שמורות.", en: "All rights reserved." },
   footerRights: { he: "כל הזכויות שמורות ל-Reut Cosmetics ©", en: "© All rights reserved to Reut Cosmetics" },
   developedBy: { he: "פותח על ידי Codedly", en: "Developed by Codedly" },
@@ -161,7 +167,7 @@ const dictionary: Dictionary = {
     en: "I'd love to get more details about",
   },
 
-  reviewsTitle: { he: "לקוחות מספרות", en: "Clients Share" },
+  reviewsTitle: { he: "המלצות", en: "Recommendations" },
   addReviewButton: { he: "הוסיפי ביקורת", en: "Add a Review" },
   reviewFormTitle: { he: "כתיבת ביקורת", en: "Write a Review" },
   requiredFieldsNote: {
@@ -314,8 +320,8 @@ const dictionary: Dictionary = {
   },
   ppControllerTitle: { he: "בעלת השליטה במאגר ופרטי קשר", en: "Data Controller and Contact Details" },
   ppControllerText: {
-    he: "בעלת השליטה במידע היא רעות יעקובי, המפעילה את Reut Cosmetics, בכתובת משה רחמילביץ 34, ירושלים. לפניות בנושא פרטיות ניתן ליצור קשר:",
-    en: "The data controller is Reut Yakobi, operator of Reut Cosmetics, at 34 Moshe Rachmilevitz Street, Jerusalem. For privacy inquiries, contact us:",
+    he: "בעלת השליטה במידע היא רעות יעקובי, המפעילה את Reut Cosmetics, בכתובת העסק הנמצא בירושלים.\nלפניות בנושא פרטיות ניתן ליצור קשר:",
+    en: "The data controller is Reut Yaakobi, operator of Reut Cosmetics, with a business address in Jerusalem.\nFor privacy-related inquiries, you may contact:",
   },
   ppDataCollectedTitle: { he: "המידע שאנו אוספות", en: "Information We Collect" },
   ppDataItem1: {
@@ -448,8 +454,8 @@ const dictionary: Dictionary = {
   },
   touOperatorTitle: { he: "מפעילת האתר ופרטי העסק", en: "Website Operator and Business Details" },
   touOperatorText: {
-    he: "האתר והשירותים מופעלים בידי רעות יעקובי — Reut Cosmetics, בכתובת משה רחמילביץ 34, ירושלים. ניתן ליצור קשר:",
-    en: "The site and services are operated by Reut Yakobi — Reut Cosmetics, at 34 Moshe Rachmilevitz Street, Jerusalem. Contact is available:",
+    he: "האתר והשירותים מופעלים בידי רעות יעקובי Reut Cosmetics, בכתובת העסק הנמצא בירושלים.\nניתן ליצור קשר:",
+    en: "The website and services are operated by Reut Yaakobi (Reut Cosmetics), with the business address located in Jerusalem.\nYou may contact us at:",
   },
   touServicesTitle: { he: "השירותים המוצעים", en: "Services Offered" },
   touServicesText: {
@@ -484,8 +490,8 @@ const dictionary: Dictionary = {
     en: "Pigment retention and results vary according to skin type, individual response, lifestyle, and adherence to aftercare instructions. If an additional session is recommended after the two included sessions, its purpose, price, and date will be disclosed and approved in advance.",
   },
   touPayment5: {
-    he: "מועד המפגש השני ייקבע בתיאום איתך ובהתאם לטווח הזמן המקצועי שיימסר לך, אשר עשוי להיות עד חודשיים מהמפגש הראשון. דחייה מעבר לטווח המומלץ עלולה להשפיע על התוצאה ולהצריך בדיקת התאמה מחודשת. אם נדרש שינוי במועד, יש לפנות לתיאום כמפורט בסעיף הבא.",
-    en: "The second session will be arranged with you within the professional timeframe communicated to you, which may be up to two months after the first session. A delay beyond the recommended period may affect the result and require a new suitability assessment. If you need to change the date, please contact us as described in the next section.",
+    he: "יש להגיע למפגש השני במועד שייקבע, ובדרך כלל בתוך פרק הזמן המקצועי שיימסר ללקוחה, אשר עשוי להיות עד חודש וחצי מהמפגש הראשון. דחייה מעבר לטווח המומלץ עלולה להשפיע על התוצאה ולחייב הערכה מקצועית חדשה.",
+    en: "The second session should take place on the agreed date and generally within the professional timeframe communicated to the customer, which may be up to one and a half months after the first session. A delay beyond the recommended period may affect the result and require a new professional assessment.",
   },
   touPayment6: {
     he: "לשינוי מועד או לביטול פגישה, יש לפנות ב-WhatsApp ולציין שם מלא, סוג הטיפול ומועד הפגישה. בקשה לדחות פגישה ולהמשיך בחבילה אינה בקשה לבטל את רכישת החבילה. מועד חלופי ייקבע בתיאום ובאישור של שני הצדדים, בהתאם לזמינות ולטווח הזמן המקצועי המתאים לטיפול.",
@@ -848,12 +854,12 @@ const dictionary: Dictionary = {
 
   // ---------- Service detail modals (permanent makeup, bridal/evening, facial waxing) ----------
   service1Detail: {
-    he: "איפור קבוע (מיקרובליידינג) הוא טיפול קוסמטי מתקדם ליצירת גבות, אייליינר או שפתיים בעלי מראה טבעי ומדויק, המחזיק לאורך זמן. הטיפול נעשה בשתי פגישות: באחת בונים את הצורה והצבע המדויקים לפנייך, ובשנייה, כחודש לאחר מכן, מבצעים תיקון עדין להשלמת התוצאה. לפני כל טיפול מתקיים ייעוץ אישי לבחירת הצורה, הגוון והטכניקה המתאימים ביותר לתווי הפנים ולסגנון שלך.",
-    en: "Permanent makeup (microblading) is an advanced cosmetic treatment that creates natural-looking, long-lasting brows, eyeliner, or lips. The treatment is done in two sessions: the first builds the exact shape and color for your face, and the second — about a month later — makes gentle adjustments to complete the result. Every treatment begins with a personal consultation to choose the shape, tone, and technique best suited to your features and style.",
+    he: "איפור קבוע (מיקרובליידינג) הוא טיפול קוסמטי מתקדם ליצירת גבות, אייליינר או קו תחתון בעלי מראה טבעי ומדויק, המחזיק לאורך זמן. הטיפול נעשה בשתי פגישות: באחת בונים את הצורה והצבע המדויקים לפנייך, ובשנייה, כחודש לאחר מכן, מבצעים תיקון עדין להשלמת התוצאה. לפני כל טיפול מתקיים ייעוץ אישי לבחירת הצורה, הגוון והטכניקה המתאימים ביותר לתווי הפנים ולסגנון שלך.",
+    en: "Permanent makeup (microblading) is an advanced cosmetic treatment that creates natural-looking, long-lasting brows, eyeliner, or the lower lash line. The treatment is done in two sessions: the first builds the exact shape and color for your face, and the second — about a month later — makes gentle adjustments to complete the result. Every treatment begins with a personal consultation to choose the shape, tone, and technique best suited to your features and style.",
   },
   service2Detail: {
-    he: "איפור כלות וערב מותאם אישית לאירוע שלך — חתונה, אירוסין, נשף או כל ערב מיוחד. האיפור נבנה בהתאמה למראה, לשמלה ולתאורת האירוע, כך שיחזיק לאורך כל הערב ויצולם בצורה מושלמת. ניתן לתאם פגישת ניסיון מראש כדי לוודא שהתוצאה בדיוק כפי שדמיינת, ולהגיע ליום הגדול רגועה ובטוחה.",
-    en: "Bridal and evening makeup is fully personalized for your event — a wedding, engagement, gala, or any special evening. The look is tailored to your appearance, outfit, and the event's lighting, so it lasts all night and photographs beautifully. A trial session can be scheduled in advance to make sure the result is exactly as you imagined, so you arrive at your big day calm and confident.",
+    he: "איפור כלות וערב מותאם אישית לאירוע שלך — חתונה, אירוסין, נשף או כל ערב מיוחד. האיפור נבנה בהתאמה למראה, לשמלה ולתאורת האירוע, כך שיחזיק לאורך כל הערב ויצולם בצורה מושלמת!",
+    en: "Bridal and evening makeup is fully personalized for your event — a wedding, engagement, gala, or any special evening. The look is tailored to your appearance, outfit, and the event's lighting, so it lasts all night and photographs beautifully!",
   },
   service4Detail: {
     he: "שעווה בפנים היא שיטה עדינה ומדויקת להסרת שיער עודף באזור הפנים, המשאירה את העור חלק ונקי לאורך זמן ממושך יותר בהשוואה לשיטות אחרות. הטיפול מתאים לגבות, שפה עליונה, סנטר ולחיים, ומבוצע תוך הקפדה על נוחות ועדינות כלפי העור הרגיש של הפנים.",

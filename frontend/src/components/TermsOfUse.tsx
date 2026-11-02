@@ -9,7 +9,7 @@ import { formatLegalDate } from "@/lib/legalDate";
 
 // Shown until the first admin edit ever sets a server-computed date (see
 // backend/src/routes/content.js's pageLastUpdated logic).
-const FALLBACK_LAST_UPDATED = "2026-09-16T00:00:00.000Z";
+const FALLBACK_LAST_UPDATED = "2026-09-17T17:46:17.482Z";
 
 const PAYMENT_TERM_KEYS: EditableTextKey[] = [
   "touPayment1",

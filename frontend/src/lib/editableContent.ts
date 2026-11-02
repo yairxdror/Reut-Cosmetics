@@ -276,6 +276,8 @@ export const EDITABLE_IMAGE_KEYS = [
   "beforeAfterImageAfter2",
   "beforeAfterImageBefore3",
   "beforeAfterImageAfter3",
+  "beforeAfterImageBefore4",
+  "beforeAfterImageAfter4",
 ] as const;
 
 export type EditableImageKey = (typeof EDITABLE_IMAGE_KEYS)[number];

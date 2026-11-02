@@ -143,7 +143,11 @@ router.post("/", submitLimiter, asyncHandler(async (req, res) => {
     privacyConsentAccepted,
   } = req.body || {};
 
-  if (!fullName || !idNumber || !phone) {
+  // The JSON body can carry any type here, and one stored non-string name would
+  // take down the whole admin list: React can't render an object, and search
+  // calls toLowerCase on it.
+  const isFilledString = (value) => typeof value === "string" && value.trim() !== "";
+  if (![fullName, idNumber, phone].every(isFilledString)) {
     return res.status(400).json({ error: "fullName, idNumber and phone are required" });
   }
 

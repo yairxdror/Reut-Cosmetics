@@ -164,8 +164,8 @@ export default function Services() {
     }
 
     function scheduleGlint(isInitial = false) {
-      const minimumDelay = isInitial ? 900 : 2200;
-      const randomRange = isInitial ? 1800 : 4000;
+      const minimumDelay = isInitial ? 900 : 1600;
+      const randomRange = isInitial ? 1800 : 3000;
       const delay = minimumDelay + Math.random() * randomRange;
 
       timerId = window.setTimeout(() => {

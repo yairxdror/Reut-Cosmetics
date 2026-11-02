@@ -13,6 +13,8 @@ import beforePhoto2 from "@/assets/images/before-after-before-2.webp";
 import afterPhoto2 from "@/assets/images/before-after-after-2.webp";
 import beforePhoto3 from "@/assets/images/before-after-before-3.webp";
 import afterPhoto3 from "@/assets/images/before-after-after-3.webp";
+import beforePhoto4 from "@/assets/images/before-after-before-4.webp";
+import afterPhoto4 from "@/assets/images/before-after-after-4.webp";
 
 const DEFAULT_POSITION = 50;
 const MIN_POSITION = 5;
@@ -42,6 +44,12 @@ const SETS: Array<{
     afterKey: "beforeAfterImageAfter3",
     beforeFallback: beforePhoto3,
     afterFallback: afterPhoto3,
+  },
+  {
+    beforeKey: "beforeAfterImageBefore4",
+    afterKey: "beforeAfterImageAfter4",
+    beforeFallback: beforePhoto4,
+    afterFallback: afterPhoto4,
   },
 ];
 

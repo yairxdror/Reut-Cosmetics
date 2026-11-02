@@ -27,7 +27,14 @@ export async function submitHealthDeclaration(payload: HealthDeclarationPayload)
   return res.json();
 }
 
-export interface HealthDeclarationSubmission extends HealthDeclarationPayload {
+type ConsentField = "healthDeclarationConfirmed" | "agreementAccepted" | "privacyConsentAccepted";
+
+// The consent flags are optional here because a stored record is only as
+// complete as the form version that wrote it — the admin UI must be able to
+// tell "not recorded" apart from an explicit false.
+export interface HealthDeclarationSubmission
+  extends Omit<HealthDeclarationPayload, ConsentField>,
+    Partial<Pick<HealthDeclarationPayload, ConsentField>> {
   id: number;
   submittedAt: string;
 }

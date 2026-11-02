@@ -8,6 +8,10 @@
   --color-blue-soft: rgba(36, 81, 163, 0.12);
   --color-red: #b23a2e;
   --color-red-soft: rgba(178, 58, 46, 0.12);
+  --color-green: #256b42;
+  --color-green-soft: rgba(37, 107, 66, 0.12);
+  --color-yellow: #6b5500;
+  --color-yellow-soft: rgba(250, 204, 21, 0.45);
 
   --glass-bg: rgba(255, 255, 255, 0.28);
   --glass-bg-hover: rgba(255, 255, 255, 0.42);
@@ -1932,9 +1936,7 @@ html.hd-success .nav-bar-side .home-button {
 .service-magic-trail-mobile {
   display: none;
   object-position: center;
-  scale: 0.8;
-  translate: 21% 8%;
-  rotate: 222deg;
+  rotate: -45deg;
 }
 
 @keyframes magicTrailFloat {
@@ -2235,14 +2237,20 @@ html.a11y-reduce-motion .service-magic-trail-mobile {
     margin-top: 3rem;
   }
 
+  /* Centered over the card (which is itself centered on mobile), sized by
+     the artwork's own ratio so `contain` leaves no empty band. The image is
+     tilted (see .service-magic-trail-mobile), which drops the spiral end, so
+     the box sits high enough for the spiral to clear the card. */
   .service-magic-trail {
-    top: clamp(-36.5rem, -150vw, -25rem);
-    left: calc(50% - 50vw - 1.25rem);
+    top: auto;
+    left: 50%;
     right: auto;
-    bottom: 45%;
-    width: 100vw;
+    bottom: calc(100% + 2.5rem);
+    width: min(96vw, 375px);
     height: auto;
+    aspect-ratio: 1879 / 837;
     transform: none;
+    translate: -50% 0;
   }
 
   .services-title {
@@ -2256,10 +2264,15 @@ html.a11y-reduce-motion .service-magic-trail-mobile {
 
 /* ---------- Private courses page ---------- */
 
+/* "anywhere", not "break-word": admin-edited text can hold a run with no
+   normal spaces (a URL, non-breaking spaces from a pasted text), and only
+   "anywhere" also shrinks min-content, which the shrink-to-fit .editable-trigger
+   and .pc-card-methods need or they'd stay as wide as that run. */
 .private-courses-section {
   max-width: 1150px;
   margin: 0 auto;
   padding: 1rem 1.5rem 4rem;
+  overflow-wrap: anywhere;
 }
 
 .private-courses-intro {
@@ -3918,8 +3931,41 @@ html[dir="rtl"] .legal-contact-line {
   background: var(--color-blue-soft);
 }
 
+.admin-answer-missing {
+  color: var(--color-yellow);
+  background: var(--color-yellow-soft);
+}
+
 .admin-answer-detail {
   flex-basis: 100%;
   font-size: 0.85rem;
   opacity: 0.75;
+}
+
+.admin-consents-title {
+  margin: 1.5rem 0 0;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(169, 127, 30, 0.35);
+  font-size: 1rem;
+}
+
+.admin-consents-list {
+  margin-top: 0.75rem;
+}
+
+.admin-consent-checked {
+  color: var(--color-green);
+  background: var(--color-green-soft);
+}
+
+.admin-consent-unchecked {
+  color: var(--color-red);
+  background: var(--color-red-soft);
+}
+
+.admin-consent-alert {
+  margin-inline-start: 0.6rem;
+  color: var(--color-red);
+  font-size: 0.8rem;
+  font-weight: 600;
 }

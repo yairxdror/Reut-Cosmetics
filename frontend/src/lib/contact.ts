@@ -10,5 +10,5 @@ export const PHONE_TEL_URL = `tel:+${PHONE_INTL_DIGITS}`;
 export const PHONE_DISPLAY_NUMBER = PHONE_DISPLAY;
 export const INSTAGRAM_URL = "https://www.instagram.com/reut_cosmetics_/";
 export const INSTAGRAM_HANDLE = "reut_cosmetics_";
-export const FACEBOOK_URL = "https://www.facebook.com/reutyakobi1";
+export const FACEBOOK_URL = "https://www.facebook.com/share/1buV7e72to/?mibextid=wwXIfr";
 export const FACEBOOK_NAME = "Reut Yakobi";

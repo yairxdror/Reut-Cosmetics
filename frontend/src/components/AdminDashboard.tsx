@@ -12,7 +12,36 @@ import Editable from "@/components/Editable";
 const PAGE_SIZE = 20;
 const SEARCH_DEBOUNCE_MS = 300;
 
+const CONSENTS = [
+  { field: "healthDeclarationConfirmed", textKey: "hdConfirmationText" },
+  { field: "agreementAccepted", textKey: "hdAgreementCheckboxText" },
+  { field: "privacyConsentAccepted", textKey: "hdPrivacyConsentText" },
+] as const;
+
 type LoadState = "checking" | "loading" | "loadingMore" | "loaded" | "error";
+
+// Only a stored literal true counts as checked, so a record with a false,
+// missing or malformed flag can never be displayed as a confirmation.
+function consentBadge(value: unknown) {
+  if (value === true) return { className: "admin-consent-checked", labelKey: "adminConsentChecked" } as const;
+  if (value === false) return { className: "admin-consent-unchecked", labelKey: "adminConsentNotChecked" } as const;
+  return { className: "admin-consent-unchecked", labelKey: "adminConsentNotRecorded" } as const;
+}
+
+// Anything other than an explicit "yes"/"no" is unanswered — it must never
+// fall through to "no", which would read as a real answer from the customer.
+function answerBadge(answer: unknown) {
+  if (answer === "yes") return { className: "admin-answer-yes", labelKey: "adminAnswerYes" } as const;
+  if (answer === "no") return { className: "admin-answer-no", labelKey: "adminAnswerNo" } as const;
+  return { className: "admin-answer-missing", labelKey: "adminAnswerMissing" } as const;
+}
+
+function hasDeclarationIssue(submission: HealthDeclarationSubmission) {
+  return (
+    CONSENTS.some(({ field }) => submission[field] !== true) ||
+    QUESTIONS.some(({ id }) => answerBadge(submission.answers?.[id]).labelKey === "adminAnswerMissing")
+  );
+}
 
 export default function AdminDashboard() {
   const { t, language } = useLanguage();
@@ -142,7 +171,12 @@ export default function AdminDashboard() {
           {submissions.map((submission) => (
             <details className="admin-submission" key={submission.id}>
               <summary className="admin-submission-summary">
-                <span className="admin-submission-name">{submission.fullName}</span>
+                <span className="admin-submission-name">
+                  {submission.fullName}
+                  {hasDeclarationIssue(submission) && (
+                    <span className="admin-consent-alert">{t("adminDeclarationIssue")}</span>
+                  )}
+                </span>
                 <span className="admin-submission-date">
                   {new Date(submission.submittedAt).toLocaleDateString(language === "he" ? "he-IL" : "en-US")}
                 </span>
@@ -156,19 +190,30 @@ export default function AdminDashboard() {
                 </p>
                 <ul className="admin-answer-list">
                   {QUESTIONS.map((question) => {
-                    const answer = submission.answers[question.id];
+                    const answer = submission.answers?.[question.id];
                     const detail = submission.details?.[question.id];
+                    const badge = answerBadge(answer);
                     return (
                       <li className="admin-answer-item" key={question.id}>
                         <span className="admin-answer-question">{t(question.textKey)}</span>
-                        <span className={`admin-answer-value ${answer === "yes" ? "admin-answer-yes" : "admin-answer-no"}`}>
-                          {answer === "yes" ? t("adminAnswerYes") : t("adminAnswerNo")}
-                        </span>
+                        <span className={`admin-answer-value ${badge.className}`}>{t(badge.labelKey)}</span>
                         {answer === "yes" && detail && (
                           <span className="admin-answer-detail">
                             {t("adminDetailLabel")}: {detail}
                           </span>
                         )}
+                      </li>
+                    );
+                  })}
+                </ul>
+                <h3 className="admin-consents-title text-gold">{t("adminConsentsTitle")}</h3>
+                <ul className="admin-answer-list admin-consents-list">
+                  {CONSENTS.map(({ field, textKey }) => {
+                    const badge = consentBadge(submission[field]);
+                    return (
+                      <li className="admin-answer-item" key={field}>
+                        <span className="admin-answer-question">{t(textKey)}</span>
+                        <span className={`admin-answer-value ${badge.className}`}>{t(badge.labelKey)}</span>
                       </li>
                     );
                   })}
