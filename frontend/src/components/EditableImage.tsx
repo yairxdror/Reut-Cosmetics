@@ -20,6 +20,7 @@ const MAX_SIZE_BYTES = 15 * 1024 * 1024;
 // (the logo) need one added where this is used.
 export default function EditableImage({
   imageKey,
+  fallbackImageKey,
   fallbackSrc,
   alt,
   sizes,
@@ -31,6 +32,9 @@ export default function EditableImage({
   editable = true,
 }: {
   imageKey: EditableImageKey;
+  // Another key's uploaded image to show while this key has none of its own;
+  // uploads still go to imageKey only.
+  fallbackImageKey?: EditableImageKey;
   fallbackSrc: StaticImageData | string;
   alt: string;
   sizes?: string;
@@ -49,7 +53,7 @@ export default function EditableImage({
   const [status, setStatus] = useState<"idle" | "submitting">("idle");
   const [error, setError] = useState("");
 
-  const overrideUrl = getImageUrl(imageKey);
+  const overrideUrl = getImageUrl(imageKey) ?? (fallbackImageKey && getImageUrl(fallbackImageKey));
   const src = overrideUrl ?? fallbackSrc;
 
   function openEditor() {

@@ -266,7 +266,13 @@ export type EditableTextKey = (typeof EDITABLE_TEXT_KEYS)[number];
 export const EDITABLE_IMAGE_KEYS = [
   "heroProduct",
   "logo",
+  // The image all four service cards used to share. Each card now has its
+  // own key below; until a card gets its own upload it keeps showing this one.
   "servicesCardImage",
+  "service1Image",
+  "service2Image",
+  "service3Image",
+  "service4Image",
   "pcCourse1Image",
   "pcCourse2Image",
   "careTimelineImage",

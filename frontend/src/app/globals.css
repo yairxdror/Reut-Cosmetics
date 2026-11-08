@@ -1936,7 +1936,7 @@ html.hd-success .nav-bar-side .home-button {
 .service-magic-trail-mobile {
   display: none;
   object-position: center;
-  rotate: -45deg;
+  rotate: -42deg;
 }
 
 @keyframes magicTrailFloat {
@@ -2245,7 +2245,7 @@ html.a11y-reduce-motion .service-magic-trail-mobile {
     top: auto;
     left: 50%;
     right: auto;
-    bottom: calc(100% + 2.5rem);
+    bottom: calc(100% + 3.5rem);
     width: min(96vw, 375px);
     height: auto;
     aspect-ratio: 1879 / 837;

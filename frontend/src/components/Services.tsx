@@ -65,10 +65,10 @@ function GoldenFaceOutline() {
 }
 
 const SERVICES = [
-  { badgeIcon: GraduationCapIcon, titleKey: "service3Title" as const, descKey: "service3Desc" as const },
-  { badgeIcon: FeatherIcon, titleKey: "service1Title" as const, descKey: "service1Desc" as const },
-  { badgeIcon: LipstickIcon, titleKey: "service2Title" as const, descKey: "service2Desc" as const },
-  { badgeIcon: LeafIcon, titleKey: "service4Title" as const, descKey: "service4Desc" as const },
+  { badgeIcon: GraduationCapIcon, titleKey: "service3Title" as const, descKey: "service3Desc" as const, imageKey: "service3Image" as const },
+  { badgeIcon: FeatherIcon, titleKey: "service1Title" as const, descKey: "service1Desc" as const, imageKey: "service1Image" as const },
+  { badgeIcon: LipstickIcon, titleKey: "service2Title" as const, descKey: "service2Desc" as const, imageKey: "service2Image" as const },
+  { badgeIcon: LeafIcon, titleKey: "service4Title" as const, descKey: "service4Desc" as const, imageKey: "service4Image" as const },
 ];
 
 export default function Services() {
@@ -213,7 +213,7 @@ export default function Services() {
         </span>
       </h2>
       <div className="services-grid">
-        {SERVICES.map(({ badgeIcon: BadgeIcon, titleKey, descKey }) => {
+        {SERVICES.map(({ badgeIcon: BadgeIcon, titleKey, descKey, imageKey }) => {
           const isPermanentMakeup = titleKey === "service1Title";
           const isBridalMakeup = titleKey === "service2Title";
           const isCourses = titleKey === "service3Title";
@@ -251,7 +251,8 @@ export default function Services() {
               )}
               <div className="service-image">
                 <EditableImage
-                  imageKey="servicesCardImage"
+                  imageKey={imageKey}
+                  fallbackImageKey="servicesCardImage"
                   fallbackSrc={eyebrowShaping}
                   alt={t(titleKey)}
                   sizes="(max-width: 860px) 85vw, 420px"
